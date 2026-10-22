@@ -32,9 +32,9 @@ final class ProfileWorkerRunner {
                 + "kill -KILL \"$1\" 2>/dev/null; }; "
                 + "for p in $(ps -A -o PID,ARGS 2>/dev/null | awk -v prefix=" + quote(prefix)
                 + " '($2 == \"sh\" || $2 == \"/system/bin/sh\") && "
-                + "((index($3,prefix)==1 && $3 ~ /\\/(ror_(regular|phoenix)_[0-9]+|cpu_policy_[0-9]+|codex_[0-9]+|library_[0-9]+)[.]sh$/) "
+                + "((index($3,prefix)==1 && $3 ~ /\\/(ror_(regular|phoenix)_[0-9]+|cpu_policy_[0-9]+|phoenix_[0-9]+|library_[0-9]+)[.]sh$/) "
                 + "|| $3 == \"/data/local/tmp/phx\" || $3 == \"/data/local/tmp/library\") {print $1; next} "
-                + "$2 ~ /^(codex|library)_[0-9]+[.]sh$/ {print $1}'); do stop_tree \"$p\"; done; "
+                + "$2 ~ /^(phoenix|library)_[0-9]+[.]sh$/ {print $1}'); do stop_tree \"$p\"; done; "
                 + properties + "; "
                 + "if [ ! -r " + quote(payload.getAbsolutePath()) + " ]; then echo ROR_PAYLOAD_UNREADABLE; "
                 + "else "

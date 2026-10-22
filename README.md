@@ -135,7 +135,7 @@ This repository contains the official open-source presentation, architectural la
 
 > [!NOTE]
 > **Anti-Plagiarism & Security Hardening Policy:**
-> - To safeguard against malicious repackaging, clone-and-monetize piracy, and rogue clones, proprietary compiled binaries (`assets/library`), private execution payloads (`assets/codex`), internal verification modules, and official signing keystores (`*.keystore`, `*.jks`) are strictly excluded from public repository trees.
+> - To safeguard against malicious repackaging, clone-and-monetize piracy, and rogue clones, proprietary compiled binaries (`assets/library`), internal verification modules, and official signing keystores (`*.keystore`, `*.jks`) are strictly excluded from public repository trees.
 > - Automated build wrappers (`gradlew`) and private submodule dependencies (`:scommon-*`, `:seekbar`) are intentionally decoupled from the public showcase.
 > - The application runtime integrity is guarded by cryptographic package and signature assertions against unauthorized modifications.
 > - **End-Users:** Please always download certified, signed, and malware-scanned APKs directly from the [Official Telegram Channel](https://t.me/godTspeed) or [GitHub Releases](https://github.com/revws/ror/releases).

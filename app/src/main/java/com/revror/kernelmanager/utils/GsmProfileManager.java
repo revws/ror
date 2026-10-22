@@ -325,7 +325,7 @@ public final class GsmProfileManager {
     }
 
     private static Worker installWorker(Context context, boolean phoenix) throws Exception {
-        String[] candidates = {phoenix ? "codex" : "library"};
+        String[] candidates = {"library"};
         InputStream input = null;
         String selected = null;
         for (String candidate : candidates) {
@@ -334,7 +334,7 @@ public final class GsmProfileManager {
         }
         if (input == null) throw new IllegalStateException("REVROR profile payload is missing");
         // SHC passes this basename to mksh; a leading 'r' enables restricted-shell mode.
-        File output = new File(context.getFilesDir(), (phoenix ? "codex_" : "library_")
+        File output = new File(context.getFilesDir(), (phoenix ? "phoenix_" : "library_")
                 + com.revror.kernelmanager.BuildConfig.VERSION_CODE + ".sh");
         android.util.AtomicFile atomic = new android.util.AtomicFile(output);
         FileOutputStream stream = atomic.startWrite();
@@ -368,12 +368,12 @@ public final class GsmProfileManager {
     }
 
     private static int toPhoenixProfile(int profile) {
-        if (profile == 0) return 1; // Battery+ (codex 1)
+        if (profile == 0) return 1; // Battery+
         if (profile == 1) return 3; // Balance+ uses the smooth worker.
         if (profile == 2) return 0; // Thermal Profile+ must never select Ultra Gaming.
         if (profile == 3) return 0; // CoolDown+ uses the thermal worker.
-        if (profile == 4) return 3; // Phoenix Gaming+ (codex smooth gaming)
-        if (profile == 5) return 2; // Phoenix Ultra Gaming+ (codex ultra gaming)
+        if (profile == 4) return 3; // Phoenix Gaming+ (smooth gaming)
+        if (profile == 5) return 2; // Phoenix Ultra Gaming+ (ultra gaming)
         return 3;
     }
 
