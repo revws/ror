@@ -1,41 +1,58 @@
-<p align="center">
-  <img src="docs/screenshots/banner_final.png" alt="REVROR Banner" width="850" style="border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.7);" />
-</p>
+<div align="center">
 
-<h1 align="center">⚡ REVROR — Reincarnation of Revolutionary ⚡</h1>
+  <img src="docs/screenshots/banner_final.png" alt="REVROR Banner" width="900" style="border-radius: 20px; box-shadow: 0 16px 50px rgba(0,0,0,0.8); margin-bottom: 20px;" />
 
-<p align="center">
-  <strong>Next-Generation Android Kernel Tuning Suite, Esports Game Space & Performance Architecture</strong><br>
-  <em>Architected & Crafted by revWhiteshadow</em>
-</p>
+  # ⚡ REVROR — Reincarnation of Revolutionary ⚡
+  ### 🎮 Next-Gen Android Performance Architecture • Esports Game Space • Linux Kernel Engine
 
-<p align="center">
-  <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
-  <a href="https://t.me/godspeedmode"><img src="https://img.shields.io/badge/Telegram-Community%20Group-29b6f6?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Group" /></a>
-  <a href="https://t.me/revwhiteshadow"><img src="https://img.shields.io/badge/Developer-revWhiteshadow-8b5cf6?style=for-the-badge&logo=telegram&logoColor=white" alt="Developer Contact" /></a>
-  <br>
-  <a href="https://github.com/revws/ror/releases"><img src="https://img.shields.io/badge/Release-v6.8%20Titanium-8b5cf6?style=flat-square&logo=android&logoColor=white" alt="Release v6.8" /></a>
-  <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Android-11%20to%2015%20(API%2030--35)-3b82f6?style=flat-square&logo=android" alt="Android 11-15" /></a>
-  <a href="https://github.com/topjohnwu/Magisk"><img src="https://img.shields.io/badge/Root-Magisk%20%7C%20KernelSU%20%7C%20APatch-00bcd4?style=flat-square&logo=android" alt="Root Engines" /></a>
-  <a href="https://github.com/RikkaApps/Shizuku"><img src="https://img.shields.io/badge/Bridge-Shizuku%20v13-10b981?style=flat-square&logo=android" alt="Shizuku" /></a>
-  <a href="#-license"><img src="https://img.shields.io/badge/License-GPL--3.0-ef4444?style=flat-square&logo=gnu&logoColor=white" alt="GPL-3.0 License" /></a>
-</p>
+  <p>
+    <em>Engineered with passion for power-users, esports competitors, and Android enthusiasts by <strong>revWS</strong></em>
+  </p>
+
+  <p>
+    <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
+    <a href="https://t.me/godspeedmode"><img src="https://img.shields.io/badge/Telegram-Discussion%20Group-29b6f6?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Group" /></a>
+    <a href="https://t.me/revwhiteshadow"><img src="https://img.shields.io/badge/Developer-revWS-8b5cf6?style=for-the-badge&logo=telegram&logoColor=white" alt="Developer Contact" /></a>
+  </p>
+
+  <p>
+    <a href="https://github.com/revws/rorexp"><img src="https://img.shields.io/badge/Version-v6.8%20Titanium-8b5cf6?style=flat-square&logo=android&logoColor=white" alt="Release v6.8" /></a>
+    <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Android-11%20to%2015%20(API%2030--35)-3b82f6?style=flat-square&logo=android" alt="Android 11-15" /></a>
+    <a href="https://github.com/topjohnwu/Magisk"><img src="https://img.shields.io/badge/Root-Magisk%20%7C%20KernelSU%20%7C%20APatch-00bcd4?style=flat-square&logo=android" alt="Root Engines" /></a>
+    <a href="https://github.com/RikkaApps/Shizuku"><img src="https://img.shields.io/badge/Bridge-Shizuku%20v13-10b981?style=flat-square&logo=android" alt="Shizuku" /></a>
+    <a href="#-license"><img src="https://img.shields.io/badge/License-GPL--3.0-ef4444?style=flat-square&logo=gnu&logoColor=white" alt="GPL-3.0 License" /></a>
+    <a href="https://github.com/revws/rorexp"><img src="https://img.shields.io/badge/Arch-arm64--v8a%20%7C%20x86__64-6366f1?style=flat-square" alt="Arch" /></a>
+  </p>
+
+  ---
+
+  **[ 📖 Overview ](#-executive-overview)** • 
+  **[ 📸 Gallery ](#-visual-showcase--previews)** • 
+  **[ ✨ Features ](#-exhaustive-feature-architecture)** • 
+  **[ 🔐 Privileges ](#-multi-tier-privilege-architecture)** • 
+  **[ 🛡️ Security ](#️-open-source-security--intellectual-property-notice)** • 
+  **[ 💬 Community ](#-community-support--official-links)**
+
+</div>
 
 ---
 
-### 🌐 Official Community & Quick Links
-* 📢 **Official Announcement Channel**: [https://t.me/godTspeed](https://t.me/godTspeed) — *Firmware releases, changelogs & VIP profile configs*
-* 💬 **Discussion & Community Chat**: [https://t.me/godspeedmode](https://t.me/godspeedmode) — *Community benchmark sharing & game optimization discussions*
-* 👨‍💻 **Lead Developer Telegram**: [https://t.me/revwhiteshadow](https://t.me/revwhiteshadow) — *Direct inquiries & custom kernel consultations*
-* 📦 **Certified Signed Releases**: [Official Releases](https://github.com/revws/ror/releases) or via [Telegram @godTspeed](https://t.me/godTspeed)
+### 🌐 Official Community & Ecosystem Hub
+* 📢 **Official Announcement Channel**: [**@godTspeed**](https://t.me/godTspeed) — *Firmware releases, VIP configs & performance benchmarks*
+* 💬 **Community Discussion Group**: [**@godspeedmode**](https://t.me/godspeedmode) — *Community gaming optimization chats & setup assistance*
+* 👨‍💻 **Lead Architect & Developer**: [**@revwhiteshadow**](https://t.me/revwhiteshadow) — *Direct consultations & inquiries*
+* 📦 **Official Release Downloads**: Available on [Telegram @godTspeed](https://t.me/godTspeed) and [GitHub Releases](https://github.com/revws/ror/releases)
 
 ---
 
 ## 📖 Executive Overview
 
-**Reincarnation of Revolutionary (REVROR)** represents the pinnacle of modern Android system tuning, hardware acceleration, and competitive esports mobile gaming. Engineered atop an obsidian cyberpunk glassmorphic visual language, REVROR bridges Android userland and the deepest layers of the Linux kernel (`sysfs`, `schedutil`, `devfreq`, `stune`) into a cohesive, zero-latency master control deck.
+> [!NOTE]
+> **Reincarnation of Revolutionary (REVROR)** represents the pinnacle of modern Android system tuning, hardware telemetry, and competitive esports mobile gaming.
 
-Whether deployed with full kernel root privileges (**Magisk / KernelSU / APatch**) or through non-invasive **Shizuku wireless debugging**, REVROR dynamically scales system boundaries, suppresses frame-time jitter, and unlocks the true potential of your hardware without compromising system stability.
+Crafted with an obsidian cyberpunk glassmorphic visual aesthetic, REVROR orchestrates Android userland services and deep Linux kernel subsystems (`sysfs`, `schedutil`, `devfreq`, `stune`) into a unified, zero-latency command center.
+
+Whether deployed with full kernel root privileges (**Magisk / KernelSU / APatch**) or through non-invasive **Shizuku wireless debugging**, REVROR dynamically mitigates frame-time jitter, throttles background drainers, and unlocks true peak hardware performance without compromising stability or battery longevity.
 
 ---
 
@@ -43,21 +60,39 @@ Whether deployed with full kernel root privileges (**Magisk / KernelSU / APatch*
 
 <div align="center">
 
+### 🚀 Core Performance & Esports Deck
+
 | 🎮 Cyberpunk Master Dashboard | 🚀 Console Trio Game Space | ⚡ GSM Profile Matrix |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/dashboard_live.png" width="270" alt="Dashboard" /> | <img src="docs/screenshots/gamespace_live.png" width="270" alt="Game Space" /> | <img src="docs/screenshots/profiles_page_live.png" width="270" alt="Profiles Page" /> |
+| <img src="docs/screenshots/dashboard_live.png" width="275" alt="Dashboard" /> | <img src="docs/screenshots/gamespace_live.png" width="275" alt="Game Space" /> | <img src="docs/screenshots/profiles_page_live.png" width="275" alt="Profiles Page" /> |
+| *Real-Time Telemetry & Hardware Gauges* | *Esports Carousel & App Launch Deck* | *6-Tier Frequency Scaling Matrix* |
+
+<br>
+
+### 🎯 Tactical Gaming & Precision Armory
 
 | 🔥 Ultra Gaming (Esports VIP) | 🎯 Tactical Crosshair Armory | 🔋 Energy & Power Tuning |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/ultra_gaming_activated.png" width="270" alt="Ultra Gaming" /> | <img src="docs/screenshots/ror_crosshair_armory.png" width="270" alt="Crosshairs" /> | <img src="docs/screenshots/battery_selected_verified.png" width="270" alt="Battery Mode" /> |
+| <img src="docs/screenshots/ultra_gaming_activated.png" width="275" alt="Ultra Gaming" /> | <img src="docs/screenshots/ror_crosshair_armory.png" width="275" alt="Crosshairs" /> | <img src="docs/screenshots/battery_selected_verified.png" width="275" alt="Battery Mode" /> |
+| *Hard Frequency Clamping & No-Throttle* | *Custom HUD Crosshairs & Colors* | *Aggressive Energy Mitigation* |
+
+<br>
+
+### ⚙️ Deep Tuning, AI Optimizer & Utilities
 
 | ⚙️ Deep Kernel Tuning Suite | 🧠 REVROR AI Optimizer | 🧹 Auto Memory & Cache Cleaner |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/kerneltuning.png" width="270" alt="Kernel Tuning" /> | <img src="docs/screenshots/ror_ai_dialog_live.png" width="270" alt="AI Optimizer" /> | <img src="docs/screenshots/autocleaner_dialog.png" width="270" alt="Auto Cleaner" /> |
+| <img src="docs/screenshots/kerneltuning.png" width="275" alt="Kernel Tuning" /> | <img src="docs/screenshots/ror_ai_dialog_live.png" width="275" alt="AI Optimizer" /> | <img src="docs/screenshots/autocleaner_dialog.png" width="275" alt="Auto Cleaner" /> |
+| *Governors, Swappiness, Schedulers* | *Auto Stutter & Thermal Mitigation* | *Scheduled System Cache Trimming* |
+
+<br>
+
+### 🛡️ SuperBase, Dynamic Themes & Telegram Hub
 
 | 🛡️ SuperBase & System Tools | 🎨 Dynamic Wallpapers & Themes | 💬 Seamless Telegram Hub |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/superbase_live.png" width="270" alt="SuperBase" /> | <img src="docs/screenshots/screen_verified_wallpapers.png" width="270" alt="Wallpapers" /> | <img src="docs/screenshots/verify_telegram_opened.png" width="270" alt="Telegram Support" /> |
+| <img src="docs/screenshots/superbase_live.png" width="275" alt="SuperBase" /> | <img src="docs/screenshots/screen_verified_wallpapers.png" width="275" alt="Wallpapers" /> | <img src="docs/screenshots/verify_telegram_opened.png" width="275" alt="Telegram Support" /> |
+| *Encrypted DNS, Doze, FPS Unlocker* | *Obsidian & Synthwave Styles* | *Instant Updates & Community Access* |
 
 </div>
 
@@ -65,19 +100,48 @@ Whether deployed with full kernel root privileges (**Magisk / KernelSU / APatch*
 
 ## ✨ Exhaustive Feature Architecture
 
+```mermaid
+graph LR
+    A["REVROR Master Deck"] --> B["Hardware Telemetry"]
+    A --> C["GSM Profile Engine"]
+    A --> D["Console Game Space"]
+    A --> E["SuperBase Utilities"]
+    A --> F["Deep Kernel Suite"]
+    
+    B --> B1["CPU Clusters & Clocks"]
+    B --> B2["ZRAM & Thermal Graphs"]
+    
+    C --> C1["Battery Endurance"]
+    C --> C2["Balance Smooth"]
+    C --> C3["Gaming Max Power"]
+    C --> C4["Ultra Gaming VIP"]
+    
+    D --> D1["HUD Game Bubble"]
+    D --> D2["Watermarked Screen Recorder"]
+    D --> D3["Tactical Crosshair Armory"]
+    
+    E --> E1["Encrypted Private DNS"]
+    E --> E2["Scheduled Memory Cleaner"]
+    E --> E3["SELinux & Doze Toggles"]
+    
+    F --> F1["Governor & Frequency Tuning"]
+    F --> F2["GPU Adreno/Mali Tables"]
+    F --> F3["I/O Schedulers & Wakelocks"]
+```
+
 ### 🎛️ 1. Real-Time Hardware Telemetry Matrix
-* **Active Cluster Telemetry**: Real-time frequency readings across all CPU clusters (Efficiency, Performance, Prime).
-* **Smooth Sparklines & Native Gauges**: Native canvas-rendered telemetry graphs (60/120 FPS) displaying per-second load, thermal gradients, and RAM allocation with near-zero CPU wake overhead.
-* **Storage & ZRAM Monitoring**: Instant visualization of zram compressed memory pressure, swap footprint, and NVMe/UFS read-write throughput.
-* **Instant Master Toggles**: One-tap toggles for Android Doze mode, SELinux enforcement, I/O CRC verification, Network Data Saver, and PrintK kernel logging.
+* **Active Cluster Telemetry**: Real-time frequency readings across all CPU clusters (Efficiency, Performance, and Prime).
+* **Ultra-Low Overhead Graphs**: Native custom-rendered canvas views (60/120 FPS) charting live per-second CPU load, thermal gradients, and memory allocation with near-zero CPU wake locks.
+* **Storage & ZRAM Monitoring**: Instant live visualization of compressed ZRAM pressure, swap footprint, and NVMe/UFS read-write throughput.
+* **Instant Master Toggles**: One-tap toggles for Android Doze mode, SELinux enforcement, I/O CRC verification, Network Data Saver, and PrintK kernel debugging logs.
 
 ### ⚡ 2. GSM Intelligent Performance Profiles
 * 🔋 **Battery Endurance**: Power-efficient frequency scaling, energy-conserving CPU governors (`powersave` / `schedutil`), aggressive background app throttling.
-* ⚖️ **Balance Smooth**: Silky everyday responsiveness with optimal thermals and progressive thermal mitigation.
+* ⚖️ **Balance Smooth**: Silky everyday responsiveness with balanced thermals and progressive thermal mitigation.
 * 🚀 **Gaming (Max Power)**: Governor touch-boost elevation, high clock rate baseline, zero thermal throttling.
 * 🔥 **Ultra Gaming (Esports VIP)**: Hard frequency clamping to `scaling_max_freq`, governor priority (`performance` fallback to `schedutil`), fixed performance mode (`cmd power set-fixed-performance-mode-enabled true`), zero background interruptions.
-* ❄️ **CoolDown**: Thermal emergency reduction dropping caches and idling aggressive clusters.
-* 🛠️ **Daily Use**: Intelligent baseline tuning for daily social and communication workloads.
+* ❄️ **CoolDown**: Emergency thermal reduction dropping caches and idling aggressive clusters.
+* 🛠️ **Daily Use**: Intelligent baseline tuning for daily social, productivity, and communication workloads.
 * 🔄 **Automated Boundary Restoration**: Switching between profiles automatically unlocks CPU frequency clamps and restores default hardware scaling bounds cleanly.
 
 ### 🎮 3. Console Trio & Esports Game Launcher
@@ -133,7 +197,7 @@ REVROR operates adaptively across all permission tiers:
 
 This repository contains the official open-source presentation, architectural layouts, resource definitions, UI components, and privilege orchestration layers of REVROR under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
 
-> [!NOTE]
+> [!IMPORTANT]
 > **Anti-Plagiarism & Security Hardening Policy:**
 > - To safeguard against malicious repackaging, clone-and-monetize piracy, and rogue clones, proprietary compiled binaries (`assets/library`), internal verification modules, and official signing keystores (`*.keystore`, `*.jks`) are strictly excluded from public repository trees.
 > - Automated build wrappers (`gradlew`) and private submodule dependencies (`:scommon-*`, `:seekbar`) are intentionally decoupled from the public showcase.
@@ -168,13 +232,13 @@ open-source-without-exposing-main-codes/
 
 ---
 
-## 🤝 Community, Support & Social Links
+## 🤝 Community, Support & Official Links
 
 Join our growing community for daily tuning guides, esports configurations, and update notifications:
 
-* 📢 **Telegram Updates & Releases**: [@godTspeed](https://t.me/godTspeed)
+* 📢 **Telegram Channel & Releases**: [@godTspeed](https://t.me/godTspeed)
 * 💬 **Telegram Community Discussion**: [@godspeedmode](https://t.me/godspeedmode)
-* 👨‍💻 **Lead Developer**: **revWhiteshadow** ([Telegram @revwhiteshadow](https://t.me/revwhiteshadow))
+* 👨‍💻 **Lead Developer**: **revWS** ([Telegram @revwhiteshadow](https://t.me/revwhiteshadow))
 * ☕ **Ko-fi Support**: [ko-fi.com/revWS](https://ko-fi.com/revWS)
 * 💰 **Cryptocurrency Contributions**:
   * **Binance Pay ID**: `113486850`
@@ -189,5 +253,5 @@ REVROR is licensed under the **GNU General Public License v3.0 or later (GPL-3.0
 See the [LICENSE](LICENSE) file for the full terms and conditions.
 
 <p align="center">
-  <em>Crafted with relentless passion & precision by <strong>revWhiteshadow</strong>.</em>
+  <em>Crafted with relentless passion & precision by <strong>revWS</strong>.</em>
 </p>
