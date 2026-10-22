@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingTop="4dp"
+    android:paddingRight="12dp">
+
+    <LinearLayout
+        android:id="@+id/profile_daily"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ror_profile_blue"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_profile_daily" app:tint="#50CBFF" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/profile_title_daily" android:text="DAILY USE AND BATTERY" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:id="@+id/profile_subtitle_daily" android:text="Recommended • responsive daily use with balanced power" android:textColor="#A2A4BD" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_daily" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_battery"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ror_profile_green"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_spectrum_battery" app:tint="#00ED74" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/profile_title_battery" android:text="ULTRA BATTERY" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:id="@+id/profile_subtitle_battery" android:text="Lower power use for maximum battery life" android:textColor="#A2A4BD" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_battery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_balance"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ror_profile_purple"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_profile_balance" app:tint="#D46CFF" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/profile_title_balance" android:text="BALANCE SMOOTH" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:id="@+id/profile_subtitle_balance" android:text="Smooth multitasking with balanced responsive performance" android:textColor="#A2A4BD" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_balance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_cooldown"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ror_profile_cyan"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_moon" app:tint="#00E5FF" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/profile_title_cooldown" android:text="COOLDOWN" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:id="@+id/profile_subtitle_cooldown" android:text="Lowest brightness • drops caches • force-stops background apps" android:textColor="#A2A4BD" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_cooldown" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_gaming"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ror_profile_red"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_spectrum_game" app:tint="#FF315C" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/profile_title_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GAMING" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/profile_subtitle_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="High performance gaming mode" android:textColor="#A2A4BD" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_ultra_gaming"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ror_profile_ultra"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:padding="9dp" android:src="@drawable/ic_ultra_gaming" app:tint="#FF1744" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/profile_title_ultra_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ULTRA GAMING" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/profile_subtitle_ultra_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="Performance governor • Peak CPU and GPU overdrive" android:textColor="#FFCDD2" android:textSize="10sp" />
+        </LinearLayout>
+        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_ultra_gaming" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="false" />
+    </LinearLayout>
+</LinearLayout>

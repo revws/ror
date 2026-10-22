@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/banner_default_height"
+        android:clipToPadding="false"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/viewpagerparent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/banner_default_height"
+        android:orientation="vertical" >
+
+        <include
+            layout="@layout/viewpager_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/viewpager_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/dropshadow"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <include layout="@layout/rv_progress_view" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/top_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/viewpagerparent"
+        android:layout_marginEnd="@dimen/recyclerview_fab_margin_right"
+        android:layout_marginTop="@dimen/recyclerview_fab_margin_top"
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorAccent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bottom_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/recyclerview_fab_margin_bottom"
+        android:layout_marginEnd="@dimen/recyclerview_fab_margin_right"
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorAccent"/>
+</RelativeLayout>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ror_surface"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_shield"
+                app:tint="#FFD166" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dialog_vip_feature_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ULTRA GAMING • PHOENIX LOCKED"
+                    android:textColor="#FF5277"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phoenix Membership Required"
+                    android:textColor="#8E95B2"
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/dialog_vip_btn_close"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/ic_cancel"
+                app:tint="#8E95B2" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="This exclusive feature is unlocked with an official REVROR Phoenix License. Copy your device code below and send it to developer @revWhiteShadow on Telegram."
+            android:textColor="#E0E2EC"
+            android:textSize="11.5sp"
+            android:lineSpacingExtra="2dp" />
+
+        <!-- Device Code Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="#0C1020"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YOUR UNIQUE DEVICE CODE"
+                android:textColor="#00E5FF"
+                android:textSize="9.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/dialog_vip_device_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:text="80E0A3A3880BEFFA"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Copy and Telegram Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dialog_vip_btn_copy"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="Copy Code"
+                android:textColor="#00E5FF"
+                android:textSize="11.5sp"
+                app:backgroundTint="#1F2847"
+                app:icon="@drawable/ic_copy"
+                app:iconSize="15dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dialog_vip_btn_telegram"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="Send to @revWS"
+                android:textColor="#FFFFFF"
+                android:textSize="11.5sp"
+                app:backgroundTint="#0088CC"
+                app:icon="@drawable/ic_telegram"
+                app:iconSize="15dp" />
+        </LinearLayout>
+
+        <!-- Official Phoenix Membership Pricing Tiers (Monitor Screen Usages Style) -->
+        <include
+            layout="@layout/ror_view_pro_pricing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- License Input -->
+        <EditText
+            android:id="@+id/dialog_vip_input_token"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="14dp"
+            android:background="#0C1020"
+            android:fontFamily="monospace"
+            android:hint="Paste Phoenix license key"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="#F5F5FF"
+            android:textColorHint="#62667E"
+            android:textSize="11.5sp"
+            android:singleLine="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_vip_btn_activate"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="10dp"
+            android:text="UNLOCK PHOENIX PREMIUM"
+            android:textColor="#FFFFFF"
+            android:textSize="12.5sp"
+            android:textStyle="bold"
+            app:backgroundTint="#7220A8"
+            app:icon="@drawable/ic_flash"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFF" />
+    </LinearLayout>
+</FrameLayout>
+

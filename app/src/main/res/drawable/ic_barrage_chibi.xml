@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="28dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Chibi Hair / Horns -->
+    <path
+        android:fillColor="#FFFF4F79"
+        android:pathData="M12,2C7.5,2 4,5.5 4,10c0,2.1 0.8,4 2.1,5.5L5,19l4.5,-2.2C10.3,17.5 11.1,18 12,18c4.5,0 8,-3.5 8,-8S16.5,2 12,2z"/>
+    <!-- Face / Skin -->
+    <path
+        android:fillColor="#FFFFE0D0"
+        android:pathData="M12,6c-3,0 -5,2 -5,5.5c0,3 2,5 5,5s5,-2 5,-5.5C17,8 15,6 12,6z"/>
+    <!-- Chibi Eyes -->
+    <path
+        android:fillColor="#FF2B1820"
+        android:pathData="M9.5,10.5m-1,0a1,1 0 1,0 2,0a1,1 0 1,0 -2,0 M14.5,10.5m-1,0a1,1 0 1,0 2,0a1,1 0 1,0 -2,0"/>
+    <!-- Blush -->
+    <path
+        android:fillColor="#FFFF7597"
+        android:pathData="M7.8,12.5a1.2,0.8 0 1,0 2.4,0a1.2,0.8 0 1,0 -2.4,0 M13.8,12.5a1.2,0.8 0 1,0 2.4,0a1.2,0.8 0 1,0 -2.4,0"/>
+    <!-- Smile -->
+    <path
+        android:strokeColor="#FF663344"
+        android:strokeWidth="0.8"
+        android:strokeLineCap="round"
+        android:pathData="M11.2,13.8 Q12,14.6 12.8,13.8"/>
+    <!-- Twin Star Ribbons / Horns -->
+    <path
+        android:fillColor="#FFFFD700"
+        android:pathData="M5.5,5.5L6.5,4L7.5,5.5L9,6.5L7.5,7.5L6.5,9L5.5,7.5L4,6.5Z M16.5,4L17.5,5.5L19,6.5L17.5,7.5L16.5,9L15.5,7.5L14,6.5L15.5,5.5Z"/>
+</vector>
+

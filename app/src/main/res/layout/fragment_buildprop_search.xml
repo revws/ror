@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorPrimary"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/found_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="?attr/colorAccent"
+        android:textSize="13sp"
+        android:textStyle="italic" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/key_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/key"
+        android:textColorHint="?attr/colorAccent"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textColor="@color/colorOnPrimary"
+        android:backgroundTint="?android:attr/colorAccent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/value_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/value"
+        android:textColorHint="?attr/colorAccent"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textColor="@color/colorOnPrimary"
+        android:backgroundTint="?android:attr/colorAccent" />
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height">
+
+    <io.codetail.widget.RevealFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/nav_header_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:colorBackground"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop" />
+    </io.codetail.widget.RevealFrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/nav_header_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/nav_header_fab_margin_bottom"
+        android:layout_marginEnd="@dimen/nav_header_fab_margin_right"
+        android:layout_marginStart="@dimen/nav_header_fab_margin_left"
+        android:layout_marginTop="@dimen/nav_header_fab_margin_top"
+        app:backgroundTint="?attr/colorAccent"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_gallery" />
+</FrameLayout>

@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/more_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="vertical"
+     android:padding="20dp">
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="More &amp; settings"
+      android:textColor="#F5F5FF"
+      android:textSize="23sp"
+      android:textStyle="bold"/>
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="Manage access, appearance, support, and app information."
+      android:textColor="#A9ABC2"
+      android:textSize="12sp"/>
+
+  <!-- ACCESS & SYSTEM -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="18dp"
+      android:background="@drawable/ror_surface"
+      android:orientation="vertical"
+      android:padding="15dp">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="ACCESS &amp; SYSTEM"
+       android:textColor="#CBA7FF"
+       android:textSize="10sp"
+       android:textStyle="bold"/>
+
+   <!-- Row 1: Root & Profile Engine, Android Settings, Feedback & Logs -->
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="88dp"
+       android:layout_marginTop="10dp"
+       android:orientation="horizontal">
+
+       <TextView
+           android:id="@+id/more_root"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_shield"
+           app:drawableTint="#00E5FF"
+           android:text="Root Engine\nProfile Access"/>
+
+       <TextView
+           android:id="@+id/more_android_settings"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_gestures"
+           app:drawableTint="#00E5FF"
+           android:text="Button\nConfiguration"/>
+
+       <TextView
+           android:id="@+id/more_feedback"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_info"
+           app:drawableTint="#FFD166"
+           android:text="Feedback\n&amp; Logs"/>
+   </LinearLayout>
+
+   <!-- Row 2: Theme & Banner, Mini Windows, Boot Automation -->
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="88dp"
+       android:layout_marginTop="6dp"
+       android:orientation="horizontal">
+
+       <TextView
+           android:id="@+id/more_appearance"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_dashboard"
+           app:drawableTint="#F72585"
+           android:text="Theme &amp;\nBanner"/>
+
+       <TextView
+           android:id="@+id/more_mini_favorites"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_layers"
+           app:drawableTint="#4CC9F0"
+           android:text="Mini Window\nFavorites"/>
+
+       <TextView
+           android:id="@+id/more_boot"
+           style="@style/RorMoreTile"
+           android:drawableTop="@drawable/ic_restore"
+           app:drawableTint="#06D6A0"
+           android:text="Boot &amp; Power\nAutomation"/>
+   </LinearLayout>
+  </LinearLayout>
+
+  <!-- DEVELOPER & COMMUNITY -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:background="@drawable/ror_surface"
+      android:orientation="vertical"
+      android:padding="15dp">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="DEVELOPER &amp; COMMUNITY"
+       android:textColor="#CBA7FF"
+       android:textSize="10sp"
+       android:textStyle="bold"/>
+
+   <!-- Developer Profile Card -->
+   <LinearLayout
+       android:id="@+id/more_dev_profile"
+       android:layout_width="match_parent"
+       android:layout_height="76dp"
+       android:gravity="center_vertical"
+       android:orientation="horizontal"
+       android:clickable="true"
+       android:focusable="true"
+       android:background="?attr/selectableItemBackground">
+
+       <FrameLayout
+           android:layout_width="48dp"
+           android:layout_height="48dp"
+           android:layout_marginEnd="14dp">
+
+           <com.google.android.material.imageview.ShapeableImageView
+               android:id="@+id/dev_avatar_image"
+               android:layout_width="48dp"
+               android:layout_height="48dp"
+               android:src="@drawable/revws_avatar"
+               android:scaleType="centerCrop"
+               app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+           <View
+               android:layout_width="48dp"
+               android:layout_height="48dp"
+               android:background="@drawable/ror_avatar_ring" />
+       </FrameLayout>
+
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:orientation="vertical">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="revWhiteshadow"
+               android:textColor="#F5F5FF"
+               android:textSize="13sp"
+               android:textStyle="bold"/>
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="Developer Profile • github.com/revws"
+               android:textColor="#7A85A8"
+               android:textSize="10.5sp"/>
+       </LinearLayout>
+
+       <ImageView
+           android:layout_width="20dp"
+           android:layout_height="20dp"
+           android:src="@drawable/ic_chevron_right"
+           app:tint="#8E95B2"/>
+   </LinearLayout>
+
+   <TextView
+       android:id="@+id/more_telegram"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_telegram"
+       android:text="Telegram Community\nOfficial group &amp; channel • @godTspeed"
+       app:drawableTint="#29B6F6"/>
+
+   <TextView
+       android:id="@+id/more_dev_donate"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_crypto"
+       app:drawableTint="#FFD166"
+       android:text="Support &amp; Crypto Donation\nKo-fi &amp; USDT TRC20, ERC20, BEP20, Binance Pay"/>
+
+  </LinearLayout>
+
+  <!-- PROJECT -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:background="@drawable/ror_surface"
+      android:orientation="vertical"
+      android:padding="15dp">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="PROJECT"
+       android:textColor="#CBA7FF"
+       android:textSize="10sp"
+       android:textStyle="bold"/>
+
+   <TextView
+       android:id="@+id/more_update"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_refresh"
+       app:drawableTint="#00E5FF"
+       android:text="Check for updates\nOfficial GitHub releases • github.com/revws/ror"/>
+
+   <TextView
+       android:id="@+id/more_bug_report"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_alert_triangle"
+       app:drawableTint="#FF3366"
+       android:text="Bug Report &amp; Issue Tracker\nReport on GitHub Issues or Telegram @godspeedmode"/>
+
+   <TextView
+       android:id="@+id/more_donate"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_ror_donate"
+       app:drawableTint="#FF2A6D"
+       android:text="Support development\nDonate through Ko-fi"/>
+
+   <TextView
+       android:id="@+id/more_about"
+       style="@style/RorMoreRow"
+       android:drawableStart="@drawable/ic_info"
+       app:drawableTint="#C77DFF"
+       android:text="About REVROR\nVersion, open source licenses &amp; safety"/>
+
+  </LinearLayout>
+
+   <!-- VIP LICENSE & ACTIVATION -->
+   <LinearLayout
+       android:id="@+id/more_vip_container"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="14dp"
+       android:background="@drawable/ror_surface"
+       android:orientation="vertical"
+       android:padding="16dp">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center_vertical"
+           android:orientation="horizontal">
+
+           <ImageView
+                android:id="@+id/vip_header_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_vip_badge_inactive" />
+
+           <TextView
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="10dp"
+               android:layout_weight="1"
+               android:text="DEVICE PHOENIX LICENSE &amp; ACTIVATION"
+               android:textColor="#F5F5FF"
+               android:textSize="12sp"
+               android:textStyle="bold" />
+
+           <TextView
+               android:id="@+id/vip_status_badge"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:background="#241525"
+               android:paddingStart="8dp"
+               android:paddingEnd="8dp"
+               android:paddingTop="3dp"
+               android:paddingBottom="3dp"
+               android:text="FREE TIER"
+               android:textColor="#FF5277"
+               android:textSize="10sp"
+               android:textStyle="bold" />
+       </LinearLayout>
+
+       <TextView
+           android:id="@+id/vip_expiry_text"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="5dp"
+           android:text="Unlock Ultra Gaming, Extreme Overclock, and Phoenix features."
+           android:textColor="#8E95B2"
+           android:textSize="11sp" />
+
+       <!-- Box visible only when Free Tier / Unactivated -->
+       <LinearLayout
+           android:id="@+id/vip_unactivated_box"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+
+       <!-- Unique Device ID Box -->
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="12dp"
+           android:background="#0C1020"
+           android:orientation="vertical"
+           android:padding="12dp">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="YOUR UNIQUE DEVICE CODE"
+               android:textColor="#00E5FF"
+               android:textSize="9.5sp"
+               android:textStyle="bold" />
+
+           <TextView
+               android:id="@+id/vip_device_code"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="3dp"
+               android:fontFamily="monospace"
+               android:text="80E0A3A3880BEFFA"
+               android:textColor="#FFFFFF"
+               android:textSize="15sp"
+               android:textStyle="bold" />
+       </LinearLayout>
+
+       <!-- Copy & Telegram Buttons -->
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:orientation="horizontal">
+
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/btn_copy_device_code"
+               style="@style/Widget.Material3.Button.TonalButton"
+               android:layout_width="0dp"
+               android:layout_height="42dp"
+               android:layout_marginEnd="6dp"
+               android:layout_weight="1"
+               android:text="Copy Code"
+               android:textColor="#00E5FF"
+               android:textSize="11.5sp"
+               app:backgroundTint="#1F2847"
+               app:icon="@drawable/ic_copy"
+               app:iconSize="15dp" />
+
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/btn_telegram_device_code"
+               style="@style/Widget.Material3.Button.TonalButton"
+               android:layout_width="0dp"
+               android:layout_height="42dp"
+               android:layout_marginStart="6dp"
+               android:layout_weight="1"
+               android:text="Send to @revWS"
+               android:textColor="#FFFFFF"
+               android:textSize="11.5sp"
+               app:backgroundTint="#0088CC"
+               app:icon="@drawable/ic_telegram"
+               app:iconSize="15dp" />
+       </LinearLayout>
+
+       <!-- Official Phoenix Membership Pricing Tiers (Monitor Screen Usages Style) -->
+       <include
+           layout="@layout/ror_view_pro_pricing"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="12dp" />
+
+       <!-- License Token Input & Activation -->
+       <EditText
+           android:id="@+id/vip_license_input"
+           android:layout_width="match_parent"
+           android:layout_height="46dp"
+           android:layout_marginTop="12dp"
+           android:background="#0C1020"
+           android:fontFamily="monospace"
+           android:hint="Enter Phoenix License Key or TXT Content"
+           android:paddingStart="12dp"
+           android:paddingEnd="12dp"
+           android:singleLine="true"
+           android:textColor="#F5F5FF"
+           android:textColorHint="#62667E"
+           android:textSize="11.5sp" />
+
+       <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_activate_license"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="8dp"
+            android:text="ACTIVATE PHOENIX LICENSE"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:backgroundTint="#7220A8"
+            app:icon="@drawable/ic_flash"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFF" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pro_benefits"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:text="PHOENIX BENEFITS"
+            android:textColor="#FFD700"
+            android:textSize="11.5sp"
+            android:textStyle="bold"
+            app:strokeColor="#FFD700"
+            app:icon="@drawable/ic_crown"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconSize="16dp"
+            app:iconTint="#FFD700" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_remove_license"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="4dp"
+            android:text="REMOVE LICENSE"
+            android:textColor="#FF5252"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_trash"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconSize="15dp"
+            app:iconTint="#FF5252" />
+   </LinearLayout>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:background="@drawable/ror_active_banner"
+      android:padding="14dp"
+      android:text="Root enables the full built-in profile and kernel engine. Shizuku enables Android-level profiles and controls. Monitoring works without either."
+      android:textColor="#BDB8D5"
+      android:textSize="10sp"/>
+
+ </LinearLayout>
+</ScrollView>

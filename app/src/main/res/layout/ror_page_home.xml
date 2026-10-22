@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/home_scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:scrollbars="none">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingLeft="18dp" android:paddingRight="18dp" android:paddingBottom="24dp">
+  
+  <!-- Hero Card: Procedural Vector Card -->
+  <FrameLayout android:id="@+id/hero_card_container" android:layout_width="match_parent" android:layout_height="172dp" android:layout_marginTop="4dp">
+   <!-- Base procedural dark card background with border -->
+   <View android:id="@+id/hero_bg_view" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/ror_hero_procedural"/>
+   <!-- Optional user custom image banner -->
+   <com.revror.kernelmanager.views.AnimatedHomeBannerView android:id="@+id/hero_banner" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:visibility="gone"/>
+   <!-- Dark scrim so permanent banner text is always legible -->
+   <View android:id="@+id/hero_scrim" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#70060812" android:visibility="gone"/>
+   <!-- Concentric radial glow circle on right side -->
+   <View android:id="@+id/hero_glow_circle" android:layout_width="260dp" android:layout_height="260dp" android:layout_gravity="end|center_vertical" android:layout_marginEnd="-60dp" android:background="@drawable/ror_hero_glow_circle"/>
+   <!-- Text and Pill Content matching reference image -->
+   <LinearLayout android:id="@+id/hero_text_container" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:paddingLeft="20dp" android:paddingRight="20dp" android:paddingTop="16dp" android:paddingBottom="16dp">
+    <TextView android:id="@+id/hero_title_small" android:layout_width="wrap_content" android:layout_height="wrap_content" android:letterSpacing="0.14" android:text="REINCARNATION OF" android:textColor="#E0E2EC" android:textSize="11.5sp" android:textStyle="bold"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/hero_title_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:letterSpacing="0.03"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="REVOLUTIONARY"
+        android:textColor="#FA476B"
+        android:textSize="29sp"
+        android:textStyle="bold|italic"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeMaxTextSize="29sp"
+        app:autoSizeStepGranularity="1sp" />
+    <TextView android:id="@+id/hero_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:letterSpacing="0.04" android:text="Performance • Battery • Gaming • Control" android:textColor="#C0C4D8" android:textSize="11sp" android:textStyle="normal"/>
+    <!-- Pill chip: Concentric Glowing Neon Pulse Dot + revWhiteShadow (Interactive Ko-fi redirect) -->
+    <LinearLayout android:id="@+id/hero_pill_chip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/ror_hero_pill"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="14dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:clickable="true"
+        android:focusable="true">
+      <FrameLayout
+          android:id="@+id/hero_pill_dot_container"
+          android:layout_width="14dp"
+          android:layout_height="14dp"
+          android:layout_marginEnd="7dp"
+          android:layout_gravity="center_vertical">
+        <View
+            android:id="@+id/hero_pill_dot_glow"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center" />
+        <View
+            android:id="@+id/hero_pill_dot"
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:layout_gravity="center" />
+      </FrameLayout>
+      <TextView
+          android:id="@+id/hero_pill_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:includeFontPadding="false"
+          android:text="revWhiteShadow"
+          android:textColor="#F3DEEE"
+          android:textSize="11sp"
+          android:textStyle="bold"/>
+    </LinearLayout>
+    <!-- Device Name below revWhiteshadow (clean marketing name, never raw model code) -->
+    <LinearLayout android:id="@+id/hero_device_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+      <ImageView
+          android:id="@+id/hero_device_icon"
+          android:layout_width="13dp"
+          android:layout_height="13dp"
+          android:layout_marginEnd="6dp"
+          android:src="@drawable/ic_device"
+          app:tint="#A0A8C7"/>
+      <TextView
+          android:id="@+id/hero_device_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:letterSpacing="0.03"
+          android:singleLine="true"
+          android:ellipsize="end"
+          android:text="OnePlus 7 • Android 14 • Linux 5.15"
+          android:textColor="#C0C4D8"
+          android:textSize="10sp"
+          android:textStyle="bold"/>
+    </LinearLayout>
+   </LinearLayout>
+  </FrameLayout>
+
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:layout_marginBottom="8dp" android:gravity="center_vertical" android:orientation="horizontal">
+   <TextView android:id="@+id/overview_section_title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:letterSpacing="0.08" android:text="Device Overview" android:textColor="#F5F5FF" android:textSize="13sp" android:textStyle="bold"/>
+   <TextView android:id="@+id/remaining_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:text="Realtime Telemetry" android:textColor="#8E95B2" android:textSize="9.5sp"/>
+   <TextView android:id="@+id/overview_live_badge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ror_hero_pill" android:letterSpacing="0.06" android:paddingLeft="8dp" android:paddingRight="8dp" android:paddingTop="3dp" android:paddingBottom="3dp" android:text="● REALTIME" android:textColor="#2DE49A" android:textSize="9sp" android:textStyle="bold"/>
+  </LinearLayout>
+
+  <!-- Device Overview Card with Realtime Grid of Telemetry Gauges (1 Row by Default) -->
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/ror_surface" android:orientation="vertical" android:padding="8dp">
+   <!-- Row 1: Battery, CPU, RAM, Free Disk (Always Visible) -->
+   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+    <LinearLayout android:id="@+id/tile_battery" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+     <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/battery_pie_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+     <TextView android:id="@+id/battery_ring" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#2DE49A" android:textSize="10.5sp" android:textStyle="bold"/>
+     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="BATTERY" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/tile_cpu" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+     <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/cpu_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+     <TextView android:id="@+id/cpu_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#53B2FF" android:textSize="10.5sp" android:textStyle="bold"/>
+     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="CPU LOAD" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/tile_ram" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+     <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/ram_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+     <TextView android:id="@+id/ram_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#A855F7" android:textSize="10.5sp" android:textStyle="bold"/>
+     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="RAM USAGE" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/tile_storage" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+     <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/storage_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+     <TextView android:id="@+id/storage_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- GB" android:textColor="#F59E0B" android:textSize="10.5sp" android:textStyle="bold"/>
+     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="FREE DISK" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+    </LinearLayout>
+   </LinearLayout>
+
+   <!-- Extra Rows (Rows 2, 3, 4) hidden by default, expandable via See more toggle -->
+   <LinearLayout android:id="@+id/overview_extra_rows" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+
+    <!-- Row 2: Thermal, Ping Latency, GPU Load, Live FPS -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
+     <LinearLayout android:id="@+id/tile_temp" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/temp_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/temp_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--°C" android:textColor="#FF5776" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="THERMAL" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_ping" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/ping_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/ping_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- ms" android:textColor="#00E5FF" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="PING LAT" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_gpu" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/gpu_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/gpu_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#EC4899" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="GPU LOAD" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_fps" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+     <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/fps_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/fps_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- FPS" android:textColor="#10B981" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="LIVE FPS" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+    </LinearLayout>
+    <!-- Row 3: Net Down, Net Up, Deep Sleep, Awake Time -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
+     <LinearLayout android:id="@+id/tile_net_dl" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/net_dl_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/net_dl_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- KB/s" android:textColor="#38BDF8" android:textSize="9.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="NET DOWN" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_net_ul" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/net_ul_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/net_ul_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- KB/s" android:textColor="#818CF8" android:textSize="9.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="NET UP" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_sleep" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/sleep_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/sleep_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#6366F1" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="DEEP SLEEP" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_awake" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/awake_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/awake_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#F43F5E" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="AWAKE TIME" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+    </LinearLayout>
+
+    <!-- Row 4: Screen On, Voltage, CPU Clock, ZRAM Swap -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
+     <LinearLayout android:id="@+id/tile_sot" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/sot_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/sot_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--h --m" android:textColor="#34D399" android:textSize="9.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="SCREEN ON" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_volt" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/volt_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/volt_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- V" android:textColor="#FBBF24" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="VOLTAGE" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_clock" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/clock_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/clock_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="-- GHz" android:textColor="#06B6D4" android:textSize="10sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="CPU CLOCK" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+     <LinearLayout android:id="@+id/tile_swap" android:layout_width="0dp" android:layout_height="86dp" android:layout_weight="1" android:layout_margin="2.5dp" android:background="@drawable/ror_metric_tile_bg" android:gravity="center" android:orientation="vertical" android:padding="4dp">
+      <com.revror.kernelmanager.views.RealtimePieGraphView android:id="@+id/swap_graph" android:layout_width="34dp" android:layout_height="34dp" android:layout_gravity="center_horizontal"/>
+      <TextView android:id="@+id/swap_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:singleLine="true" android:text="--%" android:textColor="#C084FC" android:textSize="10.5sp" android:textStyle="bold"/>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:gravity="center" android:singleLine="true" android:text="ZRAM SWAP" android:textColor="#8E95B2" android:textSize="7sp" android:textStyle="bold"/>
+     </LinearLayout>
+    </LinearLayout>
+   </LinearLayout>
+
+   <!-- See more / Show less Toggle Button -->
+   <LinearLayout android:id="@+id/overview_toggle_button" android:layout_width="match_parent" android:layout_height="32dp" android:layout_marginTop="5dp" android:background="@drawable/ror_metric_tile_bg" android:clickable="true" android:focusable="true" android:gravity="center" android:orientation="horizontal">
+    <TextView android:id="@+id/overview_toggle_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:letterSpacing="0.04" android:text="See more" android:textColor="#50CBFF" android:textSize="11sp" android:textStyle="bold"/>
+    <ImageView android:id="@+id/overview_toggle_icon" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="4dp" android:src="@drawable/ic_arrow_down" app:tint="#50CBFF"/>
+   </LinearLayout>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:background="@drawable/ror_surface"
+      android:orientation="vertical"
+      android:padding="12dp">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginBottom="8dp"
+       android:text="PERFORMANCE PROFILES"
+       android:textColor="#CBA7FF"
+       android:textSize="10.5sp"
+       android:textStyle="bold"/>
+
+   <LinearLayout
+       android:id="@+id/home_engine_switch_container"
+       android:layout_width="match_parent"
+       android:layout_height="38dp"
+       android:layout_marginBottom="8dp"
+       android:orientation="horizontal"
+       android:visibility="gone">
+    <TextView
+        android:id="@+id/home_engine_regular"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/ror_btn_primary"
+        android:gravity="center"
+        android:text="REGULAR"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/home_engine_phoenix"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="7dp"
+        android:layout_weight="1"
+        android:background="@drawable/ror_btn_outline"
+        android:gravity="center"
+        android:text="PHOENIX +"
+        android:textColor="#FF5252"
+        android:textSize="10sp"
+        android:textStyle="bold"/>
+   </LinearLayout>
+
+   <!-- Row 1: 4 Primary Performance Profiles (Daily, Balance, Battery, Gaming) -->
+   <LinearLayout android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:baselineAligned="false" android:layout_marginBottom="5dp">
+    <TextView android:id="@+id/home_profile_daily" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_profile_daily" android:text="Daily Use\nBalanced" app:drawableTint="#50CBFF"/>
+    <TextView android:id="@+id/home_profile_balance" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_profile_balance" android:text="Balance\nSmooth" app:drawableTint="#D46CFF"/>
+    <TextView android:id="@+id/home_profile_battery" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_spectrum_battery" android:text="Battery\nEndurance" app:drawableTint="#2DE49A"/>
+    <TextView android:id="@+id/home_profile_gaming" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_spectrum_game" android:text="Gaming\nMax power" app:drawableTint="#FF2E63"/>
+    <TextView android:id="@+id/home_profile_ultra_gaming" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_ultra_gaming" android:text="Ultra Gaming\nPeak power" app:drawableTint="#FF1744"/>
+   </LinearLayout>
+    <!-- Extra Profile Rows (Rows 2 &amp; 3) hidden by default, expandable via See more toggle -->
+    <LinearLayout android:id="@+id/profiles_extra_rows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+     <!-- Row 2: Ultra Gaming, CoolDown, Launcher Game Space, Kernel Tuning (4 Columns) -->
+     <LinearLayout android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:baselineAligned="false" android:layout_marginBottom="5dp">
+      <TextView android:id="@+id/home_profile_cooldown" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_cooldown" android:text="CoolDown\nThermal drop" app:drawableTint="#00E5FF"/>
+      <TextView android:id="@+id/home_game_launcher" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_spectrum_game" android:text="Launcher\nGame Space" app:drawableTint="#FFD166"/>
+      <TextView android:id="@+id/home_profile_kernel" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_cpu" android:text="Kernel\nTuning" app:drawableTint="#4CC9F0"/>
+     </LinearLayout>
+     <!-- Row 3: Profiles Manager, Display Hz, Smart AI, Instant RAM Clean (4 Columns) -->
+     <LinearLayout android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:baselineAligned="false">
+      <TextView android:id="@+id/home_profile_more" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_tools" android:text="Profiles\nManager" app:drawableTint="#06D6A0"/>
+      <TextView android:id="@+id/home_profile_hz" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_refresh" android:text="Display\nRefresh Hz" app:drawableTint="#38BDF8"/>
+      <TextView android:id="@+id/home_profile_ai" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_ai_brain_chip" android:text="Smart AI\nEngine" app:drawableTint="#F43F5E"/>
+      <TextView android:id="@+id/home_profile_clean" style="@style/RorProfileTile" android:drawableTop="@drawable/ic_clear" android:text="Instant\nRAM Clean" app:drawableTint="#FFA84B"/>
+     </LinearLayout>
+    </LinearLayout>
+
+    <!-- See more / Show less Toggle Button for Profiles -->
+    <LinearLayout android:id="@+id/profiles_toggle_button"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/ror_metric_tile_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+     <TextView android:id="@+id/profiles_toggle_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:letterSpacing="0.04"
+         android:text="See more"
+         android:textColor="#50CBFF"
+         android:textSize="11sp"
+         android:textStyle="bold"/>
+     <ImageView android:id="@+id/profiles_toggle_icon"
+         android:layout_width="14dp"
+         android:layout_height="14dp"
+         android:layout_marginStart="4dp"
+         android:src="@drawable/ic_arrow_down"
+         app:tint="#50CBFF"/>
+    </LinearLayout>
+   </LinearLayout>
+
+  <TextView style="@style/RorSectionTitle" android:text="Quick tools"/>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="90dp" android:orientation="horizontal">
+    <TextView android:id="@+id/home_tool_ultra" style="@style/RorToolTile" android:drawableTop="@drawable/ic_ultra_gaming" android:text="Ultra Gaming" app:drawableTint="#FF1744"/>
+   <TextView android:id="@+id/home_tool_apps" style="@style/RorToolTile" android:drawableTop="@drawable/ic_layers" android:text="Apps" app:drawableTint="#A865FF"/>
+   <TextView android:id="@+id/home_tool_clean" style="@style/RorToolTile" android:drawableTop="@drawable/ic_clear" android:text="Cleaner" app:drawableTint="#FFA84B"/>
+   <TextView android:id="@+id/home_tool_overlay" style="@style/RorToolTile" android:drawableTop="@drawable/ic_cpu" android:text="CPU Overlay" app:drawableTint="#368FFF"/>
+   <TextView android:id="@+id/home_tool_all" style="@style/RorToolTile" android:drawableTop="@drawable/ic_tools" android:text="See all" app:drawableTint="#2DE49A"/>
+  </LinearLayout>
+ </LinearLayout>
+</ScrollView>

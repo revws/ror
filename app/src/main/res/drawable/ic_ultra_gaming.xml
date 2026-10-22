@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Flame / Ultra Gaming vector icon -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,2C11.5,4 10,6.5 8,8C5.5,9.88 4,12.8 4,16C4,20.42 7.58,24 12,24C16.42,24 20,20.42 20,16C20,13.5 19,10.5 17,8.5C16.7,10 16,11.5 14.5,12.5C14.8,9 13.5,6 12,2ZM12,14C13.66,14 15,15.34 15,17C15,18.66 13.66,20 12,20C10.34,20 9,18.66 9,17C9,15.8 9.7,14.8 10.7,14.3L12,14Z" />
+</vector>
+

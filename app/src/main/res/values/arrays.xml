@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string-array name="main_header_picture_items">
+        <item>@string/select_picture</item>
+        <item>@string/no_picture</item>
+    </string-array>
+
+    <!-- CPU -->
+    <string-array name="path_reader_options">
+        <item>@string/frequencies</item>
+        <item>@string/manual</item>
+    </string-array>
+    <string-array name="mc_power_saving_items">
+        <item>@string/disabled</item>
+        <item>@string/enabled</item>
+        <item>@string/aggressive</item>
+    </string-array>
+
+    <!-- Screen -->
+    <string-array name="colors">
+        <item>@string/red</item>
+        <item>@string/green</item>
+        <item>@string/blue</item>
+    </string-array>
+
+    <!-- K-lapse -->
+    <string-array name="klapse">
+        <item>@string/export_settings</item>
+    </string-array>
+
+    <!-- Low Memory Killer -->
+    <string-array name="lmk_names">
+        <item>@string/foreground_app</item>
+        <item>@string/visible_app</item>
+        <item>@string/secondary_server</item>
+        <item>@string/hidden_app</item>
+        <item>@string/content_providers</item>
+        <item>@string/empty_app</item>
+    </string-array>
+
+    <!--Wakelocks-->
+    <string-array name="b_wakelocks_oder">
+        <item>@string/wkl_name</item>
+        <item>@string/wkl_time</item>
+        <item>@string/wkl_wakeup</item>
+    </string-array>
+
+    <!-- Misc -->
+    <string-array name="powersuspend_items">
+        <item>@string/autosleep</item>
+        <item>@string/userspace</item>
+        <item>@string/lcd_panel</item>
+        <item>@string/hybrid</item>
+    </string-array>
+
+    <!-- Custom Controls -->
+    <string-array name="custom_controls_options">
+        <item>@string/create</item>
+        <item>@string/import_item</item>
+    </string-array>
+    <string-array name="create_controls_options">
+        <item>@string/control_switch</item>
+        <item>@string/control_generic</item>
+    </string-array>
+
+    <!-- Backup -->
+    <string-array name="backup_options">
+        <item>@string/backup</item>
+        <item>@string/flash</item>
+    </string-array>
+    <string-array name="backup_item_options">
+        <item>@string/restore</item>
+        <item>@string/delete</item>
+    </string-array>
+
+    <!-- Build prop Editor -->
+    <string-array name="build_prop_add_options">
+        <item>@string/add</item>
+        <item>@string/backup</item>
+    </string-array>
+    <string-array name="build_prop_item_options">
+        <item>@string/edit</item>
+        <item>@string/delete</item>
+    </string-array>
+
+    <!-- Profile -->
+    <string-array name="profile_options">
+        <item>@string/create</item>
+        <item>@string/import_item</item>
+    </string-array>
+    <string-array name="profile_modes">
+        <item>@string/new_mode</item>
+        <item>@string/current_settings</item>
+    </string-array>
+
+    <!-- Scripts -->
+    <string-array name="scripts_options">
+        <item>@string/create</item>
+        <item>@string/import_item</item>
+    </string-array>
+
+    <!-- REVROR -->
+    <string-array name="reboot_options">
+        <item>@string/turn_off</item>
+        <item>@string/reboot_normal</item>
+        <item>@string/reboot_recovery</item>
+        <item>@string/reboot_bootloader</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string-array name="apply_on_boot_delay_entries">
+        <item>@string/instant</item>
+        <item>@string/five_sec</item>
+        <item>@string/ten_sec</item>
+        <item>@string/twenty_sec</item>
+        <item>@string/fifty_sec</item>
+    </string-array>
+    <string-array name="apply_on_boot_delay_values">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
+</resources>

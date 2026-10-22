@@ -1,0 +1,136 @@
+/*
+ * Copyright (C) 2015-2016 Willi Ye <williye97@gmail.com>
+ *
+ * This file is part of Kernel Adiutor.
+ *
+ * Kernel Adiutor is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Kernel Adiutor is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Kernel Adiutor.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.revror.kernelmanager.utils.kernel.lmk;
+
+import android.content.Context;
+
+import com.revror.kernelmanager.fragments.ApplyOnBootFragment;
+import com.revror.kernelmanager.utils.Utils;
+import com.revror.kernelmanager.utils.root.Control;
+import com.revror.kernelmanager.utils.root.RootUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Created by willi on 29.06.16.
+ */
+public class LMK {
+
+    private static final String MINFREE = "/sys/module/lowmemorykiller/parameters/minfree";
+    private static final String ADAPTIVE = "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk";
+    private static final String SWAP_WAIT = "/sys/module/lowmemorykiller/parameters/swap_wait";
+    private static final String SWAP_WAIT_PERCENT = "/sys/module/lowmemorykiller/parameters/swap_wait_percent";
+    private static final String FAST_RUN = "/sys/module/lowmemorykiller/parameters/lmk_fast_run";
+    private static final String PROCESS_RECLAIM = "/sys/module/process_reclaim/parameters/enable_process_reclaim";
+
+    public static void setSwapWaitPercent(int value, Context context) {
+        run(Control.write(String.valueOf(value), SWAP_WAIT_PERCENT), SWAP_WAIT_PERCENT, context);
+    }
+
+    public static int getSwapWaitPercent() {
+        return Utils.strToInt(Utils.readFile(SWAP_WAIT_PERCENT));
+    }
+
+    public static boolean hasSwapWaitPercent() {
+        return Utils.existFile(SWAP_WAIT_PERCENT);
+    }
+
+    public static void enableSwapWait(boolean enable, Context context) {
+        run(Control.write(enable ? "Y" : "N", SWAP_WAIT), SWAP_WAIT, context);
+    }
+
+    public static boolean isSwapWaitEnabled() {
+        return Utils.readFile(SWAP_WAIT).equals("Y");
+    }
+
+    public static boolean hasSwapWait() {
+        return Utils.existFile(SWAP_WAIT);
+    }
+
+    public static void setMinFree(String value, Context context) {
+        run(Control.chmod("666", MINFREE), MINFREE + "chmod", context);
+        run(Control.chown("root", MINFREE), MINFREE + "chown", context);
+        run(Control.write(value, MINFREE), MINFREE, context);
+    }
+
+    public static List<String> getMinFrees() {
+        RootUtils.chmod(MINFREE, "666");
+        String value = Utils.readFile(MINFREE);
+        return Arrays.asList(value.split(","));
+    }
+
+    public static boolean hasMinFree() {
+        return Utils.existFile(MINFREE);
+    }
+
+    public static void enableAdaptive(boolean enable, Context context) {
+        run(Control.write(enable ? "1" : "0", ADAPTIVE), ADAPTIVE, context);
+    }
+
+    public static boolean isAdaptiveEnabled() {
+        return Utils.readFile(ADAPTIVE).equals("1");
+    }
+
+    public static boolean hasAdaptive() {
+        return Utils.existFile(ADAPTIVE);
+    }
+
+    public static void enableFastRun(boolean enable, Context context) {
+        run(Control.write(enable ? "1" : "0", FAST_RUN), FAST_RUN, context);
+    }
+
+    public static boolean isFastRunEnabled() {
+        return Utils.readFile(FAST_RUN).equals("1");
+    }
+
+    public static boolean hasFastRun() {
+        return Utils.existFile(FAST_RUN);
+    }
+
+    public static void enableProcessReclaim(boolean enable, Context context) {
+        run(Control.write(enable ? "1" : "0", PROCESS_RECLAIM), PROCESS_RECLAIM, context);
+    }
+
+    public static boolean isProcessReclaimEnabled() {
+        return Utils.readFile(PROCESS_RECLAIM).equals("1");
+    }
+
+    public static boolean hasProcessReclaim() {
+        return Utils.existFile(PROCESS_RECLAIM);
+    }
+
+    private static boolean hasLMKDSupported() {
+        return RootUtils.runAndGetOutput("getprop init.svc.lmkd").equals("running");
+    }
+
+    public static boolean supported() {
+        try {
+            return !hasLMKDSupported() && (getMinFrees().size() > 1 || hasFastRun() || hasProcessReclaim());
+        } catch (NullPointerException ignored) {
+            return false;
+        }
+    }
+
+    private static void run(String command, String id, Context context) {
+        Control.runSetting(command, ApplyOnBootFragment.LMK, id, context);
+    }
+
+}

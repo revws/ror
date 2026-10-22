@@ -1,0 +1,10 @@
+include(":app", ":seekbar", ":scommon-adapters", ":scommon-apkutils", ":scommon-credits", ":scommon-crashreporter", ":scommon-commonutils", ":scommon-fileutils", ":scommon-packageutils", ":scommon-translatorutils")
+project(":scommon-adapters").projectDir = file("scommon-source/adapters")
+project(":scommon-apkutils").projectDir = file("scommon-source/apkutils")
+project(":scommon-credits").projectDir = file("scommon-source/credits")
+project(":scommon-crashreporter").projectDir = file("scommon-source/crashreporter")
+project(":scommon-commonutils").projectDir = file("scommon-source/commonutils")
+project(":scommon-fileutils").projectDir = file("scommon-source/fileutils")
+project(":scommon-packageutils").projectDir = file("scommon-source/packageutils")
+project(":scommon-translatorutils").projectDir = file("scommon-source/translatorutils")
+rootProject.name = "ROR"

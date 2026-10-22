@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/ror_tool_card_bg">
+
+    <!-- Description -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear temporary caches, app buffers, and drop reclaimable Linux kernel memory without removing personal data."
+        android:textColor="#C8D0EC"
+        android:textSize="12sp"
+        android:lineSpacingExtra="3dp" />
+
+    <!-- Action Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="14dp">
+
+        <Button
+            android:id="@+id/btn_cleaner_cancel"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="CANCEL"
+            android:textColor="#D4D8F0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/ror_btn_outline" />
+
+        <Button
+            android:id="@+id/btn_cleaner_now"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1.4"
+            android:text="CLEAN NOW"
+            android:textColor="#FFFFFF"
+            android:textSize="12.5sp"
+            android:textStyle="bold"
+            android:background="@drawable/ror_btn_primary" />
+    </LinearLayout>
+
+    <!-- Divider Line requested by user -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#333F4A75"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Auto Clean Timer Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AUTO CLEANER TIMER"
+        android:textColor="#00E5FF"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="Set a timer interval. Auto clean starts automatically after the set time."
+        android:textColor="#8892B0"
+        android:textSize="11sp" />
+
+    <!-- Timer interval preset chips -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/timer_chip_0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="OFF"
+            android:textColor="#8892B0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingVertical="8dp"
+            android:background="@drawable/ror_tool_card_bg" />
+
+        <TextView
+            android:id="@+id/timer_chip_15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:gravity="center"
+            android:text="15M"
+            android:textColor="#8892B0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingVertical="8dp"
+            android:background="@drawable/ror_tool_card_bg" />
+
+        <TextView
+            android:id="@+id/timer_chip_30"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:gravity="center"
+            android:text="30M"
+            android:textColor="#8892B0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingVertical="8dp"
+            android:background="@drawable/ror_tool_card_bg" />
+
+        <TextView
+            android:id="@+id/timer_chip_60"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:gravity="center"
+            android:text="1H"
+            android:textColor="#8892B0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingVertical="8dp"
+            android:background="@drawable/ror_tool_card_bg" />
+
+        <TextView
+            android:id="@+id/timer_chip_120"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:gravity="center"
+            android:text="2H"
+            android:textColor="#8892B0"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingVertical="8dp"
+            android:background="@drawable/ror_tool_card_bg" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cleaner_timer_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Auto clean timer is currently OFF"
+        android:textColor="#00F5D4"
+        android:textSize="10.5sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
+

@@ -1,0 +1,295 @@
+/*
+ * Copyright (C) 2015-2017 Willi Ye <williye97@gmail.com>
+ *
+ * This file is part of Kernel Adiutor.
+ *
+ * Kernel Adiutor is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Kernel Adiutor is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Kernel Adiutor.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.revror.kernelmanager.activities;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.textview.MaterialTextView;
+import com.revror.kernelmanager.R;
+import com.revror.kernelmanager.database.tools.profiles.Profiles;
+import com.revror.kernelmanager.services.profile.Tile;
+import com.revror.kernelmanager.utils.Common;
+import com.revror.kernelmanager.utils.Device;
+import com.revror.kernelmanager.utils.Prefs;
+import com.revror.kernelmanager.utils.Utils;
+import com.revror.kernelmanager.utils.ViewUtils;
+import com.revror.kernelmanager.utils.kernel.battery.Battery;
+import com.revror.kernelmanager.utils.kernel.cpu.CPUFreq;
+import com.revror.kernelmanager.utils.kernel.cpu.MSMPerformance;
+import com.revror.kernelmanager.utils.kernel.cpu.Temperature;
+import com.revror.kernelmanager.utils.kernel.cpu.boost.CPUBoost;
+import com.revror.kernelmanager.utils.kernel.cpuhotplug.Hotplug;
+import com.revror.kernelmanager.utils.kernel.cpuhotplug.QcomBcl;
+import com.revror.kernelmanager.utils.kernel.cpuvoltage.Voltage;
+import com.revror.kernelmanager.utils.kernel.gpu.GPU;
+import com.revror.kernelmanager.utils.kernel.io.IO;
+import com.revror.kernelmanager.utils.kernel.ksm.KSM;
+import com.revror.kernelmanager.utils.kernel.misc.Vibration;
+import com.revror.kernelmanager.utils.kernel.screen.Screen;
+import com.revror.kernelmanager.utils.kernel.sound.Sound;
+import com.revror.kernelmanager.utils.kernel.thermal.Thermal;
+import com.revror.kernelmanager.utils.kernel.wake.Wake;
+import com.revror.kernelmanager.utils.kernel.wakelock.Wakelocks;
+import com.revror.kernelmanager.utils.root.RootUtils;
+import com.revror.kernelmanager.utils.tools.KernelUpdater;
+import com.revror.kernelmanager.utils.tools.UpdateCheck;
+
+import org.frap129.spectrum.Spectrum;
+
+import java.lang.ref.WeakReference;
+
+import in.sunilpaulmathew.sCommon.CommonUtils.sExecutor;
+import in.sunilpaulmathew.sCommon.CrashReporter.sCrashReporter;
+
+/**
+ * Created by willi on 14.04.16.
+ */
+public class MainActivity extends BaseActivity {
+
+    private MaterialTextView mBusybox, mCollectInfo, mRootAccess, mUpdateInfo;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Force English Language, if applicable
+        if (Prefs.getBoolean("forceenglish", false, this)) {
+            Utils.setLanguage("en_US", this);
+        }
+
+        /*
+         * Initialize REVROR Profiles & Wakelock Blocker
+         */
+        if (RootUtils.rootAccess()) {
+            if (Spectrum.supported()) {
+                int Profile = Utils.strToInt(Spectrum.getProfile());
+                Prefs.saveInt("ror_profile", Profile, this);
+            }
+            if (Wakelocks.boefflawlsupported()) {
+                Wakelocks.CopyWakelockBlockerDefault();
+            }
+        }
+
+        setContentView(R.layout.activity_main);
+
+        View splashBackground = findViewById(R.id.splash_background);
+        mRootAccess = findViewById(R.id.root_access_text);
+        mBusybox = findViewById(R.id.busybox_text);
+        mCollectInfo = findViewById(R.id.info_collect_text);
+        mUpdateInfo = findViewById(R.id.info_update);
+
+        /*
+         * Hide huge banner in landscape mode
+         */
+        if (Utils.getOrientation(this) == Configuration.ORIENTATION_LANDSCAPE) {
+            splashBackground.setVisibility(View.GONE);
+        }
+
+        if (savedInstanceState == null) {
+            /*
+             * Launch biometric authentication dialogue if enabled by user,
+             * otherwise run {@link CheckingTask}
+             */
+            if (Prefs.getBoolean("use_biometric", false, this)) {
+                Intent intent = new Intent(this, SecurityActivity.class);
+                checkingTask.launch(intent);
+            } else {
+                new CheckingTask(this).execute();
+            }
+        }
+    }
+
+    ActivityResultLauncher<Intent> checkingTask = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    new CheckingTask(this).execute();
+                } else {
+                    finish();
+                }
+            }
+    );
+
+    private void launch() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (getIntent().getExtras() != null) {
+            intent.putExtras(getIntent().getExtras());
+        }
+        startActivity(intent);
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        // Record crashes
+        sCrashReporter crashReporter = new sCrashReporter(this);
+        crashReporter.setAccentColor(ViewUtils.getThemeAccentColor(this));
+        crashReporter.setTitleSize(18);
+        crashReporter.initialize();
+    }
+
+    private static class CheckingTask extends sExecutor {
+
+        private final WeakReference<MainActivity> mRefActivity;
+
+        private CheckingTask(MainActivity activity) {
+            mRefActivity = new WeakReference<>(activity);
+        }
+
+        /**
+         * Determinate what sections are supported
+         */
+        private void collectData() {
+            MainActivity activity = mRefActivity.get();
+            if (activity == null) return;
+
+            Battery.getInstance(activity);
+            CPUBoost.getInstance();
+
+            // Assign core ctl min cpu
+            CPUFreq.getInstance(activity);
+
+            Device.CPUInfo.getInstance();
+            Device.Input.getInstance();
+            Device.MemInfo.getInstance();
+            Device.ROMInfo.getInstance();
+            Device.TrustZone.getInstance();
+            GPU.supported();
+            Hotplug.supported();
+            IO.getInstance();
+            KSM.getInstance();
+            MSMPerformance.getInstance();
+            QcomBcl.supported();
+            Screen.supported();
+            Sound.getInstance();
+            Temperature.getInstance(activity);
+            Thermal.supported();
+            Tile.publishProfileTile(new Profiles(activity).getAllProfiles(), activity);
+            Vibration.getInstance();
+            Voltage.getInstance();
+            Wake.supported();
+
+        }
+
+        private void publishProgress(Integer... values) {
+            MainActivity activity = mRefActivity.get();
+            if (activity == null) return;
+
+            int red = Color.RED;
+            int accent = ViewUtils.getThemeAccentColor(activity);
+            switch (values[0]) {
+                case 0:
+                    new Handler(Looper.getMainLooper()).post(() -> activity.mRootAccess.setTextColor(Common.hasRoot() ? accent : red));
+                    break;
+                case 1:
+                    new Handler(Looper.getMainLooper()).post(() -> activity.mBusybox.setTextColor(Common.hasBusyBox() ? accent : red));
+                    break;
+                case 2:
+                    new Handler(Looper.getMainLooper()).post(() -> activity.mCollectInfo.setTextColor(accent));
+                    break;
+                case 3:
+                    new Handler(Looper.getMainLooper()).post(() -> activity.mUpdateInfo.setTextColor(accent));
+                    break;
+            }
+        }
+
+        /*
+         * Let the user know what we are doing right now
+         *
+         * @param values progress
+         *               0: Checking root
+         *               1: Checking busybox/toybox
+         *               2: Collecting information
+         *               3: Check for updates
+         */
+
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void doInBackground() {
+            Common.hasRoot(RootUtils.rootAccess());
+            publishProgress(0);
+
+            if (Common.hasRoot()) {
+                Common.hasBusyBox(RootUtils.busyboxInstalled());
+                publishProgress(1);
+
+                if (Common.hasBusyBox()) {
+                    collectData();
+                    publishProgress(2);
+                }
+
+                // Initialize auto app update check
+                if (Common.isUpdateCheckEnabled()) {
+                    publishProgress(3);
+                }
+            }
+        }
+
+        @Override
+        public void onPostExecute() {
+            MainActivity activity = mRefActivity.get();
+            if (activity == null) return;
+
+            /*
+             * If root or busybox/toybox are not available,
+             * launch text activity which let the user know
+             * what the problem is.
+             */
+            if (!Common.hasRoot() || !Common.hasBusyBox()) {
+                Intent noRoot = new Intent(activity, NoRootActivity.class);
+                activity.startActivity(noRoot);
+                activity.finish();
+                return;
+            }
+
+            activity.launch();
+        }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        // Initialize auto app update check
+        if (UpdateCheck.isUpdateTime(this)) {
+            Common.enableUpdateCheck(true);
+            mUpdateInfo.setVisibility(View.VISIBLE);
+        }
+
+        if (KernelUpdater.isUpdateTime(this)) {
+            mUpdateInfo.setVisibility(View.VISIBLE);
+        }
+    }
+
+}

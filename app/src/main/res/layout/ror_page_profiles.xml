@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/profiles_scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:scrollbars="none">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingBottom="24dp">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingLeft="20dp" android:paddingTop="8dp" android:paddingRight="20dp">
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Performance profiles" android:textColor="#F5F5FF" android:textSize="23sp" android:textStyle="bold"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Choose one mode at a time. Your active mode stays selected." android:textColor="#A9ABC2" android:textSize="12sp"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="12dp" android:orientation="horizontal">
+     <TextView android:id="@+id/engine_regular" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@drawable/ror_btn_primary" android:gravity="center" android:text="REGULAR" android:textColor="#FFFFFF" android:textSize="11sp" android:textStyle="bold"/>
+     <TextView android:id="@+id/engine_phoenix" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginLeft="8dp" android:layout_weight="1" android:background="@drawable/ror_btn_outline" android:gravity="center" android:text="PHOENIX" android:textColor="#FF5252" android:textSize="11sp" android:textStyle="bold"/>
+    </LinearLayout>
+    <TextView android:id="@+id/profile_engine_description" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:text="Regular profiles use the built-in REVROR engine." android:textColor="#8E95B2" android:textSize="10sp"/>
+   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:background="@drawable/ror_active_banner" android:gravity="center_vertical" android:orientation="horizontal" android:padding="15dp">
+    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/ror_chip" android:padding="11dp" android:src="@drawable/ic_switch"/>
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="13dp" android:layout_weight="1" android:orientation="vertical">
+     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ror_chip" android:padding="5dp" android:text="CURRENT MODE" android:textColor="#CBA7FF" android:textSize="9sp" android:textStyle="bold"/>
+     <TextView android:id="@+id/profile_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:text="Checking profile engine…" android:textColor="#F5F5FF" android:textSize="11sp"/>
+    </LinearLayout>
+   </LinearLayout>
+   <TextView style="@style/RorSectionTitle" android:text="Select a mode"/>
+  </LinearLayout>
+  <include layout="@layout/ror_profile_cards"/>
+  <TextView android:id="@+id/advanced_button" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginLeft="18dp" android:layout_marginTop="14dp" android:layout_marginRight="18dp" android:background="@drawable/ror_active_banner" android:gravity="center" android:text="ENABLE ROOT ACCESS FOR GSM PROFILES" android:textColor="#EEDFFF" android:textSize="11sp" android:textStyle="bold"/>
+ </LinearLayout>
+</ScrollView>

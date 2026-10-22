@@ -1,0 +1,82 @@
+<resources>
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">?android:attr/colorAccent</item>
+        <item name="colorOnPrimary">?android:attr/textColorPrimary</item>
+        <item name="colorOnSecondary">?android:colorBackground</item>
+        <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
+        <item name="banner_frame_drawable">@drawable/drawable_frame_light</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="RorTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#05060A</item>
+        <item name="android:navigationBarColor">#05060A</item>
+        <item name="android:windowBackground">#05060A</item>
+        <item name="colorPrimary">#9C35FF</item>
+        <item name="colorSecondary">#00C8FF</item>
+        <item name="colorSurface">#0B0E16</item>
+        <item name="colorOnSurface">#F4F6FF</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="alertDialogTheme">@style/RorDialogTheme</item>
+        <item name="android:alertDialogTheme">@style/RorDialogTheme</item>
+        <item name="materialAlertDialogTheme">@style/RorDialogTheme</item>
+    </style>
+
+    <style name="RorDialogTheme" parent="Theme.Material3.Dark.Dialog.Alert">
+        <item name="android:colorAccent">#D1A2FF</item>
+        <item name="colorPrimary">#D1A2FF</item>
+        <item name="colorSurface">#171525</item>
+        <item name="android:textColorPrimary">#F5F5FF</item>
+        <item name="android:textColorSecondary">#ADAAC2</item>
+        <item name="android:windowBackground">@drawable/ror_dialog</item>
+        <item name="backgroundTint">#171525</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/RorDialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/RorDialogButton</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/RorDialogButton</item>
+    </style>
+    <style name="RorDialogButton" parent="Widget.Material3.Button.TextButton.Dialog"><item name="android:textColor">#D1A2FF</item><item name="android:textStyle">bold</item></style>
+
+    <style name="RorNavItem">
+        <item name="android:layout_width">0dp</item><item name="android:layout_height">match_parent</item><item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item><item name="android:textSize">10sp</item><item name="android:textStyle">bold</item>
+        <item name="android:textColor">#9194B0</item><item name="drawableTint">#9194B0</item><item name="android:paddingTop">7dp</item><item name="android:paddingBottom">5dp</item>
+    </style>
+    <style name="RorSectionTitle"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:layout_marginTop">18dp</item><item name="android:layout_marginBottom">10dp</item><item name="android:textColor">#F5F5FF</item><item name="android:textSize">14sp</item><item name="android:textStyle">bold</item></style>
+    <style name="RorStat"><item name="android:layout_width">0dp</item><item name="android:layout_height">match_parent</item><item name="android:layout_weight">1</item><item name="android:layout_margin">3dp</item><item name="android:background">@drawable/ror_stat</item><item name="android:gravity">center</item><item name="android:textColor">#D5D8EF</item><item name="android:textSize">11sp</item><item name="android:textStyle">bold</item></style>
+    <style name="RorHomeRow"><item name="android:layout_width">match_parent</item><item name="android:layout_height">72dp</item><item name="android:layout_marginBottom">8dp</item><item name="android:background">@drawable/ror_surface</item><item name="android:gravity">center_vertical</item><item name="android:paddingLeft">14dp</item><item name="android:paddingRight">14dp</item><item name="android:drawablePadding">13dp</item><item name="android:textColor">#F5F5FF</item><item name="android:textSize">11sp</item><item name="android:textStyle">bold</item></style>
+    <style name="RorToolTile"><item name="android:layout_width">0dp</item><item name="android:layout_height">match_parent</item><item name="android:layout_weight">1</item><item name="android:layout_margin">3dp</item><item name="android:background">@drawable/ror_tool</item><item name="android:gravity">center</item><item name="android:padding">8dp</item><item name="android:textColor">#F5F5FF</item><item name="android:textSize">9sp</item><item name="android:textStyle">bold</item></style>
+    <style name="RorToolRow"><item name="android:layout_width">match_parent</item><item name="android:layout_height">68dp</item><item name="android:layout_marginBottom">9dp</item><item name="android:background">@drawable/ror_tool</item><item name="android:gravity">center_vertical</item><item name="android:paddingLeft">14dp</item><item name="android:paddingRight">14dp</item><item name="android:drawablePadding">14dp</item><item name="android:textColor">#F5F5FF</item><item name="android:textSize">11sp</item><item name="android:textStyle">bold</item></style>
+    <style name="RorMoreRow"><item name="android:layout_width">match_parent</item><item name="android:layout_height">72dp</item><item name="android:gravity">center_vertical</item><item name="android:drawablePadding">14dp</item><item name="android:paddingLeft">4dp</item><item name="android:paddingRight">4dp</item><item name="android:textColor">#F5F5FF</item><item name="android:textSize">11sp</item></style>
+    <style name="RorProfileTile">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">2.5dp</item>
+        <item name="android:background">@drawable/ror_metric_tile_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">#F5F5FF</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:drawablePadding">4dp</item>
+    </style>
+    <style name="RorMoreTile">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">3.5dp</item>
+        <item name="android:background">@drawable/ror_stat</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:textColor">#F5F5FF</item>
+        <item name="android:textSize">9.5sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:drawablePadding">6dp</item>
+    </style>
+
+</resources>

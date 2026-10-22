@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="#080910" android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="8dp">
+        <ImageView android:id="@+id/dashboard_header_logo" android:layout_width="34dp" android:layout_height="34dp" android:src="@drawable/ror_logo" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dashboard_header_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:letterSpacing="0.04"
+                android:text="REVOLUTIONARY"
+                android:textColor="#F5F5FF"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="7.5sp"
+                app:autoSizeMaxTextSize="13sp"
+                app:autoSizeStepGranularity="0.5sp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dashboard_header_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:letterSpacing="0.03"
+                android:text="PERFORMANCE CONTROL"
+                android:textColor="#9B9FB8"
+                android:textSize="8.5sp"
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="6sp"
+                app:autoSizeMaxTextSize="9sp"
+                app:autoSizeStepGranularity="0.5sp" />
+        </LinearLayout>
+        <ImageButton android:id="@+id/donate_button" android:layout_width="32dp" android:layout_height="32dp" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="Donate" android:padding="6dp" android:src="@drawable/ic_ror_donate" app:tint="#FFA84B" />
+        <ImageButton android:id="@+id/telegram_button" android:layout_width="32dp" android:layout_height="32dp" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="Telegram" android:padding="6dp" android:src="@drawable/ic_telegram" app:tint="#29B6F6" />
+        <ImageButton android:id="@+id/settings_button" android:layout_width="32dp" android:layout_height="32dp" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="Settings" android:padding="6dp" android:src="@drawable/ic_settings" app:tint="#C8C8DF" />
+        <ImageButton android:id="@+id/info_button" android:layout_width="32dp" android:layout_height="32dp" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="About" android:padding="6dp" android:src="@drawable/ic_info" app:tint="#C8C8DF" />
+        <FrameLayout android:id="@+id/dev_top_button" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginStart="2dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/revws_avatar"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+            <View
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ror_avatar_ring" />
+        </FrameLayout>
+        <ImageButton android:id="@+id/menu_button" android:layout_width="1dp" android:layout_height="1dp" android:visibility="gone" />
+    </LinearLayout>
+
+    <ViewFlipper android:id="@+id/page_flipper" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <include layout="@layout/ror_page_home" />
+        <include layout="@layout/ror_page_monitor" />
+        <include layout="@layout/ror_page_profiles" />
+        <include layout="@layout/ror_page_tools" />
+        <include layout="@layout/ror_page_more" />
+    </ViewFlipper>
+
+    <WebView android:id="@+id/ad_banner" android:layout_width="match_parent" android:layout_height="52dp" android:background="#080910" android:importantForAutofill="no" android:scrollbars="none" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="76dp" android:background="@drawable/ror_bottom_bar" android:gravity="center" android:orientation="horizontal" android:padding="7dp">
+        <TextView android:id="@+id/home_nav" style="@style/RorNavItem" android:background="@drawable/ror_bottom_selected" android:drawableTop="@drawable/ic_dashboard" android:text="Home" app:drawableTint="#D1A2FF" />
+        <TextView android:id="@+id/monitor_nav" style="@style/RorNavItem" android:drawableTop="@drawable/ic_chart" android:text="Monitor" />
+        <TextView android:id="@+id/profiles_nav" style="@style/RorNavItem" android:drawableTop="@drawable/ic_switch" android:text="Profiles" />
+        <TextView android:id="@+id/tools_nav" style="@style/RorNavItem" android:drawableTop="@drawable/ic_tools" android:text="Tools" />
+        <TextView android:id="@+id/more_nav" style="@style/RorNavItem" android:drawableTop="@drawable/ic_dots" android:text="More" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 2020-2021 sunilpaulmathew <sunil.kde@gmail.com>
+ *
+ * This file is part of REVROR Kernel Manager, which is a heavily modified version of Kernel Adiutor,
+ * originally developed by Willi Ye <williye97@gmail.com>
+ *
+ * Both REVROR Kernel Manager & Kernel Adiutor are free softwares: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * REVROR Kernel Manager is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with REVROR Kernel Manager.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package com.revror.kernelmanager.fragments.tools;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+
+import com.google.android.material.textview.MaterialTextView;
+import com.revror.kernelmanager.R;
+import com.revror.kernelmanager.fragments.BaseFragment;
+import com.revror.kernelmanager.utils.Common;
+
+/**
+ * Created by sunilpaulmathew <sunil.kde@gmail.com> on March 30, 2020
+ */
+
+public class DetailsFragment extends BaseFragment {
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_details, container, false);
+
+        MaterialTextView mText = rootView.findViewById(R.id.text);
+
+        if (Common.getDetailsTxt() != null) {
+            mText.setText(Common.getDetailsTxt());
+        }
+
+        return rootView;
+    }
+
+}

@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 2020-2021 sunilpaulmathew <sunil.kde@gmail.com>
+ *
+ * This file is part of SmartPack Kernel Manager, which is a heavily modified version of Kernel Adiutor,
+ * originally developed by Willi Ye <williye97@gmail.com>
+ *
+ * Both SmartPack Kernel Manager & Kernel Adiutor are free softwares: you can redistribute it 
+ * and/or modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SmartPack Kernel Manager is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SmartPack Kernel Manager.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package org.frap129.spectrum;
+
+import com.smartpack.kernelmanager.utils.root.RootUtils;
+
+import in.sunilpaulmathew.sCommon.CommonUtils.sExecutor;
+
+/*
+ * Based on the original implementation of Spectrum Kernel Manager by frap129 <joe@frap129.org>
+ *
+ * Originally authored by Morogoku <morogoku@hotmail.com>
+ *
+ * Modified by sunilpaulmathew <sunil.kde@gmail.com>
+ */
+
+public class Spectrum {
+
+    private static final boolean spectrumVendor = RootUtils.getProp("vendor.spectrum.support").equals("1");
+
+    public static String getProfile() {
+	if (spectrumVendor) {
+	    return RootUtils.runAndGetOutput("getprop persist.vendor.spectrum.profile");
+	} else {
+            return RootUtils.runAndGetOutput("getprop persist.revror.revws.profile");
+	}
+    }
+
+    // Method that interprets a profile and sets it
+    public static void setProfile(int profile) {
+        int numProfiles = 3;
+        if (profile > numProfiles || profile < 0) {
+            setProp(0);
+        } else {
+            setProp(profile);
+        }
+    }
+
+    // Method that sets system property
+    private static void setProp(final int profile) {
+        new sExecutor() {
+
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void doInBackground() {
+                if (spectrumVendor) {
+                    RootUtils.runCommand("setprop persist.vendor.spectrum.profile " + profile);
+                } else {
+            RootUtils.runCommand("setprop persist.revror.revws.profile " + profile);
+                }
+            }
+
+            @Override
+            public void onPostExecute() {
+
+            }
+        }.execute();
+    }
+
+    public static boolean supported() {
+        return RootUtils.getProp("revror.revws.support").equals("1")
+		|| RootUtils.getProp("vendor.spectrum.support").equals("1");
+    }
+
+}

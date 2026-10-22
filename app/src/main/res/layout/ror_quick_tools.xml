@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
+    android:alignmentMode="alignMargins"
+    android:rowOrderPreserved="false"
+    android:useDefaultMargins="true"
+    android:padding="4dp">
+
+    <!-- Row 1 -->
+    <!-- 0. Ultra Gaming -->
+    <LinearLayout
+        android:id="@+id/tool_ultra"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_ultra_gaming"
+            app:tint="#FF1744" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Ultra Gaming"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max power lock"
+            android:textColor="#FF8A80"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 1. App Manager -->
+    <LinearLayout
+        android:id="@+id/tool_apps"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_layers"
+            app:tint="#A865FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="App Manager"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Force stop &amp; disable"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 2. Auto Cleaner -->
+    <LinearLayout
+        android:id="@+id/tool_clean"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_clear"
+            app:tint="#FFA84B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Auto Cleaner"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clean &amp; schedule"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 3. Kernel Tuning -->
+    <LinearLayout
+        android:id="@+id/tool_kernel"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_cpu"
+            app:tint="#00E5FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Kernel Tuning"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CPU, GPU, I/O"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 4. Game Launcher -->
+    <LinearLayout
+        android:id="@+id/tool_boost"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_spectrum_game"
+            app:tint="#FA476B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Game Launcher"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PS5 console home"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Row 2 -->
+    <!-- 5. Network Boost -->
+    <LinearLayout
+        android:id="@+id/tool_network"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_server"
+            app:tint="#368FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Network Boost"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TCP low latency"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 6. Thermal Control -->
+    <LinearLayout
+        android:id="@+id/tool_thermal"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_temperature"
+            app:tint="#FA476B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Thermal Control"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alerts &amp; throttle"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 7. Hardware Overlay -->
+    <LinearLayout
+        android:id="@+id/tool_overlay"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_chart"
+            app:tint="#53B2FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="HW Overlay"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Live FPS &amp; load"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 8. Refresh Rate -->
+    <LinearLayout
+        android:id="@+id/tool_refresh"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_display"
+            app:tint="#00F5D4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Refresh Rate"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="60/90/120 Hz"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Row 3: Features from Custom Controls -->
+    <!-- 9. Memory Compact -->
+    <LinearLayout
+        android:id="@+id/tool_compact"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_layers"
+            app:tint="#2DE49A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Compact RAM"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kernel defrag"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 10. Drop Caches -->
+    <LinearLayout
+        android:id="@+id/tool_drop_caches"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_trash"
+            app:tint="#FFA84B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Drop Caches"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Release FS cache"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 11. Force Doze -->
+    <LinearLayout
+        android:id="@+id/tool_doze"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_moon"
+            app:tint="#E0AAFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Force Doze"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instant deep sleep"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 12. Data Saver -->
+    <LinearLayout
+        android:id="@+id/tool_data_saver"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_server"
+            app:tint="#368FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Data Saver"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restrict traffic"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Row 4: Profiles, Stats & Scheduler -->
+    <!-- 13. Save Profile -->
+    <LinearLayout
+        android:id="@+id/tool_save_profile"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_save"
+            app:tint="#00F5D4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Save Profile"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snapshot tuning"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 14. Apply Profile -->
+    <LinearLayout
+        android:id="@+id/tool_custom_profile"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_switch"
+            app:tint="#CBA7FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Custom Profiles"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply tuning"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 15. Battery Scheduler -->
+    <LinearLayout
+        android:id="@+id/tool_schedule"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_battery"
+            app:tint="#2DE49A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Battery Sched"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timed profile"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 16. Live CPU Details -->
+    <LinearLayout
+        android:id="@+id/tool_cpu_details"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_info"
+            app:tint="#00E5FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Live CPU Info"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Core frequencies"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Row 5: Game, Network, Boot & Power -->
+    <!-- 17. FPS Unlocker -->
+    <LinearLayout
+        android:id="@+id/tool_fps_unlocker"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_unlock"
+            app:tint="#FF0055" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="FPS Unlocker"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game 90/120 FPS"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 18. DNS Changer -->
+    <LinearLayout
+        android:id="@+id/tool_dns_changer"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_server"
+            app:tint="#00D2FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="DNS Changer"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AdGuard &amp; Gaming"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 19. Boot Auto-run -->
+    <LinearLayout
+        android:id="@+id/tool_boot_settings"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_refresh"
+            app:tint="#2DE49A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Boot Auto-run"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply on boot"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 20. Reboot Menu -->
+    <LinearLayout
+        android:id="@+id/tool_reboot_manager"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_restore"
+            app:tint="#FFA84B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Reboot Menu"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Soft / Recovery"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+</GridLayout>

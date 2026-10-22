@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="app_settings"
+        android:title="@string/app_name">
+
+        <Preference
+            android:key="update_check"
+            android:summary="@string/check_update_summary"
+            android:title="@string/check_update" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="auto_update"
+            android:summary="@string/auto_update_check" />
+    </PreferenceCategory>
+
+    <Preference
+        android:key="reset_settings"
+        android:summary="@string/reset_settings_summary"
+        android:title="@string/reset_settings" />
+
+    <PreferenceCategory
+        android:key="user_interface"
+        android:title="@string/user_interface">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="darktheme"
+            android:summary="@string/dark_theme" />
+        <SwitchPreferenceCompat
+            android:key="materialicon"
+            android:summary="@string/material_icon" />
+        <Preference
+            android:key="banner_resizer"
+            android:summary="@string/banner_resizer" />
+        <SwitchPreferenceCompat
+            android:key="hide_banner"
+            android:summary="@string/hide_banner" />
+        <SwitchPreferenceCompat
+            android:key="forceenglish"
+            android:summary="@string/force_english" />
+        <SwitchPreferenceCompat
+            android:key="useretardedmeasurement"
+            android:summary="@string/fahrenheit_summary" />
+        <SwitchPreferenceCompat
+            android:key="forcecards"
+            android:summary="@string/force_cards_summary" />
+        <Preference
+            android:key="accent_color"
+            android:summary="@string/accent_color"
+            android:widgetLayout="@layout/preference_color_view" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="section_icons"
+            android:summary="@string/section_icons" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/apply_on_boot">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="enable_onboot"
+            android:title="@string/enable_onboot"
+            android:summary="@string/enable_onboot_summary" />
+        <ListPreference
+            android:defaultValue="10"
+            android:entries="@array/apply_on_boot_delay_entries"
+            android:entryValues="@array/apply_on_boot_delay_values"
+            android:key="applyonbootdelay"
+            android:summary="%s"
+            android:title="@string/delay" />
+        <Preference
+            android:key="applyonboottest"
+            android:summary="@string/apply_on_boot_test_summary"
+            android:title="@string/test" />
+        <SwitchPreferenceCompat
+            android:key="applyonboothide"
+            android:summary="@string/apply_on_boot_hide_summary"
+            android:title="@string/hide" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="applyonbootconfirmationnotification"
+            android:summary="@string/apply_on_boot_confirmation_notification_summary"
+            android:title="@string/confirmation_notification" />
+        <SwitchPreferenceCompat
+            android:key="applyonbootscript"
+            android:summary="@string/apply_on_boot_script_summary"
+            android:title="@string/script" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/profile_tasker">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="showtaskertoast"
+            android:summary="@string/profile_tasker_toast"
+            android:title="@string/toast" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="security_category"
+        android:title="@string/security">
+
+        <SwitchPreferenceCompat
+            android:key="use_biometric"
+            android:summary="@string/biometric_summary"
+            android:title="@string/biometric" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="sections"
+        android:title="@string/sections">
+
+        <ListPreference
+            android:key="default_section"
+            android:summary="@string/default_section_summary"
+            android:title="@string/default_section"
+            android:defaultValue="OverallFragment"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+
+    <!-- Outer Hex Layer -->
+    <path
+        android:pathData="M36,4 L64,18 L64,54 L36,68 L8,54 L8,18 Z"
+        android:strokeWidth="2"
+        android:strokeColor="#333E52"
+        android:fillColor="#121620" />
+
+    <!-- Crown Outline -->
+    <path
+        android:pathData="M23,43 L20,27 L28,34 L36,23 L44,34 L52,27 L49,43 Z"
+        android:fillColor="#4F5D75" />
+
+    <!-- Crown Base -->
+    <path
+        android:pathData="M22,45 L50,45 L48,49 L24,49 Z"
+        android:fillColor="#333E52" />
+
+    <!-- Lock Shackle -->
+    <path
+        android:pathData="M31,52 L31,48 A5,5 0 0,1 41,48 L41,52"
+        android:strokeWidth="2"
+        android:strokeColor="#8E9AB2"
+        android:fillColor="#00000000" />
+    <!-- Lock Body -->
+    <path
+        android:pathData="M28,52 L44,52 L44,62 L28,62 Z"
+        android:fillColor="#6C7A92" />
+</vector>
+

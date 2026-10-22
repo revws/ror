@@ -1,0 +1,58 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+
+    <!-- Outer Hex Glow Layer -->
+    <path
+        android:pathData="M36,4 L64,18 L64,54 L36,68 L8,54 L8,18 Z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FFD700"
+        android:fillColor="#1A1500" />
+
+    <!-- Inner Shield Gradient -->
+    <path
+        android:pathData="M36,9 L59,21 L59,51 L36,63 L13,51 L13,21 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="13"
+                android:startY="9"
+                android:endX="59"
+                android:endY="63">
+                <item android:offset="0.0" android:color="#332400" />
+                <item android:offset="0.5" android:color="#1F1700" />
+                <item android:offset="1.0" android:color="#4D3600" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Imperial VIP Crown -->
+    <path
+        android:pathData="M23,43 L20,27 L28,34 L36,23 L44,34 L52,27 L49,43 Z"
+        android:fillColor="#FFD700" />
+
+    <!-- Crown Jewels / Highlights -->
+    <path
+        android:pathData="M20,25 A2,2 0 1,1 20,29 A2,2 0 1,1 20,25"
+        android:fillColor="#00E5FF" />
+    <path
+        android:pathData="M36,21 A2.5,2.5 0 1,1 36,26 A2.5,2.5 0 1,1 36,21"
+        android:fillColor="#FF2A4D" />
+    <path
+        android:pathData="M52,25 A2,2 0 1,1 52,29 A2,2 0 1,1 52,25"
+        android:fillColor="#00E5FF" />
+
+    <!-- Crown Base Band -->
+    <path
+        android:pathData="M22,45 L50,45 L48,49 L24,49 Z"
+        android:fillColor="#FFA000" />
+
+    <!-- Star Core -->
+    <path
+        android:pathData="M36,51 L37.5,55 L42,55 L38.5,58 L40,62 L36,59.5 L32,62 L33.5,58 L30,55 L34.5,55 Z"
+        android:fillColor="#FFD700" />
+</vector>
+

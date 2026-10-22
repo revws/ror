@@ -1,0 +1,6 @@
+/build
+/fdroid
+/pro
+/release
+/src/main/gen
+*.jks

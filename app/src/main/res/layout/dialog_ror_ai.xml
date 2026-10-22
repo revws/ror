@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/ror_dialog"
+    android:padding="20dp">
+
+    <!-- Header Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REVROR AI Smart Optimizer"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Autonomous real-time hardware parameter controller."
+        android:textColor="#8E95AF"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="#2E3758" />
+
+    <!-- Scrollable Module Switches -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_engine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Auto-Optimization Engine\nDynamic real-time governor &amp; scheduler"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_gpu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI GPU Turbo Boost\nForces high rendering clocks under 3D load"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_ram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI RAM &amp; ZRAM Compactor\nAuto swappiness &amp; dirty cache balance"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_fps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Frame Rate Jank Buster\nSurfaceflinger sync &amp; zero scheduler latency"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_io"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Storage &amp; I/O Acceleration\nRead-ahead buffer &amp; flash queue boost"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_art"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI ART &amp; Dex Optimizer\nProfile JIT compilation &amp; HWUI boost"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_net"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Low-Latency Network\nTCP BBR congestion &amp; fast socket queues"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_ai_doze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Aggressive Doze\nInstant kernel deep sleep on screen turn-off"
+                android:textColor="#FFFFFF"
+                android:textSize="12.5sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Anchored Prominent Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_ror_cancel"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ror_btn_outline"
+            android:text="CLOSE"
+            android:textColor="#D4D8F0"
+            android:textSize="12.5sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_ror_apply"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1.6"
+            android:background="@drawable/ror_btn_primary"
+            android:text="OPTIMIZE NOW"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
+
