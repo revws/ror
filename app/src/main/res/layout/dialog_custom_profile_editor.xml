@@ -1,327 +1,415 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:layout_height="match_parent"
+    android:background="@drawable/ror_dialog"
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <!-- 1. Pinned Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ror_dialog"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <!-- Header -->
+        <ImageView
+            android:id="@+id/profile_editor_icon_preview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ror_chip"
+            android:padding="8dp"
+            android:src="@drawable/ic_cpu"
+            app:tint="#00E5FF" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/profile_editor_icon_preview"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@drawable/ror_chip"
-                android:padding="8dp"
-                android:src="@drawable/ic_crown"
-                app:tint="#00E5FF" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/profile_editor_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Custom Profile Studio"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="VIP Hardware-Calibrated Optimization Engine"
-                    android:textColor="#CBA7FF"
-                    android:textSize="10.5sp" />
-            </LinearLayout>
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/btn_capture_live"
+                android:id="@+id/profile_editor_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ror_chip"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="6dp"
-                android:text="CAPTURE LIVE"
-                android:textColor="#00F5D4"
-                android:textSize="10sp"
+                android:text="Custom Profile Studio"
+                android:textColor="#FFFFFF"
+                android:textSize="15.5sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Hardware-Calibrated Custom Profile Engine"
+                android:textColor="#CBA7FF"
+                android:textSize="10.5sp" />
         </LinearLayout>
 
-        <!-- Name Input -->
         <TextView
+            android:id="@+id/btn_capture_live"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="PROFILE IDENTITY"
-            android:textColor="#7A85A8"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ror_chip"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="6dp"
+            android:text="CAPTURE LIVE"
+            android:textColor="#00F5D4"
             android:textSize="10sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/profile_editor_name"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/ror_tool_card_bg"
-            android:hint="Profile Name (e.g. Extreme FPS 120Hz)"
-            android:inputType="text"
-            android:paddingHorizontal="12dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#5A6588"
-            android:textSize="13sp" />
+        <ImageView
+            android:id="@+id/btn_editor_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_close_white"
+            app:tint="#A0A8C2" />
+    </LinearLayout>
 
-        <!-- Icon Picker Row -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="10dp"
+        android:background="#1B2446" />
+
+    <!-- 2. Scrollable Body -->
+    <ScrollView
+        android:id="@+id/profile_editor_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
+            <!-- Profile Name Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Badge Icon:"
-                android:textColor="#A2A4BD"
-                android:textSize="11sp" />
+                android:text="PROFILE IDENTITY"
+                android:textColor="#7A85A8"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
 
+            <EditText
+                android:id="@+id/profile_editor_name"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/ror_tool_card_bg"
+                android:hint="Profile Name (e.g. Extreme FPS 120Hz)"
+                android:inputType="text"
+                android:paddingHorizontal="14dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#5A6588"
+                android:textSize="13sp" />
+
+            <!-- Badge Icon Selection -->
             <LinearLayout
-                android:id="@+id/icon_row_container"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="end"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/pick_icon_game"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/ror_chip"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_game"
-                    app:tint="#FF5252" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Badge Icon:"
+                    android:textColor="#A2A4BD"
+                    android:textSize="11.5sp" />
 
-                <ImageView
-                    android:id="@+id/pick_icon_cpu"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/ror_chip"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_cpu"
-                    app:tint="#00E5FF" />
+                <LinearLayout
+                    android:id="@+id/icon_row_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/pick_icon_flash"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/ror_chip"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_flash"
-                    app:tint="#FFA84B" />
+                    <ImageView
+                        android:id="@+id/pick_icon_game"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/ror_chip"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_game"
+                        app:tint="#FF5252" />
 
-                <ImageView
-                    android:id="@+id/pick_icon_battery"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/ror_chip"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_battery"
-                    app:tint="#00ED74" />
+                    <ImageView
+                        android:id="@+id/pick_icon_cpu"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/ror_chip"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_cpu"
+                        app:tint="#00E5FF" />
 
-                <ImageView
-                    android:id="@+id/pick_icon_speed"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/ror_chip"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_speed_meter"
-                    app:tint="#D46CFF" />
+                    <ImageView
+                        android:id="@+id/pick_icon_flash"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/ror_chip"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_flash"
+                        app:tint="#FFA84B" />
+
+                    <ImageView
+                        android:id="@+id/pick_icon_battery"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/ror_chip"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_battery"
+                        app:tint="#00ED74" />
+
+                    <ImageView
+                        android:id="@+id/pick_icon_speed"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/ror_chip"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_speed_meter"
+                        app:tint="#D46CFF" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- CPU Clusters Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="CPU POLICIES &amp; CLUSTERS"
-            android:textColor="#00E5FF"
-            android:textSize="10.5sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/profile_editor_policies_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="vertical" />
-
-        <!-- CPU Online Cores Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="CPU CORES ONLINE / HOTPLUG"
-            android:textColor="#00E5FF"
-            android:textSize="10.5sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/profile_editor_cores_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="vertical" />
-
-        <!-- Memory & Cache Tweaks -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="MEMORY &amp; CACHE TUNING"
-            android:textColor="#00E5FF"
-            android:textSize="10.5sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/ror_tool_card_bg"
-            android:orientation="vertical"
-            android:padding="12dp">
-
+            <!-- CPU Clusters Section -->
             <LinearLayout
-                android:id="@+id/row_editor_swappiness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="RAM Swappiness"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/val_editor_swappiness"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Default"
+                    android:text="CPU POLICIES &amp; CLUSTERS"
                     android:textColor="#00E5FF"
                     android:textSize="11sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="6dp" android:background="#1B2446" />
+                <ProgressBar
+                    android:id="@+id/policies_loading_bar"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/row_editor_vfs"
+                android:id="@+id/profile_editor_policies_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:layout_marginTop="6dp"
+                android:orientation="vertical" />
 
-                <TextView
-                    android:layout_width="0dp"
+            <!-- CPU Online Cores Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="CPU CORES ONLINE / HOTPLUG"
+                android:textColor="#00E5FF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+
+            <LinearLayout
+                android:id="@+id/profile_editor_cores_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical" />
+
+            <!-- Memory & Cache Tweaks -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="MEMORY &amp; CACHE TUNING"
+                android:textColor="#00E5FF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/ror_tool_card_bg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:id="@+id/row_editor_swappiness"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="VFS Cache Pressure"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
 
-                <TextView
-                    android:id="@+id/val_editor_vfs"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="RAM Swappiness"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/val_editor_swappiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ror_chip"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="Default"
+                        android:textColor="#00E5FF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="▾"
+                        android:textColor="#7A85A8"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="6dp"
+                    android:background="#1B2446" />
+
+                <LinearLayout
+                    android:id="@+id/row_editor_vfs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="VFS Cache Pressure"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/val_editor_vfs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ror_chip"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="Default"
+                        android:textColor="#00E5FF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="▾"
+                        android:textColor="#7A85A8"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="6dp"
+                    android:background="#1B2446" />
+
+                <CheckBox
+                    android:id="@+id/chk_editor_drop_caches"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Default"
-                    android:textColor="#00E5FF"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
+                    android:text="Drop Filesystem Caches on Apply"
+                    android:textColor="#D4D8F0"
+                    android:textSize="11.5sp" />
+
+                <CheckBox
+                    android:id="@+id/chk_editor_compact_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Compact RAM Memory on Apply"
+                    android:textColor="#D4D8F0"
+                    android:textSize="11.5sp" />
             </LinearLayout>
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="6dp" android:background="#1B2446" />
-
-            <CheckBox
-                android:id="@+id/chk_editor_drop_caches"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Drop Filesystem Caches on Apply"
-                android:textColor="#D4D8F0"
-                android:textSize="11sp" />
-
-            <CheckBox
-                android:id="@+id/chk_editor_compact_memory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Compact RAM Memory on Apply"
-                android:textColor="#D4D8F0"
-                android:textSize="11sp" />
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Actions -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="10dp"
+        android:background="#1B2446" />
 
-            <TextView
-                android:id="@+id/btn_editor_save"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ror_btn_primary"
-                android:gravity="center"
-                android:text="SAVE PROFILE"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+    <!-- 3. Pinned Footer Actions (ALWAYS visible!) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/btn_editor_cancel"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ror_chip"
-                android:gravity="center"
-                android:text="CANCEL"
-                android:textColor="#9EADC8"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/btn_editor_cancel"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/ror_chip"
+            android:gravity="center"
+            android:text="CANCEL"
+            android:textColor="#9EADC8"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/btn_editor_save"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/ror_btn_primary"
+            android:gravity="center"
+            android:text="SAVE PROFILE"
+            android:textColor="#FFFFFF"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

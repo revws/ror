@@ -1,20 +1,26 @@
 package com.revror.kernelmanager.views.dialog;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.revror.kernelmanager.R;
@@ -23,6 +29,7 @@ import com.revror.kernelmanager.utils.kernel.cpu.CpuTopologyDetector;
 import com.revror.kernelmanager.utils.profile.CustomProfileManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +49,10 @@ public final class CustomProfileDialog {
 
     private CustomProfileDialog() {}
 
+    private static int dp(Context context, int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
+
     public static void showEditor(@NonNull Activity activity, @Nullable CustomProfileManager.CustomProfile existingProfile, @NonNull Runnable onSaved) {
         if (activity.isFinishing() || activity.isDestroyed()) return;
 
@@ -53,15 +64,13 @@ public final class CustomProfileDialog {
         }
 
         activity.runOnUiThread(() -> {
+            if (activity.isFinishing() || activity.isDestroyed()) return;
+
             View view = LayoutInflater.from(activity).inflate(R.layout.dialog_custom_profile_editor, null);
-            AlertDialog dialog = new AlertDialog.Builder(activity)
+            AlertDialog dialog = new AlertDialog.Builder(activity, R.style.RorDialogTheme)
                     .setView(view)
                     .setCancelable(true)
                     .create();
-
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
 
             final CustomProfileManager.CustomProfile profile = existingProfile != null
                     ? existingProfile
@@ -81,6 +90,7 @@ public final class CustomProfileDialog {
 
             LinearLayout policiesContainer = view.findViewById(R.id.profile_editor_policies_container);
             LinearLayout coresContainer = view.findViewById(R.id.profile_editor_cores_container);
+            ProgressBar loadingBar = view.findViewById(R.id.policies_loading_bar);
 
             TextView valSwappiness = view.findViewById(R.id.val_editor_swappiness);
             TextView valVfs = view.findViewById(R.id.val_editor_vfs);
@@ -114,11 +124,19 @@ public final class CustomProfileDialog {
                         }).show();
             });
 
+            // Close button in header
+            View btnClose = view.findViewById(R.id.btn_editor_close);
+            if (btnClose != null) {
+                btnClose.setOnClickListener(v -> dialog.dismiss());
+            }
+
             // Detect live topology in background and populate policy and core rows
+            if (loadingBar != null) loadingBar.setVisibility(View.VISIBLE);
             EXECUTOR.execute(() -> {
                 CpuTopologyDetector.DeviceCpuTopology topo = CpuTopologyDetector.detect();
                 activity.runOnUiThread(() -> {
                     if (activity.isFinishing() || activity.isDestroyed()) return;
+                    if (loadingBar != null) loadingBar.setVisibility(View.GONE);
 
                     // Populate policies
                     policiesContainer.removeAllViews();
@@ -186,7 +204,7 @@ public final class CustomProfileDialog {
                 });
             });
 
-            // Save Profile
+            // Save Profile (Pinned in footer)
             view.findViewById(R.id.btn_editor_save).setOnClickListener(v -> {
                 if (!RorLicenseManager.isPremiumActive(activity)) {
                     RorLicenseManager.showVipRequiredDialog(activity, "Custom Profile Studio", null);
@@ -205,9 +223,29 @@ public final class CustomProfileDialog {
                 dialog.dismiss();
             });
 
+            // Cancel Profile (Pinned in footer)
             view.findViewById(R.id.btn_editor_cancel).setOnClickListener(v -> dialog.dismiss());
 
+            // Show dialog and configure responsive window geometry
             dialog.show();
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                DisplayMetrics dm = activity.getResources().getDisplayMetrics();
+                int screenWidth = dm.widthPixels;
+                int screenHeight = dm.heightPixels;
+                boolean isLandscape = screenWidth > screenHeight;
+
+                int targetWidth = isLandscape
+                        ? Math.min((int) (screenWidth * 0.75f), dp(activity, 520))
+                        : Math.min((int) (screenWidth * 0.94f), dp(activity, 480));
+
+                int targetHeight = Math.min((int) (screenHeight * 0.88f), dp(activity, 680));
+
+                window.setLayout(targetWidth, targetHeight);
+                window.setGravity(Gravity.CENTER);
+            }
         });
     }
 
@@ -241,7 +279,10 @@ public final class CustomProfileDialog {
 
         // Governor picker
         view.findViewById(R.id.item_row_governor).setOnClickListener(v -> {
-            String[] govs = pol.availableGovernors.toArray(new String[0]);
+            List<String> govsList = pol.availableGovernors != null && !pol.availableGovernors.isEmpty()
+                    ? pol.availableGovernors
+                    : Arrays.asList("schedutil", "performance", "powersave", "interactive", "conservative");
+            String[] govs = govsList.toArray(new String[0]);
             new AlertDialog.Builder(activity, R.style.RorDialogTheme)
                     .setTitle("Policy " + pol.policyId + " Governor")
                     .setItems(govs, (d, which) -> {
@@ -255,7 +296,9 @@ public final class CustomProfileDialog {
 
         // Min Freq picker
         view.findViewById(R.id.item_row_min_freq).setOnClickListener(v -> {
-            List<Long> freqs = pol.availableFrequenciesKhz;
+            List<Long> freqs = pol.availableFrequenciesKhz != null && !pol.availableFrequenciesKhz.isEmpty()
+                    ? pol.availableFrequenciesKhz
+                    : Arrays.asList(300000L, 576000L, 800000L, 1000000L, 1200000L, 1500000L, 1800000L, 2000000L, 2400000L, 2800000L);
             String[] items = new String[freqs.size()];
             for (int i = 0; i < freqs.size(); i++) {
                 items[i] = CpuTopologyDetector.formatFreq(freqs.get(i));
@@ -275,7 +318,9 @@ public final class CustomProfileDialog {
 
         // Max Freq picker
         view.findViewById(R.id.item_row_max_freq).setOnClickListener(v -> {
-            List<Long> freqs = pol.availableFrequenciesKhz;
+            List<Long> freqs = pol.availableFrequenciesKhz != null && !pol.availableFrequenciesKhz.isEmpty()
+                    ? pol.availableFrequenciesKhz
+                    : Arrays.asList(300000L, 576000L, 800000L, 1000000L, 1200000L, 1500000L, 1800000L, 2000000L, 2400000L, 2800000L);
             String[] items = new String[freqs.size()];
             for (int i = 0; i < freqs.size(); i++) {
                 items[i] = CpuTopologyDetector.formatFreq(freqs.get(i));
@@ -333,30 +378,52 @@ public final class CustomProfileDialog {
     }
 
     private static void setupIconPicker(View root, CustomProfileManager.CustomProfile profile, ImageView preview, Activity activity) {
-        root.findViewById(R.id.pick_icon_game).setOnClickListener(v -> {
+        ImageView btnGame = root.findViewById(R.id.pick_icon_game);
+        ImageView btnCpu = root.findViewById(R.id.pick_icon_cpu);
+        ImageView btnFlash = root.findViewById(R.id.pick_icon_flash);
+        ImageView btnBattery = root.findViewById(R.id.pick_icon_battery);
+        ImageView btnSpeed = root.findViewById(R.id.pick_icon_speed);
+
+        Runnable updateSelectionUi = () -> {
+            String active = profile.iconResName != null ? profile.iconResName : "ic_cpu";
+            btnGame.setBackgroundResource("ic_game".equals(active) ? R.drawable.ror_chip_selected : R.drawable.ror_chip);
+            btnCpu.setBackgroundResource("ic_cpu".equals(active) ? R.drawable.ror_chip_selected : R.drawable.ror_chip);
+            btnFlash.setBackgroundResource("ic_flash".equals(active) ? R.drawable.ror_chip_selected : R.drawable.ror_chip);
+            btnBattery.setBackgroundResource("ic_battery".equals(active) ? R.drawable.ror_chip_selected : R.drawable.ror_chip);
+            btnSpeed.setBackgroundResource("ic_speed_meter".equals(active) ? R.drawable.ror_chip_selected : R.drawable.ror_chip);
+        };
+
+        updateSelectionUi.run();
+
+        btnGame.setOnClickListener(v -> {
             profile.iconResName = "ic_game";
             profile.accentColor = "#FF5252";
             updateIconPreview(activity, preview, profile.iconResName, profile.accentColor);
+            updateSelectionUi.run();
         });
-        root.findViewById(R.id.pick_icon_cpu).setOnClickListener(v -> {
+        btnCpu.setOnClickListener(v -> {
             profile.iconResName = "ic_cpu";
             profile.accentColor = "#00E5FF";
             updateIconPreview(activity, preview, profile.iconResName, profile.accentColor);
+            updateSelectionUi.run();
         });
-        root.findViewById(R.id.pick_icon_flash).setOnClickListener(v -> {
+        btnFlash.setOnClickListener(v -> {
             profile.iconResName = "ic_flash";
             profile.accentColor = "#FFA84B";
             updateIconPreview(activity, preview, profile.iconResName, profile.accentColor);
+            updateSelectionUi.run();
         });
-        root.findViewById(R.id.pick_icon_battery).setOnClickListener(v -> {
+        btnBattery.setOnClickListener(v -> {
             profile.iconResName = "ic_battery";
             profile.accentColor = "#00ED74";
             updateIconPreview(activity, preview, profile.iconResName, profile.accentColor);
+            updateSelectionUi.run();
         });
-        root.findViewById(R.id.pick_icon_speed).setOnClickListener(v -> {
+        btnSpeed.setOnClickListener(v -> {
             profile.iconResName = "ic_speed_meter";
             profile.accentColor = "#D46CFF";
             updateIconPreview(activity, preview, profile.iconResName, profile.accentColor);
+            updateSelectionUi.run();
         });
     }
 
@@ -379,39 +446,78 @@ public final class CustomProfileDialog {
             return;
         }
 
-        String[] options = {
-                "Apply Profile",
-                "Edit Profile",
-                "Duplicate Profile",
-                "Delete Profile"
-        };
+        activity.runOnUiThread(() -> {
+            if (activity.isFinishing() || activity.isDestroyed()) return;
 
-        new AlertDialog.Builder(activity, R.style.RorDialogTheme)
-                .setTitle(profile.name)
-                .setItems(options, (d, which) -> {
-                    if (which == 0) {
-                        applyProfile(activity, profile, onModified);
-                    } else if (which == 1) {
-                        showEditor(activity, profile, onModified);
-                    } else if (which == 2) {
-                        CustomProfileManager.duplicateProfile(activity, profile.id);
-                        Toast.makeText(activity, "Profile duplicated", Toast.LENGTH_SHORT).show();
-                        onModified.run();
-                    } else if (which == 3) {
-                        new AlertDialog.Builder(activity, R.style.RorDialogTheme)
-                                .setTitle("Delete Profile")
-                                .setMessage("Are you sure you want to delete '" + profile.name + "'?")
-                                .setPositiveButton("Delete", (d2, w2) -> {
-                                    CustomProfileManager.deleteProfile(activity, profile.id);
-                                    Toast.makeText(activity, "Profile deleted", Toast.LENGTH_SHORT).show();
-                                    onModified.run();
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .show();
-                    }
-                })
-                .setNegativeButton("Close", null)
-                .show();
+            View dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_custom_profile_options, null);
+            AlertDialog dialog = new AlertDialog.Builder(activity, R.style.RorDialogTheme)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create();
+
+            TextView titleText = dialogView.findViewById(R.id.options_profile_title);
+            titleText.setText(profile.name);
+
+            ImageView iconView = dialogView.findViewById(R.id.options_profile_icon);
+            updateIconPreview(activity, iconView, profile.iconResName, profile.accentColor);
+
+            TextView summaryText = dialogView.findViewById(R.id.options_profile_summary);
+            StringBuilder sb = new StringBuilder();
+            sb.append(profile.policySettings.size()).append(" Policies");
+            if (profile.swappiness >= 0) sb.append(" • Swap ").append(profile.swappiness).append("%");
+            if (profile.dropCaches) sb.append(" • Drop Cache");
+            summaryText.setText(sb.toString());
+
+            // 1. Apply Profile
+            dialogView.findViewById(R.id.opt_btn_apply).setOnClickListener(v -> {
+                dialog.dismiss();
+                applyProfile(activity, profile, onModified);
+            });
+
+            // 2. Edit Profile
+            dialogView.findViewById(R.id.opt_btn_edit).setOnClickListener(v -> {
+                dialog.dismiss();
+                showEditor(activity, profile, onModified);
+            });
+
+            // 3. Duplicate Profile
+            dialogView.findViewById(R.id.opt_btn_duplicate).setOnClickListener(v -> {
+                CustomProfileManager.duplicateProfile(activity, profile.id);
+                Toast.makeText(activity, "Profile '" + profile.name + "' duplicated", Toast.LENGTH_SHORT).show();
+                onModified.run();
+                dialog.dismiss();
+            });
+
+            // 4. Delete Profile
+            dialogView.findViewById(R.id.opt_btn_delete).setOnClickListener(v -> {
+                dialog.dismiss();
+                new AlertDialog.Builder(activity, R.style.RorDialogTheme)
+                        .setTitle("Delete Custom Profile")
+                        .setMessage("Are you sure you want to delete '" + profile.name + "'? This action cannot be undone.")
+                        .setPositiveButton("Delete", (d2, w2) -> {
+                            CustomProfileManager.deleteProfile(activity, profile.id);
+                            Toast.makeText(activity, "Profile '" + profile.name + "' deleted", Toast.LENGTH_SHORT).show();
+                            onModified.run();
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            });
+
+            // Close button
+            dialogView.findViewById(R.id.btn_options_close).setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                DisplayMetrics dm = activity.getResources().getDisplayMetrics();
+                int screenWidth = dm.widthPixels;
+                int targetWidth = Math.min((int) (screenWidth * 0.92f), dp(activity, 460));
+                window.setLayout(targetWidth, WindowManager.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+            }
+        });
     }
 
     public static void applyProfile(@NonNull Activity activity, @NonNull CustomProfileManager.CustomProfile profile, @NonNull Runnable onApplied) {
