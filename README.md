@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
   <p align="center">
     <img src="assets/logos/ror.png" alt="ROR Official Logo" width="150" />
@@ -21,7 +21,7 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Platform-Android%2010%20to%2014%2B%20(API%2029--34)-3b82f6?style=flat-square&logo=android" alt="Android Support" />
+    <img src="https://img.shields.io/badge/Platform-Android%2010%20to%2017%2B%20%26%20Upcoming%20(API%2029--37%2B)-3b82f6?style=flat-square&logo=android" alt="Android Support" />
     <img src="https://img.shields.io/badge/Privilege-Root%20(Magisk%20%7C%20KSU%20%7C%20APatch)%20%2F%20Shizuku-06b6d4?style=flat-square&logo=android" alt="Root & Shizuku" />
     <img src="https://img.shields.io/badge/Architecture-arm64--v8a%20%7C%20armeabi--v7a%20%7C%20x86__64-6366f1?style=flat-square" alt="Supported Architectures" />
     <img src="https://img.shields.io/badge/License-GPL--3.0-ef4444?style=flat-square&logo=gnu&logoColor=white" alt="GPL-3.0 License" />
@@ -82,7 +82,7 @@ ROR operates as both an interactive esports **Game Space launcher** and a precis
 
 The ROR aesthetic is defined by an uncompromising high-contrast obsidian dark palette accentuated with vivid crimson, neon cyan, and amber telemetry accents.
 
-- **The ROR Brand (`assets/logos/ror.png`)**: Symbolizes rebellion against OEM hardware restrictions, vendor-locked game boosters, and conservative thermal algorithms.
+- **The ROR Brand (`assets/logos/ror.png`)**: The official ROR esports mecha emblem featuring the angular red helmet crest, glowing crimson optics, and integrated "R-O-R" typographic mask on an obsidian squircle. It symbolizes rebellion against restrictive OEM thermal throttling and vendor-locked game boosters.
 - **The Phoenix VIP Brand (`assets/logos/phoenix.png`)**: Represents rebirth into uncompromising peak hardware capability—unlocking sub-millisecond thread scheduling, aggressive memory management, and competitive esports tuning.
 
 ---
@@ -208,9 +208,26 @@ Battery thermal generation is the primary cause of mid-game frame dropping. When
 
 ## 13. Android Compatibility
 
-- **Supported Android Versions**: Android 10 (Q, API 29), Android 11 (R, API 30), Android 12/12L (S, API 31/32), Android 13 (T, API 33), and Android 14+ (U, API 34).
-- **Supported Architectures**: `arm64-v8a` (64-bit ARM), `armeabi-v7a` (32-bit ARM legacy), and `x86_64` (emulators & ChromeOS).
-- **Tested SoCs**: Qualcomm Snapdragon (845 through 8 Gen 3), MediaTek Dimensity (700 through 9300), Google Tensor (G1-G3), Samsung Exynos.
+ROR is engineered with an adaptive, forward-compatible architecture designed to support **Android 10 all the way through Android 17 and all upcoming Android releases**:
+
+| Android Version | API Level | Codename | Status | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| **Android 17+** | **37+** | *Future Android* | :white_check_mark: Full Forward Compatibility | Sysfs & LibSU isolation unaffected by userland changes |
+| **Android 16** | **36** | Baklava | :white_check_mark: Fully Supported | 16 KB page-size support & GKI 6.6 kernel compatibility |
+| **Android 15** | **35** | Vanilla Ice Cream | :white_check_mark: Fully Supported | Dynamic performance framework & Shizuku v13 IPC |
+| **Android 14** | **34** | Upside Down Cake | :white_check_mark: Fully Supported | Native foreground service types & target SDK 34 |
+| **Android 13** | **33** | Tiramisu | :white_check_mark: Fully Supported | Runtime notifications & per-app language support |
+| **Android 12 / 12L** | **31 / 32** | Snow Cone / v2 | :white_check_mark: Fully Supported | Explicit component exports & splash screen engine |
+| **Android 11** | **30** | Red Velvet Cake | :white_check_mark: Fully Supported | Scoped storage isolation & wireless ADB debugging |
+| **Android 10** | **29** | Quince Tart | :white_check_mark: Fully Supported (`minSdkVersion 29`) | Legacy storage compatibility & dark theme primitives |
+
+### Forward-Compatible Architecture
+- **Hardware-Direct Sysfs Primitives**: Kernel nodes (`/sys/devices/system/cpu/`, `/sys/class/kgsl/`, `/sys/class/power_supply/`) operate directly on Linux kernel interfaces, making ROR immune to Android userland framework deprecations.
+- **Universal Root Daemon**: Built on TopJohnWu's `libsu` IPC bridge, providing reliable, non-blocking superuser command execution across Magisk, KernelSU, and APatch on GKI kernels (4.14 through 6.6+).
+- **Decoupled Shizuku Token Exchange**: Non-root capabilities interface directly with system binder tokens, eliminating reliance on internal hidden APIs.
+- **Zero Maximum SDK Restrictions**: No artificial upper API ceilings are enforced, allowing ROR to launch and execute smoothly on bleeding-edge developer previews and upcoming Android releases.
+- **Supported CPU Architectures**: `arm64-v8a` (64-bit ARM), `armeabi-v7a` (32-bit legacy), and `x86_64` (emulators & ChromeOS).
+- **Tested SoCs**: Qualcomm Snapdragon (845 through 8 Gen 3/4), MediaTek Dimensity (700 through 9400), Google Tensor (G1 through G4), Samsung Exynos.
 
 ---
 

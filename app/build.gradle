@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId "com.revror.revws"
-        minSdkVersion 30
+        minSdkVersion 29
         targetSdkVersion 34
         versionCode 514
         versionName "51.4"
