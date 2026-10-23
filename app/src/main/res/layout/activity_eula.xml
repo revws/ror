@@ -1,293 +1,572 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0C0F14"
-    android:orientation="vertical"
-    android:paddingLeft="24dp"
-    android:paddingTop="36dp"
-    android:paddingRight="24dp"
-    android:paddingBottom="24dp">
+    android:background="@drawable/ror_welcome_gradient_bg">
 
-    <!-- Welcome Header -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Please accept our agreement to continue"
-        android:textColor="#8E95AF"
-        android:textSize="15sp" />
-
-    <!-- Agreement Summary Chip -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/ror_chip"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="8dp"
-        android:text="Agreement summary"
-        android:textColor="#8E95AF"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <ScrollView
+    <!-- ================================================================= -->
+    <!-- 1. MODERN & STYLISH WELCOME PAGE CONTAINER                        -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/container_welcome"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:visibility="visible">
 
+        <!-- Top Brand Header with Glowing Emblem & Neon Typography -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <!-- Card 1: System Optimization (Teal / Cyan) -->
+            <ImageView
+                android:id="@+id/welcome_logo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="ROR Logo"
+                android:src="@drawable/ror_logo" />
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/ror_eula_card_teal"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.06"
+                        android:text="REVROR"
+                        android:textColor="#FFFFFF"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/ror_welcome_chip"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        android:text="v50.4"
+                        android:textColor="#FF5252"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="REVROR optimizes your system by modifying various system parameters"
-                    android:textColor="#D8F2FF"
-                    android:textSize="15sp"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.04"
+                    android:text="HYPER KERNEL SUITE • TOURNAMENT EDITION"
+                    android:textColor="#FF3D60"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_sparkle" />
             </LinearLayout>
-
-            <!-- Card 2: Data Backup (Steel / Slate) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/ror_eula_card_slate"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="Ensure you have a data backup"
-                    android:textColor="#E0E8EF"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_cloud_backup" />
-            </LinearLayout>
-
-            <!-- Card 3: Disclaimer (Violet / Purple) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/ror_eula_card_purple"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="We are not responsible for any damage."
-                    android:textColor="#EBE0F5"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_alert_triangle" />
-            </LinearLayout>
-
-            <!-- Card 4: Conflicting Tweaks (Deep Crimson / Red) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/ror_eula_card_red"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="Do not use other tweaks with REVROR."
-                    android:textColor="#FFE5E5"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_tools_crossed" />
-            </LinearLayout>
-
-            <!-- Card 5: Root & Privacy (Ocean Blue) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/ror_eula_card_blue"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="Root and Shizuku run 100% on-device with zero telemetry collected or shared."
-                    android:textColor="#D5EDFF"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_shield"
-                    app:tint="#80D8FF" />
-            </LinearLayout>
-
-            <!-- Card 6: Thermal & Power Limits (Deep Amber) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/ror_eula_card_amber"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="Gaming and overclock modes increase device thermal load and power consumption."
-                    android:textColor="#FFF0D0"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_cpu"
-                    app:tint="#FFD54F" />
-            </LinearLayout>
-
-            <!-- Card 7: Factory Defaults & Safety (Forest Emerald) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/ror_eula_card_emerald"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="3dp"
-                    android:text="All kernel and system parameters can be restored to factory defaults anytime."
-                    android:textColor="#D8FFE8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="14dp"
-                    android:src="@drawable/ic_restore"
-                    app:tint="#69F0AE" />
-            </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
 
-    <!-- Bottom Action Buttons matching the design -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        <!-- Subtitle & Status Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_see_full_eula"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Precision Architecture • Zero Compromise"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ror_chip"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
+                android:text="● 100% ON-DEVICE"
+                android:textColor="#00E676"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Section Title -->
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:background="@drawable/ror_eula_btn_outline"
-            android:paddingStart="22dp"
-            android:paddingEnd="22dp"
-            android:text="See full EULA"
-            android:textAllCaps="false"
-            android:textColor="#B0BBD0"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/btn_accept_eula"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:background="@drawable/ror_eula_btn_accept"
-            android:paddingStart="28dp"
-            android:paddingEnd="28dp"
-            android:text="Accept"
-            android:textAllCaps="false"
-            android:textColor="#081724"
-            android:textSize="14sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp"
+            android:letterSpacing="0.08"
+            android:text="SYSTEM &amp; HARDWARE GOVERNANCE"
+            android:textColor="#64748B"
+            android:textSize="11sp"
             android:textStyle="bold" />
+
+        <!-- Scrollable Modern Agreement Cards -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Card 1: System Optimization (Teal / Cyan) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_teal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kernel Governor &amp; Clock Tuning"
+                            android:textColor="#00E5FF"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="REVROR optimizes CPU/GPU governor parameters and sysfs nodes to minimize micro-stutter and frame latency."
+                            android:textColor="#CBD5E1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_sparkle"
+                        app:tint="#00E5FF" />
+                </LinearLayout>
+
+                <!-- Card 2: Data Backup (Steel / Slate) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_slate"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Device Backup Recommendation"
+                            android:textColor="#94A3B8"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Ensure you maintain regular backups prior to applying extensive kernel overrides or raw sysctl parameters."
+                            android:textColor="#CBD5E1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_cloud_backup"
+                        app:tint="#94A3B8" />
+                </LinearLayout>
+
+                <!-- Card 3: Responsibility (Deep Crimson / Red) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_red"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Informed Hardware Operation"
+                            android:textColor="#FF5252"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Modifying hardware clock rates and thermal thresholds involves user agency. Maintain thermal awareness."
+                            android:textColor="#FFE5E5"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_alert_triangle"
+                        app:tint="#FF5252" />
+                </LinearLayout>
+
+                <!-- Card 4: Conflicting Tweaks (Flame Amber) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_amber"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Isolated Tuning Stack"
+                            android:textColor="#FFB74D"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Do not stack external performance modules or battery daemons concurrently to avoid governor desync."
+                            android:textColor="#CBD5E1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_tools_crossed"
+                        app:tint="#FFB74D" />
+                </LinearLayout>
+
+                <!-- Card 5: Root & Privacy (Emerald Green) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_emerald"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100% On-Device Privacy"
+                            android:textColor="#69F0AE"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Privileged commands run purely locally on your device. Zero analytics or personal telemetry are transmitted."
+                            android:textColor="#CBD5E1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_shield"
+                        app:tint="#69F0AE" />
+                </LinearLayout>
+
+                <!-- Card 6: Factory Defaults & Safety (Sapphire Violet) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:background="@drawable/ror_eula_card_purple"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Instant Factory Reversibility"
+                            android:textColor="#C084FC"
+                            android:textSize="13.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:lineSpacingExtra="2dp"
+                            android:text="All modified kernel nodes, governors, and frequencies can be reverted to OEM factory stock anytime."
+                            android:textColor="#CBD5E1"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_restore"
+                        app:tint="#C084FC" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Bottom Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_see_full_eula"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ror_welcome_btn_outline"
+                android:letterSpacing="0.03"
+                android:text="See full EULA"
+                android:textAllCaps="false"
+                android:textColor="#E2E8F0"
+                android:textSize="13.5sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_accept_eula"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ror_welcome_btn_accept"
+                android:letterSpacing="0.04"
+                android:text="Accept &amp; Launch ➔"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="13.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+    <!-- ================================================================= -->
+    <!-- 2. FULL EULA PAGE CONTAINER (TEXT ONLY)                           -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/container_full_eula"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#07090E"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:visibility="gone">
 
+        <!-- Top Header for Full EULA Reader -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btn_back_to_welcome"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ror_welcome_btn_outline"
+                android:contentDescription="Back"
+                android:padding="10dp"
+                android:src="@drawable/ic_back"
+                app:tint="#E2E8F0" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="END USER LICENSE AGREEMENT"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.05"
+                    android:text="TEXT-ONLY OFFICIAL TERMS • GNU GPL-3.0"
+                    android:textColor="#FF3D60"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ror_chip"
+                android:paddingStart="8dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
+                android:text="FULL TEXT"
+                android:textColor="#94A3B8"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="12dp"
+            android:background="#1E293B" />
+
+        <!-- Scrollable Pure Text Reader -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/tv_full_eula_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:textColor="#CBD5E1"
+                android:textSize="13sp" />
+        </ScrollView>
+
+        <!-- Bottom Reader Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_reader_back"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ror_welcome_btn_outline"
+                android:letterSpacing="0.03"
+                android:text="← Back to Summary"
+                android:textAllCaps="false"
+                android:textColor="#E2E8F0"
+                android:textSize="13.5sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_reader_accept"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ror_welcome_btn_accept"
+                android:letterSpacing="0.04"
+                android:text="I Agree &amp; Continue ➔"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="13.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
