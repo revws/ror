@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
   <p align="center">
     <img src="assets/logos/ror.png" alt="ROR Official Logo" width="150" />
@@ -242,48 +242,15 @@ ROR adapts seamlessly to your device's security environment:
 
 ## 15. Installation
 
-1. Download the latest release APK from our official distribution channels:
-   - Official Source: [https://github.com/revws/ror/releases](https://github.com/revws/ror/releases)
-   - Experimental Builds: [https://github.com/revws/rorexp/releases](https://github.com/revws/rorexp/releases)
-2. Install the APK on your Android device:
-   ```bash
-   adb install -r ROR.apk
-   ```
-3. Launch ROR and grant required overlay and storage permissions. If rooted, grant Superuser permissions when prompted.
+Download the latest release package from our official distribution channels:
+- Official Source Releases: [https://github.com/revws/ror/releases](https://github.com/revws/ror/releases)
+- Experimental Builds: [https://github.com/revws/rorexp/releases](https://github.com/revws/rorexp/releases)
+
+Launch ROR and grant the required overlay and battery optimization permissions. If rooted, grant Superuser permissions when prompted to unlock complete kernel tuning and hardware controls.
 
 ---
 
-## 16. Build From Source
-
-### Prerequisites
-- **JDK**: OpenJDK 17 or higher
-- **Android SDK**: API level 34 build-tools
-- **Gradle**: 7.3.1+ (included via Gradle Wrapper)
-
-### Compilation Steps
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/revws/rorexp.git
-   cd rorexp
-   ```
-2. Configure local Android SDK path in `local.properties`:
-   ```properties
-   sdk.dir=/path/to/android-sdk
-   ```
-3. Build using the Gradle wrapper:
-   ```bash
-   # Build Debug APK
-   ./gradlew :app:assembleFdroidDebug
-
-   # Build Release APK
-   ./gradlew :app:assembleFdroidRelease
-   ```
-4. Generated APKs will be located in:
-   `app/build/outputs/apk/fdroid/release/`
-
----
-
-## 17. GPL-3.0 License
+## 16. GPL-3.0 License
 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 You are free to inspect, modify, and redistribute this software in accordance with the terms of the GPL-3.0 license.
@@ -292,17 +259,7 @@ You are free to inspect, modify, and redistribute this software in accordance wi
 
 ---
 
-## 18. Contributions
-
-Contributions, bug reports, and hardware feature requests are warmly welcomed:
-1. Fork the experimental repository: [https://github.com/revws/rorexp](https://github.com/revws/rorexp)
-2. Create your feature branch (`git checkout -b feature/kernel-tweak`)
-3. Commit your changes with clear, descriptive commit messages
-4. Open a Pull Request targeting the `main` branch
-
----
-
-## 19. Frequently Asked Questions
+## 17. Frequently Asked Questions
 
 **Q: Does ROR require a custom kernel?**  
 A: No. ROR works with stock vendor kernels as well as custom kernels. Custom kernels may expose additional governors and sysfs nodes.
@@ -315,18 +272,19 @@ A: The Aim Boost module operates purely as a system window overlay and does not 
 
 ---
 
-## 20. Developer Information
+## 18. Developer Information & Credits
 
-- **Lead Architect & Developer**: `revWS`
+- **Lead Architect & Developer**: revWS (revWhiteShadow)
+- **Technical Support**: [wahyu6070](https://github.com/wahyu6070) & [mshan](https://t.me/M_Shan_Op)
 - **Telegram Contact**: [@revwhiteshadow](https://t.me/revwhiteshadow)
 - **Ecosystem**: Reincarnation of Revolutionary (ROR)
 
 ---
 
-## 21. Official Links
+## 19. Official Links
 
-- 🌐 **Official Source Repository**: [https://github.com/revws/ror](https://github.com/revws/ror)
-- 🧪 **Experimental Development Repository**: [https://github.com/revws/rorexp](https://github.com/revws/rorexp)
-- 📢 **Official Telegram Channel**: [https://t.me/godTspeed](https://t.me/godTspeed)
-- 💬 **Discussion Community**: [https://t.me/godspeedmode](https://t.me/godspeedmode)
-- 📝 **Architecture & Benchmark Article**: [articel.md](articel.md)
+- **Official Source Repository**: [https://github.com/revws/ror](https://github.com/revws/ror)
+- **Experimental Development Repository**: [https://github.com/revws/rorexp](https://github.com/revws/rorexp)
+- **Official Telegram Channel**: [https://t.me/godTspeed](https://t.me/godTspeed)
+- **Discussion Community**: [https://t.me/godspeedmode](https://t.me/godspeedmode)
+- **Architecture & Benchmark Article**: [articel.md](articel.md)
