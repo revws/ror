@@ -363,7 +363,7 @@ private ScrollView verticalGameScroll;
         "Crimson", "Cyan", "Violet", "REVROR Green", "Gold", "Ice Blue", "Blaze", "White"
     };
     private int gameSpaceAccent = 0xFFFF1744;
-    private int bannerBlur = 8;
+    private int bannerBlur = 0;
     private int activeBannerId = 0;
     private AnimatedGameSpaceBannerView animatedBannerView;
     private int selectedBannerId = 0;
@@ -1243,7 +1243,7 @@ private ScrollView verticalGameScroll;
 
         SharedPreferences th = getSharedPreferences("ror_game_space_themes", 0);
         gameSpaceAccent = th.getInt("game_space_accent", 0xFFFF1744);
-        bannerBlur = th.getInt("banner_blur", 8);
+        bannerBlur = th.getInt("banner_blur", 0);
         selectedBannerId = th.getInt("selected_banner_id", 0);
         activeBannerId = selectedBannerId;
         selectedBannerPath = th.getString("selected_banner_path", null);
@@ -1730,7 +1730,7 @@ private ScrollView verticalGameScroll;
             lBg.setCornerRadius(dp(14));
             lBg.setStroke(dp(1.2f), 0x5500E5FF);
             leftCard.setBackground(lBg);
-            leftCard.setAlpha(0.65f);
+            leftCard.setAlpha(1.0f);
 
             ImageView lIcon = new ImageView(this);
             lIcon.setImageDrawable(getEntryIcon(prevEntry));
@@ -1820,7 +1820,7 @@ private ScrollView verticalGameScroll;
             rBg.setCornerRadius(dp(14));
             rBg.setStroke(dp(1.2f), 0x5500E5FF);
             rightCard.setBackground(rBg);
-            rightCard.setAlpha(0.65f);
+            rightCard.setAlpha(1.0f);
 
             ImageView rIcon = new ImageView(this);
             rIcon.setImageDrawable(getEntryIcon(nextEntry));
@@ -5291,7 +5291,7 @@ private ScrollView verticalGameScroll;
 
         LinearLayout transBtns = new LinearLayout(this);
         transBtns.setOrientation(LinearLayout.HORIZONTAL);
-        int curTrans = sp.getInt("ror_floating_transparency", 96);
+        int curTrans = sp.getInt("ror_floating_transparency", 100);
         int[] transPresets = new int[]{80, 90, 96, 100};
         for (int t : transPresets) {
             boolean isSel = (curTrans == t);
@@ -7209,7 +7209,7 @@ private ScrollView verticalGameScroll;
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             gameSpaceAccent = 0xFFFF1744;
             activeBannerId = 0;
-            bannerBlur = 8;
+            bannerBlur = 0;
             savePreferences();
             blurBar.setProgress(bannerBlur);
             blurVal.setText("Blur: " + bannerBlur + " px");

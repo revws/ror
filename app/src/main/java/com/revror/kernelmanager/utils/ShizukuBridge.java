@@ -264,10 +264,9 @@ public final class ShizukuBridge {
 
         Process process = null;
         try {
+            String cmdTrimmed = command != null ? command.trim() : "";
+            String wrappedCommand = cmdTrimmed.endsWith(";") ? "{ " + cmdTrimmed + " } 2>&1" : "{ " + cmdTrimmed + "; } 2>&1";
             Method method = getNewProcessMethod();
-            // Wrap in sh -c with merged stderr into stdout redirection inside the shell invocation
-            // to eliminate any pipe buffer saturation deadlock between stdout and stderr.
-            String wrappedCommand = "{ " + command + "; } 2>&1";
             process = (Process) method.invoke(null, new String[]{"sh", "-c", wrappedCommand}, null, null);
             if (process == null) {
                 return new Result(false, "Failed to instantiate remote process", -1);
@@ -315,7 +314,7 @@ public final class ShizukuBridge {
             }
 
             // Await reader stream drain
-            readLatch.await(500, TimeUnit.MILLISECONDS);
+            readLatch.await(1200, TimeUnit.MILLISECONDS);
 
             int exitCode = process.exitValue();
             return new Result(exitCode == 0, output.toString().trim(), exitCode);

@@ -335,6 +335,24 @@ public final class GyroDelayEngine {
         }).start();
     }
 
+    public static void restoreDefault(@NonNull Context context, @NonNull Runnable onComplete) {
+        new Thread(() -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append("setprop persist.vendor.sensors.debug.latency \"\"; ");
+            sb.append("setprop persist.vendor.sensors.direct_report 0; ");
+            sb.append("setprop vendor.sensor.gyro.latency \"\"; ");
+            sb.append("setprop debug.sensors.fast_poll 0; ");
+            executePrivileged(sb.toString());
+
+            context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(KEY_OPTIMIZED, false)
+                    .apply();
+
+            new Handler(Looper.getMainLooper()).post(onComplete);
+        }).start();
+    }
+
     private static void executePrivileged(String cmd) {
         if (RootUtils.rootAccess()) {
             RootUtils.runCommand(cmd);

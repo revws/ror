@@ -144,7 +144,7 @@ public class GameBubbleService extends Service {
     private WindowManager.LayoutParams params;
     private View overlay;
     private TextView metrics;
-    private final Button[] profileButtons = new Button[8];
+    private Button[] profileButtons = new Button[8];
     private String targetPackage = "", targetLabel = "Game";
     private boolean userDismissed = false;
 
@@ -181,7 +181,7 @@ public class GameBubbleService extends Service {
     private int appliedHardwareColorFilter = -1;
     private View crosshairOverlay;
     private WindowManager.LayoutParams crosshairParams;
-    public static final String DEFAULT_FLOATING_TOOLS_ORDER = "quick_screenshot,speedrun_stopwatch,floating_calc,audio_boost,quick_ram_vram_purge,touch_sampling_boost,force_max_refresh,thermal_battery_guard,voice_changer,display_tools,wifi_manager,crosshair_settings,anti_disturb,barrage,mini_apps,screen_recorder,network,cleanup,toggle_overlay";
+    public static final String DEFAULT_FLOATING_TOOLS_ORDER = "quick_screenshot,screen_recorder,touch_sampling_boost,aim_boost,gyro_delay_fix,force_max_refresh,quick_ram_vram_purge,network,cleanup,thermal_battery_guard,charging_cooldown,force_doze,hw_overlay,kernel_tuning,toggle_overlay,speedrun_stopwatch,floating_calc,audio_boost,crosshair_toggle,crosshair_settings,voice_changer,hunting_filter,color_boost,display_tools,wifi_manager,mobile_data,anti_disturb,barrage,mini_apps,brightness_lock,play_reminder,app_manager";
     private LinearLayout floatingToolsContainer;
     private View screenFilterOverlay;
     private WindowManager.LayoutParams screenFilterParams;
@@ -310,9 +310,8 @@ public class GameBubbleService extends Service {
                                     lastThermalAlertTime = System.currentTimeMillis();
                                     handler.post(() -> {
                                         showBarrage("THERMAL ALERT", String.format(Locale.US, "Battery temp at %.1fC! Switching to CoolDown profile", temp));
-                                        GameOptimizer.applyProfile(GameBubbleService.this, 3, null);
-                                        selectedProfile = 3;
-                                        updateProfileButtons();
+                                        int cdProf = GsmProfileManager.isPhoenixSelected(GameBubbleService.this) ? 2 : 3;
+                                        applyProfileDirect(cdProf);
                                     });
                                 }
                             } catch (Exception ignored) {}
@@ -610,7 +609,7 @@ public class GameBubbleService extends Service {
     /**
      * macOS Style Traffic Lights: Red (Close/Collapse), Yellow (Minimize to Edge '>'), Green (Toggle HUD / Expand)
      */
-    private LinearLayout buildMacOsTrafficLights(Runnable onClose, Runnable onMinimize, Runnable onExpand) {
+    public LinearLayout buildMacOsTrafficLights(Runnable onClose, Runnable onMinimize, Runnable onExpand) {
         LinearLayout bar = new LinearLayout(this);
         bar.setOrientation(LinearLayout.HORIZONTAL);
         bar.setGravity(Gravity.CENTER_VERTICAL);
@@ -655,12 +654,14 @@ public class GameBubbleService extends Service {
     }
 
     View buildPanel() {
-        SharedPreferences floatingPrefs = getSharedPreferences("ror_game_space_center", MODE_PRIVATE);
-        int layoutStyle = floatingPrefs.getInt("ror_floating_layout_style", 0);
+        int layoutStyle = FloatingWindowLayoutManager.sanitizeAndMigrateLayoutStyle(this);
+        if (layoutStyle == FloatingWindowLayoutManager.LAYOUT_PHOENIX_COMMAND) {
+            return buildClassicPanel();
+        }
         return FloatingWindowLayoutManager.buildLayout(this, layoutStyle);
     }
 
-    private View buildClassicPanel() {
+    public View buildClassicPanel() {
         LinearLayout panel = new LinearLayout(this);
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setPadding(dp(16), dp(14), dp(16), dp(14));
@@ -731,14 +732,11 @@ public class GameBubbleService extends Service {
 
         List<com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.ProfileDescriptor> profiles =
                 com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.getProfiles(phoenix);
-        for (int i = 0; i < 8; i++) {
-            if (i < profiles.size()) {
-                com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.ProfileDescriptor desc = profiles.get(i);
-                profileButtons[i] = profileButton(desc.shortName, desc.id);
-                profileRow.addView(profileButtons[i], profileParams());
-            } else {
-                profileButtons[i] = null;
-            }
+        profileButtons = new Button[profiles.size()];
+        for (int i = 0; i < profiles.size(); i++) {
+            com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.ProfileDescriptor desc = profiles.get(i);
+            profileButtons[i] = profileButton(desc.shortName, desc.id);
+            profileRow.addView(profileButtons[i], profileParams());
         }
         profileScroll.addView(profileRow, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         content.addView(profileScroll);
@@ -821,7 +819,7 @@ public class GameBubbleService extends Service {
         new Handler(Looper.getMainLooper()).post(this::populateFloatingTools);
     }
 
-    private void populateFloatingTools() {
+    public void populateFloatingTools() {
         if (floatingToolsContainer == null) return;
         floatingToolsContainer.removeAllViews();
 
@@ -829,11 +827,19 @@ public class GameBubbleService extends Service {
         String orderCsv = sp.getString("ror_floating_tools_order", DEFAULT_FLOATING_TOOLS_ORDER);
         String[] toolKeys = orderCsv.split(",");
         List<String> visibleKeys = new ArrayList<>();
+        java.util.Set<String> seenKeys = new java.util.HashSet<>();
         for (String k : toolKeys) {
             String toolKey = k.trim();
-            if (toolKey.isEmpty()) continue;
+            if (toolKey.isEmpty() || !seenKeys.add(toolKey)) continue;
             boolean isVisible = sp.getBoolean("ror_tool_vis_" + toolKey, true);
             if (isVisible) visibleKeys.add(toolKey);
+        }
+        for (String defKey : DEFAULT_FLOATING_TOOLS_ORDER.split(",")) {
+            String toolKey = defKey.trim();
+            if (!toolKey.isEmpty() && seenKeys.add(toolKey)) {
+                boolean isVisible = sp.getBoolean("ror_tool_vis_" + toolKey, true);
+                if (isVisible) visibleKeys.add(toolKey);
+            }
         }
 
         final int count = visibleKeys.size();
@@ -936,45 +942,9 @@ public class GameBubbleService extends Service {
     }
 
     private View buildToolActionView(String toolKey) {
-        if ("quick_screenshot".equals(toolKey)) {
-            return action("Quick Screenshot  |  Instant capture", "quick_screenshot");
-        } else if ("speedrun_stopwatch".equals(toolKey)) {
-            return action("Speedrun Stopwatch  |  " + (stopwatchOverlay != null ? "ACTIVE" : "OFF"), "speedrun_stopwatch");
-        } else if ("floating_calc".equals(toolKey)) {
-            return action("Combat Mini Calculator  |  Overlay", "floating_calc");
-        } else if ("audio_boost".equals(toolKey)) {
-            return action("Audio Boost (+6dB)  |  " + (audioBoostEnabled ? "ON" : "OFF"), "audio_boost");
-        } else if ("quick_ram_vram_purge".equals(toolKey)) {
-            return action("Super RAM & VRAM Flush  |  Purge caches", "quick_ram_vram_purge");
-        } else if ("touch_sampling_boost".equals(toolKey)) {
-            return action("Touch Engine Boost  |  " + (touchBoostEnabled ? "480Hz ULTRA" : "240Hz NORMAL"), "touch_sampling_boost");
-        } else if ("force_max_refresh".equals(toolKey)) {
-            return action("Force Peak Display Refresh  |  " + (highRefreshEnabled ? "PEAK LOCKED" : "AUTO"), "force_max_refresh");
-        } else if ("thermal_battery_guard".equals(toolKey)) {
-            return action("Thermal Guard Alert  |  " + (thermalGuardEnabled ? "ARMED" : "OFF"), "thermal_battery_guard");
-        } else if ("voice_changer".equals(toolKey)) {
-            return action("Voice Comms Filter  |  " + VOICE_FILTER_NAMES[voiceFilterIndex], "voice_changer");
-        } else if ("display_tools".equals(toolKey)) {
-            return action("Game plugins and display", "display_tools");
-        } else if ("wifi_manager".equals(toolKey)) {
-            return action("Wi-Fi search & connect", "wifi_manager");
-        } else if ("crosshair_settings".equals(toolKey)) {
-            return action("Crosshair settings  |  " + CROSSHAIR_NAMES[crosshairStyle] + (crosshairEnabled ? "  |  ON" : "  |  OFF"), "crosshair_settings");
-        } else if ("anti_disturb".equals(toolKey)) {
-            return action("Anti-disturb  |  " + (antiDisturbEnabled ? "ON" : "OFF"), "anti_disturb");
-        } else if ("barrage".equals(toolKey)) {
-            return action("Barrage messages  |  " + (barrageEnabled ? "ON" : "OFF"), "barrage");
-        } else if ("mini_apps".equals(toolKey)) {
-            return action("Mini windows and multitasking", "mini_apps");
-        } else if ("screen_recorder".equals(toolKey)) {
-            return action("Screen recorder  |  480p / 720p / 1080p", "screen_recorder");
-        } else if ("network".equals(toolKey)) {
-            return action("Network latency boost", "network");
-        } else if ("cleanup".equals(toolKey)) {
-            return action("One-touch background cleanup", "cleanup");
-        } else if ("toggle_overlay".equals(toolKey)) {
-            boolean isOverlayActive = getSharedPreferences("ror_tools", MODE_PRIVATE).getBoolean("overlay", false);
-            return action(isOverlayActive ? "CPU / GPU floating HUD  |  ON" : "CPU / GPU floating HUD  |  OFF", "toggle_overlay");
+        FloatingFeatureRegistry.FloatingFeature feat = FloatingFeatureRegistry.getFeature(toolKey);
+        if (feat != null) {
+            return action(feat.name + "  |  " + feat.getStatusText(this), toolKey);
         }
         return null;
     }
@@ -982,6 +952,7 @@ public class GameBubbleService extends Service {
     private Button profileButton(String name, int profile) {
         Button button = new Button(this);
         button.setText(name);
+        button.setTag(Integer.valueOf(profile));
         button.setTextColor(Color.WHITE);
         button.setTextSize(9.5f);
         button.setTypeface(null, Typeface.BOLD);
@@ -989,9 +960,8 @@ public class GameBubbleService extends Service {
         button.setAllCaps(false);
         button.setGravity(Gravity.CENTER);
         button.setOnClickListener(v -> {
-            selectedProfile = profile;
-            updateProfileButtons();
-            GameOptimizer.applyProfile(this, profile, this::toastResult);
+            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            applyProfileDirect(profile);
         });
         return button;
     }
@@ -1003,17 +973,21 @@ public class GameBubbleService extends Service {
     }
 
     private void updateProfileButtons() {
-        for (int i = 0; i < profileButtons.length; i++) {
-            if (profileButtons[i] == null) continue;
-            boolean active = i == selectedProfile;
+        if (profileButtons == null) return;
+        for (Button btn : profileButtons) {
+            if (btn == null) continue;
+            Object tag = btn.getTag();
+            if (!(tag instanceof Integer)) continue;
+            int btnProf = (Integer) tag;
+            boolean active = (btnProf == selectedProfile);
             GradientDrawable bg = active
                     ? new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{0xFFD81125, 0xFFFF3346})
                     : new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{0xFF242428, 0xFF17171A});
             bg.setCornerRadius(dp(8));
             bg.setStroke(dp(active ? 2 : 1), active ? 0xFFFF7580 : 0xFF46464D);
-            profileButtons[i].setBackground(bg);
-            profileButtons[i].setAlpha(active ? 1f : .78f);
-            profileButtons[i].setTextColor(active ? Color.WHITE : 0xFFB0B0B8);
+            btn.setBackground(bg);
+            btn.setAlpha(1f);
+            btn.setTextColor(active ? Color.WHITE : 0xFFE0E2EC);
         }
     }
 
@@ -1044,157 +1018,62 @@ public class GameBubbleService extends Service {
         lp.bottomMargin = dp(6);
         button.setLayoutParams(lp);
 
-        button.setOnClickListener(v -> {
-            if ("quick_screenshot".equals(act)) {
-                takeQuickScreenshot();
-                return;
-            }
-            if ("speedrun_stopwatch".equals(act)) {
-                toggleSpeedrunStopwatch();
-                if (bubbleState == 0) replaceOverlay(buildPanel());
-                return;
-            }
-            if ("floating_calc".equals(act)) {
-                toggleFloatingCalculator();
-                return;
-            }
-            if ("audio_boost".equals(act)) {
-                toggleAudioBoost();
-                return;
-            }
-            if ("quick_ram_vram_purge".equals(act)) {
-                flushVramAndRam();
-                return;
-            }
-            if ("touch_sampling_boost".equals(act)) {
-                boostTouchSampling();
-                return;
-            }
-            if ("force_max_refresh".equals(act)) {
-                forcePeakRefreshRate();
-                return;
-            }
-            if ("thermal_battery_guard".equals(act)) {
-                toggleThermalGuard();
-                return;
-            }
-            if ("voice_changer".equals(act)) {
-                cycleVoiceFilter();
-                return;
-            }
-            if ("close".equals(act)) {
-                collapse();
-                return;
-            }
-            if ("minimize".equals(act)) {
-                minimizeToEdge();
-                return;
-            }
-            if ("mini_apps".equals(act)) {
-                showMiniApps();
-                return;
-            }
-            if ("screen_recorder".equals(act)) {
-                showScreenRecorder();
-                return;
-            }
-            if ("display_tools".equals(act)) {
-                showGamePlugins();
-                return;
-            }
-            if ("crosshair_toggle".equals(act)) {
-                toggleCrosshair();
-                return;
-            }
-            if ("crosshair_settings".equals(act)) {
-                showCrosshairSettingsPanel();
-                return;
-            }
-            if ("crosshair_style".equals(act)) {
-                cycleCrosshairStyle();
-                return;
-            }
-            if ("crosshair_color".equals(act)) {
-                cycleCrosshairColor();
-                return;
-            }
-            if ("crosshair_size".equals(act)) {
-                cycleCrosshairSize();
-                return;
-            }
-            if ("anti_disturb".equals(act)) {
-                toggleAntiDisturb();
-                return;
-            }
-            if ("barrage".equals(act)) {
-                toggleBarrage();
-                return;
-            }
-            if ("choose_any_app".equals(act)) {
-                showAllInstalledAppsPicker();
-                return;
-            }
-            if ("wifi_manager".equals(act)) {
-                showWifiPanel();
-                return;
-            }
-            if ("toggle_overlay".equals(act)) {
-                boolean active = getSharedPreferences("ror_tools", MODE_PRIVATE).getBoolean("overlay", false);
-                if (active) {
-                    startService(new Intent(this, CpuOverlayService.class).setAction(CpuOverlayService.ACTION_STOP));
-                    getSharedPreferences("ror_tools", MODE_PRIVATE).edit().putBoolean("overlay", false).apply();
-                    button.setText("CPU / GPU floating HUD  |  OFF");
-                    toast("Floating info overlay disabled");
-                } else {
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        startForegroundService(new Intent(this, CpuOverlayService.class));
-                    } else {
-                        startService(new Intent(this, CpuOverlayService.class));
-                    }
-                    getSharedPreferences("ror_tools", MODE_PRIVATE).edit().putBoolean("overlay", true).apply();
-                    button.setText("CPU / GPU floating HUD  |  ON");
-                    toast("Floating info overlay enabled");
-                }
-                return;
-            }
-            GameOptimizer.quickAction(this, targetPackage, act, this::toastResult);
-        });
+        button.setOnClickListener(v -> performAction(act, button));
         return button;
     }
 
+    public void performAction(String act) {
+        performAction(act, null);
+    }
+
+    public void performAction(String act, TextView labelView) {
+        if ("close".equals(act)) {
+            collapse();
+            return;
+        }
+        if ("minimize".equals(act)) {
+            minimizeToEdge();
+            return;
+        }
+        if ("choose_any_app".equals(act)) {
+            showAllInstalledAppsPicker();
+            return;
+        }
+        if (FloatingFeatureRegistry.hasFeature(act)) {
+            FloatingFeatureRegistry.executeFeature(this, act, () -> {
+                if (labelView != null) {
+                    FloatingFeatureRegistry.FloatingFeature feat = FloatingFeatureRegistry.getFeature(act);
+                    if (feat != null) {
+                        labelView.setText(feat.name + "  |  " + feat.getStatusText(this));
+                    }
+                }
+                if (bubbleState == 0) {
+                    populateFloatingTools();
+                }
+            });
+            return;
+        }
+        GameOptimizer.quickAction(this, targetPackage, act, this::toastResult);
+    }
+
     private int iconForAction(String act) {
+        FloatingFeatureRegistry.FloatingFeature feat = FloatingFeatureRegistry.getFeature(act);
+        if (feat != null) {
+            return feat.iconRes;
+        }
         switch (act) {
-            case "quick_screenshot": return R.drawable.ic_gallery;
-            case "speedrun_stopwatch": return R.drawable.ic_clock;
-            case "floating_calc": return R.drawable.ic_numbers;
-            case "audio_boost": return R.drawable.ic_volume;
-            case "quick_ram_vram_purge": return R.drawable.ic_turbo_fan;
-            case "touch_sampling_boost": return R.drawable.ic_gestures;
-            case "force_max_refresh": return R.drawable.ic_refresh;
-            case "thermal_battery_guard": return R.drawable.ic_shield;
-            case "voice_changer": return R.drawable.ic_barrage_style;
-            case "display_tools": return R.drawable.ic_display;
-            case "crosshair_toggle":
             case "crosshair_style":
             case "crosshair_color":
             case "crosshair_size": return R.drawable.ic_crosshair;
-            case "anti_disturb": return R.drawable.ic_shield;
-            case "barrage": return R.drawable.ic_barrage_message;
-            case "mini_apps": return R.drawable.ic_layers;
-            case "screen_recorder": return R.drawable.ic_record_dot;
             case "stop_rec_now": return R.drawable.ic_stop;
             case "choose_any_app": return R.drawable.ic_search;
-            case "network":
-            case "wifi_manager": return R.drawable.ic_wifi;
-            case "cleanup": return R.drawable.ic_turbo_fan;
-            case "toggle_overlay": return R.drawable.ic_speed_meter;
             case "minimize": return R.drawable.ic_window_minimize;
             case "close": return R.drawable.ic_window_close;
             default: return R.drawable.ic_tools;
         }
     }
 
-    void showGamePlugins() {
+    public void showGamePlugins() {
         bubbleState = 5;
         params.width = dp(360);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -1420,7 +1299,7 @@ public class GameBubbleService extends Service {
         }
     }
 
-    private void showCrosshairSettingsPanel() {
+    public void showCrosshairSettingsPanel() {
         cancelAutoEdgeTimer();
         bubbleState = 8;
         params.width = dp(340);
@@ -1479,7 +1358,7 @@ public class GameBubbleService extends Service {
         return root;
     }
 
-    void toggleCrosshair() {
+    public void toggleCrosshair() {
         crosshairEnabled = !crosshairEnabled;
         updateCrosshairOverlay();
         showBarrage("Crosshair", crosshairEnabled ? "Center aim overlay enabled" : "Center aim overlay disabled");
@@ -1552,7 +1431,7 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleBrightnessLock() {
+    public void toggleBrightnessLock() {
         brightnessLocked = !brightnessLocked;
         runPrivileged(brightnessLocked
                 ? "settings put system screen_brightness_mode 0; settings put system screen_brightness 220"
@@ -1560,18 +1439,18 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleColorBoost() {
+    public void toggleColorBoost() {
         colorBoostEnabled = !colorBoostEnabled;
         updateScreenFilterOverlay();
         showBarrage("Color boost", colorBoostEnabled ? "Vivid contrast layer enabled" : "Color boost disabled");
         refreshPluginPanel();
     }
 
-    private void toggleScreenFilter() {
+    public void toggleScreenFilter() {
         showHuntingFilterPanel();
     }
 
-    private void toggleHighRefresh() {
+    public void toggleHighRefresh() {
         highRefreshEnabled = !highRefreshEnabled;
         if (highRefreshEnabled) {
             float peak = RefreshRateManager.getPeakRefreshRate(this);
@@ -1584,7 +1463,7 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleTouchBoost() {
+    public void toggleTouchBoost() {
         touchBoostEnabled = !touchBoostEnabled;
         String value = touchBoostEnabled ? "1" : "0";
         runPrivileged("for f in /proc/touchpanel/game_switch_enable /sys/class/touch/touch_dev/game_switch_enable "
@@ -1602,21 +1481,21 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleBarrage() {
+    public void toggleBarrage() {
         barrageEnabled = !barrageEnabled;
         refreshPluginPanel();
         if (barrageEnabled) showBarrage("Barrage messages", "Floating game notifications enabled");
         else toast("Barrage messages disabled");
     }
 
-    private void cycleBarrageStyle() {
+    public void cycleBarrageStyle() {
         barrageStyle = (barrageStyle + 1) % BARRAGE_STYLE_NAMES.length;
         savePluginState();
         showBarrage("Barrage style", BARRAGE_STYLE_NAMES[barrageStyle] + " notification theme");
         refreshPluginPanel();
     }
 
-    private void cycleReminder() {
+    public void cycleReminder() {
         if (reminderMinutes == 0) reminderMinutes = 15;
         else if (reminderMinutes == 15) reminderMinutes = 30;
         else if (reminderMinutes == 30) reminderMinutes = 60;
@@ -1626,7 +1505,7 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void togglePerformanceHud() {
+    public void togglePerformanceHud() {
         boolean active = getSharedPreferences("ror_tools", MODE_PRIVATE).getBoolean("overlay", false);
         if (active) startService(new Intent(this, CpuOverlayService.class).setAction(CpuOverlayService.ACTION_STOP));
         else if (Build.VERSION.SDK_INT >= 26) startForegroundService(new Intent(this, CpuOverlayService.class));
@@ -1636,13 +1515,13 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleWifi() {
+    public void toggleWifi() {
         wifiEnabled = !wifiEnabled;
         runPrivileged("svc wifi " + (wifiEnabled ? "enable" : "disable"), "Wi-Fi " + onOff(wifiEnabled));
         refreshPluginPanel();
     }
 
-    private void toggleMobileData() {
+    public void toggleMobileData() {
         mobileDataEnabled = !mobileDataEnabled;
         runPrivileged("svc data " + (mobileDataEnabled ? "enable" : "disable"), "Mobile data " + onOff(mobileDataEnabled));
         refreshPluginPanel();
@@ -2700,7 +2579,7 @@ public class GameBubbleService extends Service {
     // MINI APPS & FAVORITES MANAGEMENT
     // ==========================================
 
-    void showMiniApps() {
+    public void showMiniApps() {
         bubbleState = 3;
         params.width = dp(340);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -3019,7 +2898,7 @@ public class GameBubbleService extends Service {
     // SCREEN RECORDER (480p, 720p, 1080p + SOUND)
     // ==========================================
 
-    private void showScreenRecorder() {
+    public void showScreenRecorder() {
         bubbleState = 4;
         params.width = dp(340);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -3336,7 +3215,7 @@ public class GameBubbleService extends Service {
     private TextView wifiScanStatusText;
     private LinearLayout wifiNetworksContainer;
 
-    private void showWifiPanel() {
+    public void showWifiPanel() {
         cancelAutoEdgeTimer();
         bubbleState = 6;
         params.width = dp(340);
@@ -3956,7 +3835,7 @@ public class GameBubbleService extends Service {
     /**
      * Minimizes the floating icon to a sleek '>' tab docked at the screen edge.
      */
-    void minimizeToEdge() {
+    public void minimizeToEdge() {
         cancelAutoEdgeTimer();
         bubbleState = 2; // edge tab
         metrics = null;
@@ -3972,8 +3851,8 @@ public class GameBubbleService extends Service {
         expand();
     }
 
-    private void toastResult(boolean success, String detail) { toast(detail); }
-    private void toast(String message) { new Handler(getMainLooper()).post(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show()); }
+    public void toastResult(boolean success, String detail) { toast(detail); }
+    public void toast(String message) { new Handler(getMainLooper()).post(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show()); }
 
     private void attachEdgeTabTouch(View view) {
         final int touchSlop = Math.max(dp(14), ViewConfiguration.get(view.getContext()).getScaledTouchSlop());
@@ -4132,7 +4011,7 @@ public class GameBubbleService extends Service {
         replaceOverlay(buildPanel());
     }
 
-    void collapse() {
+    public void collapse() {
         bubbleState = 1;
         metrics = null;
         params.width = dp(54);
@@ -4588,7 +4467,7 @@ public class GameBubbleService extends Service {
         });
     }
 
-    private View buildBrightnessControlRow() {
+    public View buildBrightnessControlRow() {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.VERTICAL);
         row.setPadding(dp(10), dp(8), dp(10), dp(8));
@@ -4856,7 +4735,7 @@ public class GameBubbleService extends Service {
         cleanAdBanner(null);
     }
 
-    private void replaceOverlay(View next) {
+    void replaceOverlay(View next) {
         cleanAdBanner(next);
         if (windowManager == null) windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         if (overlay != null && windowManager != null) {
@@ -5010,7 +4889,11 @@ public class GameBubbleService extends Service {
     public void applyProfileDirect(int profile) {
         selectedProfile = profile;
         updateProfileButtons();
-        GameOptimizer.applyProfile(this, profile, this::toastResult);
+        GameOptimizer.applyProfile(this, profile, (success, msg) -> {
+            toastResult(success, msg);
+            updateProfileButtons();
+            if (metrics != null) metrics.setText(readLiveStats());
+        });
     }
 
     public void toggleScreenRecording() {
@@ -5019,6 +4902,81 @@ public class GameBubbleService extends Service {
         } else {
             startScreenRecording(1080, true);
         }
+    }
+
+    public boolean isTouchBoostEnabled() { return touchBoostEnabled; }
+    public boolean isHighRefreshEnabled() { return highRefreshEnabled; }
+    public boolean isCrosshairEnabled() { return crosshairEnabled; }
+    public String getCrosshairStyleName() {
+        if (crosshairStyle >= 0 && crosshairStyle < CROSSHAIR_NAMES.length) {
+            return CROSSHAIR_NAMES[crosshairStyle];
+        }
+        return "Classic";
+    }
+    public boolean isStopwatchActive() { return stopwatchOverlay != null; }
+    public boolean isCalculatorActive() { return calculatorOverlay != null; }
+    public boolean isAudioBoostEnabled() { return audioBoostEnabled; }
+    public int getVoiceFilterIndex() { return voiceFilterIndex; }
+    public String getVoiceFilterName() {
+        if (voiceFilterIndex >= 0 && voiceFilterIndex < VOICE_FILTER_NAMES.length) {
+            return VOICE_FILTER_NAMES[voiceFilterIndex];
+        }
+        return "Normal";
+    }
+    public boolean isScreenFilterEnabled() { return screenFilterEnabled; }
+    public boolean isColorBoostEnabled() { return colorBoostEnabled; }
+    public boolean isScreenRecording() { return isRecording || ScreenCaptureManager.getInstance().isRecording(); }
+    public boolean isThermalGuardEnabled() { return thermalGuardEnabled; }
+    public boolean isAntiDisturbEnabled() { return antiDisturbEnabled; }
+    public boolean isBarrageEnabled() { return barrageEnabled; }
+    public boolean isMobileDataEnabled() { return mobileDataEnabled; }
+    public boolean isBrightnessLocked() { return brightnessLocked; }
+    public int getReminderMinutes() { return reminderMinutes; }
+    public boolean isPerformanceHudActive() {
+        return getSharedPreferences("ror_tools", MODE_PRIVATE).getBoolean("overlay", false);
+    }
+    public boolean isForceDozeActive() {
+        return getSharedPreferences("ror_game_space_center", MODE_PRIVATE).getBoolean("force_doze_active", false);
+    }
+
+    public void toggleForceDoze() {
+        boolean active = isForceDozeActive();
+        if (active) {
+            com.revror.kernelmanager.utils.doze.ForceDozeManager.exitDoze(this);
+            getSharedPreferences("ror_game_space_center", MODE_PRIVATE).edit().putBoolean("force_doze_active", false).apply();
+            toast("Force Doze deactivated");
+        } else {
+            com.revror.kernelmanager.utils.doze.ForceDozeManager.DozeReport report =
+                    com.revror.kernelmanager.utils.doze.ForceDozeManager.executeDoze(this, com.revror.kernelmanager.utils.doze.ForceDozeManager.DozeMode.BALANCE);
+            getSharedPreferences("ror_game_space_center", MODE_PRIVATE).edit().putBoolean("force_doze_active", true).apply();
+            toast("Force Doze activated (" + report.stoppedCount + " apps suspended)");
+        }
+    }
+
+    public void launchKernelTuning() {
+        Intent intent = new Intent(this, com.revror.kernelmanager.activities.KernelTuningActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void launchAppManager() {
+        Intent intent = new Intent(this, com.revror.kernelmanager.activities.AppManagerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void openLicenseActivation(String featureName) {
+        Intent intent = new Intent(this, com.revror.kernelmanager.activities.DashboardActivity.class);
+        intent.putExtra("open_vip_feature", featureName);
+        intent.putExtra("open_page", 4);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        toast("Phoenix VIP required for " + featureName);
+    }
+
+    public void refreshTelemetryNow() {
+        if (metrics != null) metrics.setText(readLiveStats());
+        toast("Telemetry refreshed");
     }
 
     @Override public void onDestroy() {

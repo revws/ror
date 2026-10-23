@@ -233,6 +233,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (!rootReady && shizukuReady) {
                     profileStatus.setText("Shizuku active - Android-level profiles ready");
                     profileStatus.setTextColor(Color.rgb(105, 220, 255));
+                    SilentPermissionHelper.grantAllSilent(DashboardActivity.this);
                 }
             });
         }
@@ -252,10 +253,17 @@ public class DashboardActivity extends AppCompatActivity {
 
     private final Shizuku.OnRequestPermissionResultListener shizukuPermissionListener = (requestCode, grantResult) -> {
         if (requestCode != SHIZUKU_PERMISSION) return;
-        shizukuReady = ShizukuBridge.granted();
-        setProfileAccess(rootReady || shizukuReady);
-        profileStatus.setText(shizukuReady ? "Shizuku active - Android-level profiles ready" : "Shizuku permission denied");
-        toast(shizukuReady ? "Shizuku connected" : "Shizuku permission denied");
+        boolean granted = (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) || ShizukuBridge.granted();
+        shizukuReady = granted;
+        runOnUiThread(() -> {
+            setProfileAccess(rootReady || shizukuReady);
+            profileStatus.setText(shizukuReady ? "Shizuku active - Android-level profiles ready" : "Shizuku permission denied");
+            profileStatus.setTextColor(shizukuReady ? Color.rgb(105, 220, 255) : Color.rgb(255, 82, 119));
+            toast(shizukuReady ? "Shizuku connected" : "Shizuku permission denied");
+            if (shizukuReady) {
+                SilentPermissionHelper.grantAllSilent(DashboardActivity.this);
+            }
+        });
     };
 
     private final Runnable metricsUpdater = new Runnable() {
@@ -352,6 +360,27 @@ public class DashboardActivity extends AppCompatActivity {
         if (targetPage >= 0) {
             showPage(targetPage);
             getIntent().removeExtra("open_page");
+        }
+        if (getIntent().hasExtra("open_vip_feature")) {
+            String feat = getIntent().getStringExtra("open_vip_feature");
+            RorLicenseManager.showVipRequiredDialog(this, feat, null);
+            getIntent().removeExtra("open_vip_feature");
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        int targetPage = intent.getIntExtra("open_page", -1);
+        if (targetPage >= 0) {
+            showPage(targetPage);
+            intent.removeExtra("open_page");
+        }
+        if (intent.hasExtra("open_vip_feature")) {
+            String feat = intent.getStringExtra("open_vip_feature");
+            RorLicenseManager.showVipRequiredDialog(this, feat, null);
+            intent.removeExtra("open_vip_feature");
         }
     }
 
@@ -1253,8 +1282,26 @@ public class DashboardActivity extends AppCompatActivity {
                 .setNeutralButton("Use Shizuku", (d, w) -> {
                     rootDialogVisible = false;
                     if (!ShizukuBridge.available()) {
-                        toast("Shizuku service is not running. Start it, then tap Use Shizuku again");
-                    } else ShizukuBridge.request(SHIZUKU_PERMISSION);
+                        android.content.Intent shizukuIntent = getPackageManager().getLaunchIntentForPackage("moe.shizuku.privileged.api");
+                        if (shizukuIntent != null) {
+                            try {
+                                startActivity(shizukuIntent);
+                                toast("Opening Shizuku app. Start the service and return to REVROR.");
+                            } catch (Exception e) {
+                                toast("Error opening Shizuku: " + e.getMessage());
+                            }
+                        } else {
+                            toast("Shizuku service is not running. Install Shizuku or grant root.");
+                        }
+                    } else if (!ShizukuBridge.granted()) {
+                        toast("Requesting Shizuku authorization...");
+                        ShizukuBridge.request(SHIZUKU_PERMISSION);
+                    } else {
+                        shizukuReady = true;
+                        setProfileAccess(true);
+                        SilentPermissionHelper.grantAllSilent(this);
+                        toast("Shizuku connected and ready");
+                    }
                 })
                 .setPositiveButton("Grant root", (d, w) -> {
                     rootDialogVisible = false;
@@ -1288,11 +1335,11 @@ public class DashboardActivity extends AppCompatActivity {
             if (profileSwitches[i] != null) profileSwitches[i].setEnabled(enabled);
             if (i < cards.length) {
                 View c = findViewById(cards[i]);
-                if (c != null) c.setAlpha(enabled ? 1f : 0.48f);
+                if (c != null) c.setAlpha(enabled ? 1f : 0.85f);
             }
             if (i < homeCards.length) {
                 View hc = findViewById(homeCards[i]);
-                if (hc != null) hc.setAlpha(enabled ? 1f : 0.48f);
+                if (hc != null) hc.setAlpha(enabled ? 1f : 0.85f);
             }
         }
         rootAccessButton.setText(rootReady ? "ROOT ACTIVE - FULL ENGINE READY"
@@ -1789,6 +1836,7 @@ public class DashboardActivity extends AppCompatActivity {
             } else {
                 view.setRenderEffect(null);
             }
+            view.setAlpha(1.0f);
         } else {
             view.setAlpha(blurRadius > 0 ? Math.max(0.45f, 1.0f - (blurRadius / 50.0f)) : 1.0f);
         }
