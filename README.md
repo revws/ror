@@ -61,12 +61,10 @@
 13. [Android Compatibility](#13-android-compatibility)
 14. [Root & Shizuku Requirements](#14-root--shizuku-requirements)
 15. [Installation](#15-installation)
-16. [Build From Source](#16-build-from-source)
-17. [GPL-3.0 License & Open-Source Boundary](#17-gpl-30-license)
-18. [Contributions & Issue Reporting](#18-contributions)
-19. [Frequently Asked Questions (FAQ)](#19-frequently-asked-questions)
-20. [Developer Information](#20-developer-information)
-21. [Official Links](#21-official-links)
+16. [GPL-3.0 License](#16-gpl-30-license)
+17. [Frequently Asked Questions (FAQ)](#17-frequently-asked-questions)
+18. [Developer Information & Credits](#18-developer-information--credits)
+19. [Official Links](#19-official-links)
 
 ---
 
@@ -254,7 +252,7 @@ Launch ROR and grant the required overlay and battery optimization permissions. 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 You are free to inspect, modify, and redistribute this software in accordance with the terms of the GPL-3.0 license.
 
-*Note on Open-Source Distribution*: This public distribution contains the complete, buildable open-source edition of ROR under GPL-3.0. Proprietary modules (such as specialized esports telemetry algorithms and Phoenix Pro binary assets) are maintained separately and licensed through the Phoenix Pro program.
+*Note on Open-Source Distribution*: This public repository contains the modular source code and architectural components of ROR under GPL-3.0. Standalone build configurations and proprietary modules (such as specialized esports telemetry algorithms and Phoenix Pro binary assets) are decoupled and distributed exclusively through official compiled release packages.
 
 ---
 
