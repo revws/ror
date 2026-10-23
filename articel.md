@@ -1,4 +1,4 @@
-﻿# ROR Android Game Launcher and Kernel Manager: Features, Game Space, Phoenix Profiles and Performance Tools
+# ROR Android Game Launcher and Kernel Manager: Features, Game Space, Phoenix Profiles and Performance Tools
 
 > **An in-depth technical analysis and architecture breakdown of the next-generation Android gaming console, kernel tuning suite, and esports optimization platform.**
 
@@ -10,7 +10,7 @@ Mobile esports and competitive mobile gaming demand deterministic frame pacing, 
 
 **ROR (Reincarnation of Revolutionary)** is an autonomous, open-core Android Game Launcher, Kernel Manager, and Gaming Suite engineered to bridge the gap between low-level Linux kernel interfaces and high-performance esports titles. Designed with a dark obsidian and crimson cyberpunk aesthetic, ROR combines an immersive console-style landscape **Game Space**, real-time floating in-game telemetry, deep sysfs kernel governor customization, automated thermal dissipation controllers, and specialized hardware-level input enhancement modules (including Gyro Delay Fix and Aim Boost).
 
-This comprehensive technical article explores ROR’s architectural foundations, evaluates its dual-tier profile governance (Regular vs. Phoenix VIP), details its root and non-root operational modes, benchmarks real-world performance gains, and compares its capabilities against conventional vendor game toolkits.
+This comprehensive technical article explores ROR’s architectural foundations, evaluates its dual-tier profile governance (Regular vs. Phoenix Pro), details its root and non-root operational modes, benchmarks real-world performance gains, and compares its capabilities against conventional vendor game toolkits.
 
 ---
 
@@ -55,7 +55,7 @@ flowchart TD
         ORCH["GameLaunchOrchestrator"]
         OVERLAY["FloatingToolsManager (WindowManager / Bubble)"]
         PERF["PerformanceMonitorService (Battery / SOT / Thermals)"]
-        PHX["Phoenix VIP Licensing & Keygen Engine"]
+        PHX["Phoenix Pro Licensing & Keygen Engine"]
     end
 
     subgraph Subsystem_Controllers ["Optimization Controllers"]
@@ -99,11 +99,11 @@ flowchart TD
 
 ---
 
-## 4. Phoenix Gaming System & VIP Tier
+## 4. Phoenix Gaming System & Pro Gaming Tier
 
-The ROR ecosystem features an integrated dual-tier architecture: the **Standard Open-Source Tier** and the **Phoenix VIP Performance System**.
+The ROR ecosystem features an integrated dual-tier architecture: the **Standard Open-Source Tier** and the **Phoenix Pro Performance System**.
 
-| Feature Capability | ROR Standard (GPL-3.0) | Phoenix VIP Gaming Tier |
+| Feature Capability | ROR Standard (GPL-3.0) | Phoenix Pro Gaming Tier |
 | :--- | :---: | :---: |
 | **Console Game Space** | Standard Tri-Deck Grid | Custom Esports Themes & Dynamic Shaders |
 | **Gaming Profiles** | Balanced, Gaming, Battery | Esports Peak, Extreme Cold, Competitive 144Hz |
@@ -114,7 +114,7 @@ The ROR ecosystem features an integrated dual-tier architecture: the **Standard 
 | **Gyro Delay Elimination** | 60Hz Rate Unlock | Low-Latency IMU Native Polling Buffer |
 | **Background Optimization** | Standard Process Trimmer | Aggressive OOM Killer Overrides & RAM Flush |
 
-Phoenix VIP unlocks sub-millisecond execution loops, automated background task termination with Android Low Memory Killer (LMK) overrides, and fine-grained EAS cluster affinity that pins game render loops exclusively to Prime Cortex cores.
+Phoenix Pro unlocks sub-millisecond execution loops, automated background task termination with Android Low Memory Killer (LMK) overrides, and fine-grained EAS cluster affinity that pins game render loops exclusively to Prime Cortex cores.
 
 ---
 
@@ -203,7 +203,7 @@ While ROR delivers substantial value in non-rooted environments through standard
 
 Empirical testing conducted on Snapdragon 870 and Snapdragon 8 Gen 2 hardware under sustained 45-minute gaming loads in competitive titles demonstrates marked stability improvements:
 
-| Metric | Stock Vendor Setup | ROR Gaming Profile | ROR Phoenix VIP |
+| Metric | Stock Vendor Setup | ROR Gaming Profile | ROR Phoenix Pro |
 | :--- | :---: | :---: | :---: |
 | **Average FPS (60-minute session)** | 52.4 FPS | 58.7 FPS | **59.8 FPS** |
 | **1% Low Framerate Stability** | 31.2 FPS | 48.6 FPS | **56.2 FPS** |

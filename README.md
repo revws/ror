@@ -3,7 +3,7 @@
   <p align="center">
     <img src="assets/logos/ror.png" alt="ROR Official Logo" width="150" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <img src="assets/logos/phoenix.png" alt="Phoenix VIP Logo" width="150" />
+    <img src="assets/logos/phoenix.png" alt="Phoenix Pro Logo" width="150" />
   </p>
 
   # ROR | Reincarnation of Revolutionary
@@ -83,7 +83,7 @@ ROR operates as both an interactive esports **Game Space launcher** and a precis
 The ROR aesthetic is defined by an uncompromising high-contrast obsidian dark palette accentuated with vivid crimson, neon cyan, and amber telemetry accents.
 
 - **The ROR Brand (`assets/logos/ror.png`)**: The official ROR esports mecha emblem featuring the angular red helmet crest, glowing crimson optics, and integrated "R-O-R" typographic mask on an obsidian squircle. It symbolizes rebellion against restrictive OEM thermal throttling and vendor-locked game boosters.
-- **The Phoenix VIP Brand (`assets/logos/phoenix.png`)**: Represents rebirth into uncompromising peak hardware capability—unlocking sub-millisecond thread scheduling, aggressive memory management, and competitive esports tuning.
+- **The Phoenix Pro Brand (`assets/logos/phoenix.png`)**: Represents rebirth into uncompromising peak hardware capability—unlocking sub-millisecond thread scheduling, aggressive memory management, and competitive esports tuning.
 
 ---
 
@@ -91,9 +91,9 @@ The ROR aesthetic is defined by an uncompromising high-contrast obsidian dark pa
 
 ROR incorporates a dual-tier modular architecture:
 - **Standard Edition (GPL-3.0 Public Open-Source)**: Delivers full core functionality including Game Space, Hardware Telemetry, Profile Governors, Kernel Sysfs controls, Screen Recorder, and the 21-tile Optimization Armory.
-- **Phoenix VIP System**: An enhanced tier featuring automated thread priority escalations, specialized hardware crosshairs with dynamic scaling, low-overhead IMU sensor polling loops, and direct Adreno/Mali GPU frequency clamping.
+- **Phoenix Pro System**: An enhanced tier featuring automated thread priority escalations, specialized hardware crosshairs with dynamic scaling, low-overhead IMU sensor polling loops, and direct Adreno/Mali GPU frequency clamping.
 
-Phoenix VIP utilizes a cryptographic license validation protocol (`KeygenService`) ensuring zero network telemetry or tracking.
+Phoenix Pro utilizes a cryptographic license validation protocol (`KeygenService`) ensuring zero network telemetry or tracking.
 
 ---
 
@@ -180,12 +180,12 @@ Battery thermal generation is the primary cause of mid-game frame dropping. When
 ## 12. Screenshots
 
 ### Dashboard, Telemetry & Kernel Tuning
-| Cyberpunk Home Deck | Phoenix VIP Active Deck | Linux Kernel Tuning |
+| Cyberpunk Home Deck | Phoenix Pro Active Deck | Linux Kernel Tuning |
 | :---: | :---: | :---: |
 | <img src="assets/screenshots/home.png" width="280" /> | <img src="assets/screenshots/phoenix-home.png" width="280" /> | <img src="assets/screenshots/kernel-tuning.png" width="280" /> |
 
 ### Performance Profiles & Gaming Armory
-| Performance Profiles | Phoenix VIP Profiles | 21-Tile Armory |
+| Performance Profiles | Phoenix Pro Profiles | 21-Tile Armory |
 | :---: | :---: | :---: |
 | <img src="assets/screenshots/regular-profiles.png" width="280" /> | <img src="assets/screenshots/phoenix-profiles.png" width="280" /> | <img src="assets/screenshots/tools.png" width="280" /> |
 
@@ -244,7 +244,6 @@ ROR adapts seamlessly to your device's security environment:
 
 Download the latest release package from our official distribution channels:
 - Official Source Releases: [https://github.com/revws/ror/releases](https://github.com/revws/ror/releases)
-- Experimental Builds: [https://github.com/revws/rorexp/releases](https://github.com/revws/rorexp/releases)
 
 Launch ROR and grant the required overlay and battery optimization permissions. If rooted, grant Superuser permissions when prompted to unlock complete kernel tuning and hardware controls.
 
@@ -255,7 +254,7 @@ Launch ROR and grant the required overlay and battery optimization permissions. 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 You are free to inspect, modify, and redistribute this software in accordance with the terms of the GPL-3.0 license.
 
-*Note on Open-Source Distribution*: This public distribution contains the complete, buildable open-source edition of ROR under GPL-3.0. Proprietary modules (such as specialized esports telemetry algorithms and VIP binary assets) are maintained separately and licensed through the Phoenix VIP program.
+*Note on Open-Source Distribution*: This public distribution contains the complete, buildable open-source edition of ROR under GPL-3.0. Proprietary modules (such as specialized esports telemetry algorithms and Phoenix Pro binary assets) are maintained separately and licensed through the Phoenix Pro program.
 
 ---
 
