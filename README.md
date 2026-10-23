@@ -331,7 +331,7 @@ A: The Aim Boost module operates purely as a system window overlay and does not 
 ## 18. Developer Information & Credits
 
 - **Lead Architect & Developer**: revWS (revWhiteShadow)
-- **Technical Support**: [wahyu6070](https://github.com/wahyu6070) & [mshan](https://t.me/M_Shan_Op) [Spectrum](https://github.com/frap129/spectrum)
+- **Technical Support**: [wahyu6070](https://github.com/wahyu6070) & [mshan](https://t.me/M_Shan_Op) and [frap129 for Spectrum](https://github.com/frap129/spectrum)
 - **Telegram Contact**: [@revwhiteshadow](https://t.me/revwhiteshadow)
 - **Ecosystem**: Reincarnation of Revolutionary (ROR)
 
