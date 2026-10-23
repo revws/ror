@@ -20,9 +20,9 @@
     <em>The next-generation open-core esports console, dynamic kernel governor manager, and mobile gaming optimization platform for Android.</em>
   </p>
 
-<p align="center">
-    <a href="https://github.com/revws/ror"><img src="https://komarev.com/ghpvc/?username=revws&color=e11d48&style=for-the-badge&label=PROFILE+VIEWS" alt="Repo Views" /></a>
-</p>
+ <a href="https://github.com/revws">
+    <img src="https://profileviews.blueorbitdevs.workers.dev/?username=revws&amp;color=e11d48&amp;style=for-the-badge&amp;label=PROFILE+VIEWS" alt="Repo Views" />
+  </a>
   <p>
     <a href="https://github.com/revws/ror"><img src="https://img.shields.io/badge/Official%20Source-github.com%2Frevws%2Fror-e11d48?style=for-the-badge&logo=github&logoColor=white" alt="Official Source" /></a>
     <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
