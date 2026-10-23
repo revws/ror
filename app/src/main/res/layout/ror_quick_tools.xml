@@ -154,6 +154,7 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- Row 2: Game Launcher, Aim Boost, Gyro Delay Fix, HW Overlay -->
     <!-- 4. Game Launcher -->
     <LinearLayout
         android:id="@+id/tool_boost"
@@ -184,16 +185,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PS5 console home"
+            android:text="Your Games, Your Space"
             android:textColor="#7A85A8"
             android:textSize="8.5sp"
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Row 2 -->
-    <!-- 5. Network Boost -->
+    <!-- 5. Aim Boost -->
     <LinearLayout
-        android:id="@+id/tool_network"
+        android:id="@+id/tool_aim_boost"
         android:layout_width="0dp"
         android:layout_height="115dp"
         android:layout_columnWeight="1"
@@ -205,14 +205,14 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_server"
-            app:tint="#368FFF" />
+            android:src="@drawable/ic_crosshair"
+            app:tint="#FF0055" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Network Boost"
+            android:text="Aim Boost"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -221,15 +221,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TCP low latency"
+            android:text="Touch 480Hz &amp; Aim"
             android:textColor="#7A85A8"
             android:textSize="8.5sp"
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 6. Thermal Control -->
+    <!-- 6. Gyro Delay Fix -->
     <LinearLayout
-        android:id="@+id/tool_thermal"
+        android:id="@+id/tool_gyro_fix"
         android:layout_width="0dp"
         android:layout_height="115dp"
         android:layout_columnWeight="1"
@@ -241,14 +241,14 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_temperature"
-            app:tint="#FA476B" />
+            android:src="@drawable/ic_gyro"
+            app:tint="#00F5D4" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Thermal Control"
+            android:text="Gyro Delay Fix"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -257,7 +257,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alerts &amp; throttle"
+            android:text="Latency &amp; Jitter"
             android:textColor="#7A85A8"
             android:textSize="8.5sp"
             android:gravity="center" />
@@ -299,7 +299,80 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 8. Refresh Rate -->
+    <!-- Row 3 -->
+    <!-- 8. Network Boost -->
+    <LinearLayout
+        android:id="@+id/tool_network"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_server"
+            app:tint="#368FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Network Boost"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TCP low latency"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 9. Thermal Control -->
+    <LinearLayout
+        android:id="@+id/tool_thermal"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_temperature"
+            app:tint="#FA476B" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Thermal Control"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alerts &amp; throttle"
+            android:textColor="#7A85A8"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 10. Refresh Rate -->
     <LinearLayout
         android:id="@+id/tool_refresh"
         android:layout_width="0dp"
@@ -335,8 +408,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Row 3: Features from Custom Controls -->
-    <!-- 9. Memory Compact -->
+    <!-- 11. Memory Compact -->
     <LinearLayout
         android:id="@+id/tool_compact"
         android:layout_width="0dp"
@@ -372,7 +444,8 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 10. Drop Caches -->
+    <!-- Row 4 -->
+    <!-- 12. Drop Caches -->
     <LinearLayout
         android:id="@+id/tool_drop_caches"
         android:layout_width="0dp"
@@ -408,7 +481,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 11. Force Doze -->
+    <!-- 13. Force Doze -->
     <LinearLayout
         android:id="@+id/tool_doze"
         android:layout_width="0dp"
@@ -444,7 +517,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 12. Data Saver -->
+    <!-- 14. Data Saver -->
     <LinearLayout
         android:id="@+id/tool_data_saver"
         android:layout_width="0dp"
@@ -480,8 +553,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Row 4: Profiles, Stats & Scheduler -->
-    <!-- 13. Save Profile -->
+    <!-- 15. Save Profile -->
     <LinearLayout
         android:id="@+id/tool_save_profile"
         android:layout_width="0dp"
@@ -517,7 +589,8 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 14. Apply Profile -->
+    <!-- Row 5 -->
+    <!-- 16. Custom Profiles -->
     <LinearLayout
         android:id="@+id/tool_custom_profile"
         android:layout_width="0dp"
@@ -553,7 +626,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 15. Battery Scheduler -->
+    <!-- 17. Battery Scheduler -->
     <LinearLayout
         android:id="@+id/tool_schedule"
         android:layout_width="0dp"
@@ -589,7 +662,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 16. Live CPU Details -->
+    <!-- 18. Live CPU Details -->
     <LinearLayout
         android:id="@+id/tool_cpu_details"
         android:layout_width="0dp"
@@ -625,8 +698,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Row 5: Game, Network, Boot & Power -->
-    <!-- 17. FPS Unlocker -->
+    <!-- 19. FPS Unlocker -->
     <LinearLayout
         android:id="@+id/tool_fps_unlocker"
         android:layout_width="0dp"
@@ -662,7 +734,8 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 18. DNS Changer -->
+    <!-- Row 6 -->
+    <!-- 20. DNS Changer -->
     <LinearLayout
         android:id="@+id/tool_dns_changer"
         android:layout_width="0dp"
@@ -698,7 +771,43 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 19. Boot Auto-run -->
+    <!-- 21. Charging Cooldown / Smart Fast Charge (Placed directly beside DNS Changer) -->
+    <LinearLayout
+        android:id="@+id/tool_charging_cooldown"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_columnWeight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/ror_tool_card_bg"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_flash"
+            app:tint="#00F5D4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Fast &amp; Cool"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Smart Charging"
+            android:textColor="#00F5D4"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- 22. Boot Auto-run -->
     <LinearLayout
         android:id="@+id/tool_boot_settings"
         android:layout_width="0dp"
@@ -734,7 +843,7 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- 20. Reboot Menu -->
+    <!-- 23. Reboot Menu -->
     <LinearLayout
         android:id="@+id/tool_reboot_manager"
         android:layout_width="0dp"

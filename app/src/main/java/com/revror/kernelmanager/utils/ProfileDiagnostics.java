@@ -33,6 +33,10 @@ public final class ProfileDiagnostics {
         RorFeedback.append(context, "Profile " + profile + " stage: " + stage);
     }
 
+    public static void record(String tag, String message) {
+        Log.i("RorProfileDiag", "[" + tag + "] " + message);
+    }
+
     public static void error(Context context, Throwable failure) {
         try {
             String detail = Log.getStackTraceString(failure);

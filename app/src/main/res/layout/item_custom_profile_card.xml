@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_card_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/ror_tool_card_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/custom_card_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/ror_chip"
+        android:padding="9dp"
+        android:src="@drawable/ic_cpu"
+        app:tint="#00E5FF" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/custom_card_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY CUSTOM PROFILE"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/custom_card_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/ror_chip"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="ACTIVE"
+                android:textColor="#00ED74"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/custom_card_lock_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_lock"
+                android:visibility="gone"
+                app:tint="#FFA84B" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/custom_card_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Custom CPU Policies • GPU &amp; VM Tuning"
+            android:textColor="#A2A4BD"
+            android:textSize="10.5sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/custom_card_options"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/ror_chip"
+        android:padding="8dp"
+        android:src="@drawable/ic_dots"
+        app:tint="#D4D8F0" />
+
+</LinearLayout>

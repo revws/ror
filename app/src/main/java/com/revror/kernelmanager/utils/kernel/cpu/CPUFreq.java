@@ -89,6 +89,12 @@ public class CPUFreq {
     private static final String CPU_POLICY6_MAX_FREQ = CPU_POLICY6 + "/scaling_max_freq";
 
     private int mCpuCount;
+    private int mPrimeCpu = -1;
+    private List<Integer> mPrimeCpus;
+    private List<Integer> mBigCpus;
+    private List<Integer> mMidCpus;
+    private List<Integer> mLITTLECpus;
+    private Context mContext;
     private int mBigCpu = -1;
     private int mMidCpu = -1;
     private int mLITTLECpu = -1;
@@ -98,6 +104,7 @@ public class CPUFreq {
 
     private CPUFreq(Context context) {
         if (context != null) {
+            mContext = context.getApplicationContext();
             mCoreCtlMinCpu = Prefs.getInt("core_ctl_min_cpus_big", 2, context);
         }
     }
@@ -612,7 +619,21 @@ public class CPUFreq {
                 category, Utils.strFormat(CPU_ONLINE, cpu) + "chmod444", context);
     }
 
+    public List<Integer> getPrimeCpuRange() {
+        if (mPrimeCpus != null && !mPrimeCpus.isEmpty()) {
+            return mPrimeCpus;
+        }
+        List<Integer> list = new ArrayList<>();
+        if (hasPrimeCpu()) {
+            list.add(getPrimeCpu());
+        }
+        return list;
+    }
+
     public List<Integer> getLITTLECpuRange() {
+        if (mLITTLECpus != null && !mLITTLECpus.isEmpty()) {
+            return mLITTLECpus;
+        }
         List<Integer> list = new ArrayList<>();
         if (hasMidCpu()) {
             for (int i = 0; i < getMidCpu(); i++) {
@@ -635,6 +656,9 @@ public class CPUFreq {
     }
 
     public List<Integer> getMidCpuRange() {
+        if (mMidCpus != null && !mMidCpus.isEmpty()) {
+            return mMidCpus;
+        }
         List<Integer> list = new ArrayList<>();
         for (int i = getMidCpu(); i < getBigCpu(); i++) {
             list.add(i);
@@ -643,6 +667,9 @@ public class CPUFreq {
     }
 
     public List<Integer> getBigCpuRange() {
+        if (mBigCpus != null && !mBigCpus.isEmpty()) {
+            return mBigCpus;
+        }
         List<Integer> list = new ArrayList<>();
         if (!isBigLITTLE()) {
             for (int i = 0; i < getCpuCount(); i++) {
@@ -666,6 +693,16 @@ public class CPUFreq {
         return list;
     }
 
+    public int getPrimeCpu() {
+        isBigLITTLE();
+        return Math.max(mPrimeCpu, 0);
+    }
+
+    public boolean hasPrimeCpu() {
+        isBigLITTLE();
+        return mPrimeCpu >= 0 && (mPrimeCpus != null && !mPrimeCpus.isEmpty());
+    }
+
     public int getLITTLECpu() {
         isBigLITTLE();
         return Math.max(mLITTLECpu, 0);
@@ -682,11 +719,43 @@ public class CPUFreq {
     }
 
     public boolean hasMidCpu() {
-        return is4Little2Mid2Big() || is4Little3Mid1Big();
+        isBigLITTLE();
+        return (mMidCpu >= 0 && mMidCpus != null && !mMidCpus.isEmpty()) || is4Little2Mid2Big() || is4Little3Mid1Big();
     }
 
     public boolean isBigLITTLE() {
-        if (mBigCpu == -1 || mMidCpu == -1 || mLITTLECpu == -1) {
+        if (mBigCpu == -1 || mMidCpu == -1 || mLITTLECpu == -1 || mPrimeCpu == -1) {
+            // 1. Dynamic cluster discovery via UniversalHardwareDetector & KernelCompatEngine
+            try {
+                com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.DeviceHardwareProfile dev =
+                        com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.detect(mContext);
+                if (dev != null && dev.clusters != null && dev.clusters.size() > 1) {
+                    for (com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.DetectedCluster c : dev.clusters) {
+                        if (c.role == com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.ClusterRole.PRIME) {
+                            mPrimeCpu = c.coreIds.get(0);
+                            mPrimeCpus = c.coreIds;
+                        } else if (c.role == com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.ClusterRole.BIG) {
+                            mBigCpu = c.coreIds.get(0);
+                            mBigCpus = c.coreIds;
+                        } else if (c.role == com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.ClusterRole.MID) {
+                            mMidCpu = c.coreIds.get(0);
+                            mMidCpus = c.coreIds;
+                        } else if (c.role == com.revror.kernelmanager.utils.kernel.compat.UniversalHardwareDetector.ClusterRole.LITTLE) {
+                            mLITTLECpu = c.coreIds.get(0);
+                            mLITTLECpus = c.coreIds;
+                        }
+                    }
+                    if (mPrimeCpu >= 0 || mBigCpu >= 0 || mLITTLECpu >= 0) {
+                        if (mBigCpu == -1 && mPrimeCpu >= 0) {
+                            mBigCpu = mPrimeCpu;
+                            mBigCpus = mPrimeCpus;
+                        }
+                        return true;
+                    }
+                }
+            } catch (Throwable ignored) {}
+
+            // 2. Legacy fallback detection
             if (getCpuCount() <= 4 && !is8996()
                     || (Device.getBoard().startsWith("mt6") && !Device.getBoard().startsWith("mt6595"))
                     || Device.getBoard().startsWith("msm8929")) return false;
@@ -728,7 +797,7 @@ public class CPUFreq {
             }
         }
 
-        return mBigCpu >= 0 && mLITTLECpu >= 0;
+        return (mBigCpu >= 0 || mPrimeCpu >= 0) && mLITTLECpu >= 0;
     }
 
     private boolean is8996() {

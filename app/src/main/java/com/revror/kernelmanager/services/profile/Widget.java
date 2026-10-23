@@ -113,7 +113,7 @@ public class Widget extends AppWidgetProvider {
                 }
 
                 for (String command : adjustedCommands) {
-                    RootUtils.runCommand(command);
+                    com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, command);
                 }
                 RootUtils.closeSU();
                 Utils.toast(context.getString(R.string.applied), context);

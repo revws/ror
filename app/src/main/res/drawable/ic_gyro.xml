@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Outer gyro frame ring -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2Z" />
+    <!-- Inner tilted gyroscope gimbal ellipse -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:pathData="M12,6C7.58,6 4,8.69 4,12C4,15.31 7.58,18 12,18C16.42,18 20,15.31 20,12C20,8.69 16.42,6 12,6Z" />
+    <!-- Vertical spin axis needle -->
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M12,2L12,22" />
+    <!-- Center core wheel / hub -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,12m-2.5,0a2.5,2.5 0 1,1 5,0a2.5,2.5 0 1,1 -5,0" />
+</vector>

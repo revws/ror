@@ -19,6 +19,69 @@
    <TextView style="@style/RorSectionTitle" android:text="Select a mode"/>
   </LinearLayout>
   <include layout="@layout/ror_profile_cards"/>
+
+  <!-- Custom Profiles Section -->
+  <LinearLayout
+      android:id="@+id/custom_profiles_section"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingLeft="12dp"
+      android:paddingTop="16dp"
+      android:paddingRight="12dp">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingHorizontal="8dp"
+          android:paddingBottom="6dp">
+
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="CUSTOM PROFILES"
+                  android:textColor="#CBA7FF"
+                  android:textSize="13sp"
+                  android:textStyle="bold"
+                  android:letterSpacing="0.06" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="2dp"
+                  android:text="VIP Hardware-Calibrated Custom Profiles"
+                  android:textColor="#7A85A8"
+                  android:textSize="10sp" />
+          </LinearLayout>
+
+          <TextView
+              android:id="@+id/btn_add_custom_profile"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/ror_chip"
+              android:paddingHorizontal="12dp"
+              android:paddingVertical="7dp"
+              android:text="+ CREATE NEW"
+              android:textColor="#00E5FF"
+              android:textSize="11sp"
+              android:textStyle="bold" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/custom_profiles_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical" />
+  </LinearLayout>
+
   <TextView android:id="@+id/advanced_button" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginLeft="18dp" android:layout_marginTop="14dp" android:layout_marginRight="18dp" android:background="@drawable/ror_active_banner" android:gravity="center" android:text="ENABLE ROOT ACCESS FOR GSM PROFILES" android:textColor="#EEDFFF" android:textSize="11sp" android:textStyle="bold"/>
  </LinearLayout>
 </ScrollView>

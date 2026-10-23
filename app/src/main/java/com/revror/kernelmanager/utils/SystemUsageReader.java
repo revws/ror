@@ -78,7 +78,11 @@ public final class SystemUsageReader {
             if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
                 String type = plugged == BatteryManager.BATTERY_PLUGGED_AC ? "AC" :
                         (plugged == BatteryManager.BATTERY_PLUGGED_USB ? "USB" : "Wireless");
-                data.chargingStatus = "Charging " + type;
+                if (com.revror.kernelmanager.charging.SmartChargingManager.getInstance(context).isActive()) {
+                    data.chargingStatus = "Charging " + type + " • Fast & Cool";
+                } else {
+                    data.chargingStatus = "Charging " + type;
+                }
             } else if (status == BatteryManager.BATTERY_STATUS_FULL) {
                 data.chargingStatus = "Full 100%";
             } else {

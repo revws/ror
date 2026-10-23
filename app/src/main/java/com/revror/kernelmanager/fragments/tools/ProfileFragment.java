@@ -320,19 +320,9 @@ public class ProfileFragment extends RecyclerViewFragment {
             mApplyDialog = ViewUtils.dialogBuilder(getString(R.string.apply_question,
                     descriptionView.getSummary()), (dialogInterface, i12) -> {
             }, (dialogInterface, i12) -> {
-                for (Profiles.ProfileItem.CommandItem command : mProfiles.getAllProfiles()
-                        .get(position).getCommands()) {
-                    CPUFreq.ApplyCpu applyCpu;
-                    if (command.getCommand().startsWith("#") && ((applyCpu =
-                            new CPUFreq.ApplyCpu(command.getCommand().substring(1)))
-                            .toString() != null)) {
-                        for (String applyCpuCommand : ApplyOnBoot.getApplyCpu(applyCpu)) {
-                            Control.runSetting(applyCpuCommand, null, null, null);
-                        }
-                    } else {
-                        Control.runSetting(command.getCommand(), null, null, null);
-                    }
-                }
+                com.revror.kernelmanager.database.tools.profiles.Profiles.ProfileItem prof =
+                        mProfiles.getAllProfiles().get(position);
+                com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCustomProfile(requireContext(), prof);
             }, dialogInterface -> mApplyDialog = null, getActivity());
             try {
                 mApplyDialog.show();

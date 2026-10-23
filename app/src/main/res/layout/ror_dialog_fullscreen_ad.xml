@@ -8,15 +8,17 @@
     <RelativeLayout
         android:id="@+id/ad_top_bar"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="54dp"
         android:background="#121422"
-        android:paddingStart="16dp"
+        android:paddingStart="12dp"
         android:paddingEnd="12dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/ad_visit_btn"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -24,24 +26,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#2E1C05"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
                 android:text="SPONSORED"
                 android:textColor="#FFB300"
-                android:textSize="10sp"
+                android:textSize="9.5sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/ad_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="GAMING REWARDS &amp; OFFERS"
                 android:textColor="#8F94AD"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- Sponsored Action Button "VISIT OFFER" -->
+        <TextView
+            android:id="@+id/ad_visit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_toStartOf="@id/ad_countdown_text"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/ror_hero_pill"
+            android:text="VISIT OFFER"
+            android:textColor="#FFB300"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
 
         <!-- 5-second countdown timer badge -->
         <TextView
@@ -50,7 +74,6 @@
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="6dp"
             android:gravity="center"
             android:text="5s"
             android:textColor="#FFFFFF"
@@ -85,10 +108,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ad_top_bar"
+        android:layout_above="@id/ad_bottom_bar"
         android:background="#0A0B12" />
 
     <!-- Bottom Notice for Phoenix users -->
     <LinearLayout
+        android:id="@+id/ad_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -105,4 +130,3 @@
     </LinearLayout>
 
 </RelativeLayout>
-

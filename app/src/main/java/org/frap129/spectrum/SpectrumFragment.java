@@ -1,21 +1,21 @@
 /*
  * Copyright (C) 2020-2021 sunilpaulmathew <sunil.kde@gmail.com>
  *
- * This file is part of SmartPack Kernel Manager, which is a heavily modified version of Kernel Adiutor,
+ * This file is part of REVROR Kernel Manager, which is a heavily modified version of Kernel Adiutor,
  * originally developed by Willi Ye <williye97@gmail.com>
  *
- * Both SmartPack Kernel Manager & Kernel Adiutor are free softwares: you can redistribute it 
+ * Both REVROR Kernel Manager & Kernel Adiutor are free softwares: you can redistribute it 
  * and/or modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * SmartPack Kernel Manager is distributed in the hope that it will be useful,
+ * REVROR Kernel Manager is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with SmartPack Kernel Manager.  If not, see <http://www.gnu.org/licenses/>.
+ * along with REVROR Kernel Manager.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -26,13 +26,13 @@ import android.graphics.Color;
 
 import androidx.core.content.ContextCompat;
 
-import com.smartpack.kernelmanager.R;
-import com.smartpack.kernelmanager.fragments.DescriptionFragment;
-import com.smartpack.kernelmanager.fragments.RecyclerViewFragment;
-import com.smartpack.kernelmanager.utils.Prefs;
-import com.smartpack.kernelmanager.views.recyclerview.CardView;
-import com.smartpack.kernelmanager.views.recyclerview.DescriptionView;
-import com.smartpack.kernelmanager.views.recyclerview.RecyclerViewItem;
+import com.revror.kernelmanager.R;
+import com.revror.kernelmanager.fragments.DescriptionFragment;
+import com.revror.kernelmanager.fragments.RecyclerViewFragment;
+import com.revror.kernelmanager.utils.Prefs;
+import com.revror.kernelmanager.views.recyclerview.CardView;
+import com.revror.kernelmanager.views.recyclerview.DescriptionView;
+import com.revror.kernelmanager.views.recyclerview.RecyclerViewItem;
 
 import java.util.List;
 
@@ -122,7 +122,7 @@ public class SpectrumFragment extends RecyclerViewFragment {
         items.add(card3);
 
         //Detects the selected profile on launch
-        int mProfile = Prefs.getInt("spectrum_profile", 0, getActivity());
+        int mProfile = Prefs.getInt("ror_profile", 0, getActivity());
 
         if(mProfile == 0){
             card0.GrxSetInitSelection(true, balColor);
@@ -159,7 +159,7 @@ public class SpectrumFragment extends RecyclerViewFragment {
             Spectrum.setProfile(prof);
             oldCard = card;
             oldDesc = desc;
-            Prefs.saveInt("spectrum_profile", prof, getActivity());
+            Prefs.saveInt("ror_profile", prof, getActivity());
         }
     }
 

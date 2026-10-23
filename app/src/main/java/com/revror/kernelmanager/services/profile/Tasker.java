@@ -74,11 +74,11 @@ public class Tasker extends BroadcastReceiver {
                                 if (cs[i].startsWith("#") && !applyCpu.toString().isEmpty()) {
                                     for (String applyCpuCommand : ApplyOnBoot.getApplyCpu(applyCpu)) {
                                         Log.i(TAG + ": " + getClass().getSimpleName(), "Run: " + applyCpuCommand);
-                                        RootUtils.runCommand(applyCpuCommand);
+                                        com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, applyCpuCommand);
                                     }
                                 } else {
                                     Log.i(TAG + ": " + getClass().getSimpleName(), "Run: " + cs[i]);
-                                    RootUtils.runCommand(cs[i]);
+                                    com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, cs[i]);
                                 }
                             }
                         }

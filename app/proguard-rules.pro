@@ -23,13 +23,13 @@
 -keep class rikka.shizuku.Shizuku { *; }
 
 # Keep REVROR core integrity classes and signatures
--keep class com.smartpack.kernelmanager.RevrorApp { *; }
--keep class com.smartpack.kernelmanager.utils.AppIntegrity { *; }
+-keep class com.revror.kernelmanager.RevrorApp { *; }
+-keep class com.revror.kernelmanager.utils.AppIntegrity { *; }
 -keepclassmembers class * {
     public static final java.lang.String REVROR_SIGNATURE;
 }
--keep class com.smartpack.kernelmanager.activities.DashboardActivity { *; }
--keep class com.smartpack.kernelmanager.activities.GameLauncherActivity { *; }
--keep class com.smartpack.kernelmanager.services.GameBubbleService { *; }
--keep class com.smartpack.kernelmanager.utils.GsmProfileManager { *; }
--keep class revror.kernelmanager.** { *; }
+-keep class com.revror.kernelmanager.activities.DashboardActivity { *; }
+-keep class com.revror.kernelmanager.activities.GameLauncherActivity { *; }
+-keep class com.revror.kernelmanager.services.GameBubbleService { *; }
+-keep class com.revror.kernelmanager.utils.GsmProfileManager { *; }
+-keep class com.revror.kernelmanager.** { *; }

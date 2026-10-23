@@ -85,7 +85,9 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.revror.kernelmanager.R;
 import com.revror.kernelmanager.services.GameBubbleService;
+import com.revror.kernelmanager.services.FloatingWindowLayoutManager;
 import com.revror.kernelmanager.utils.AppIntegrity;
+import com.revror.kernelmanager.utils.HunterModeEngine;
 import com.revror.kernelmanager.utils.BannerTextStyleRegistry;
 import com.revror.kernelmanager.utils.CpuStatsReader;
 import com.revror.kernelmanager.utils.GameOptimizer;
@@ -149,7 +151,7 @@ private ScrollView verticalGameScroll;
     private ValueAnimator activeModeAnimator;
     private View currentlyAnimatedModeButton;
     public static final String[] PROFILE_NAMES = {
-        "DAILY USE", "BATTERY", "BALANCE", "COOLDOWN", "GAMING", "ULTRA GAMING", "ESPORTS", "OVERDRIVE"
+        "DAILY USE", "BALANCE", "BATTERY", "COOLDOWN", "GAMING", "ULTRA GAMING", "ESPORTS", "OVERDRIVE"
     };
 
     private static class SuperProfileItem {
@@ -558,6 +560,7 @@ private ScrollView verticalGameScroll;
         }
         applyImmersive();
         startPingMonitor();
+        updateActiveBannerTextStyle();
         handler.removeCallbacks(hudUpdater);
         handler.post(hudUpdater);
         if (currentlyAnimatedCard != null) {
@@ -2427,9 +2430,18 @@ private ScrollView verticalGameScroll;
         navRow.setOrientation(LinearLayout.HORIZONTAL);
         navRow.setGravity(Gravity.CENTER_VERTICAL);
 
-        TextView tabGames = label("● GAMES", 10.5f, 0xFFFFD600);
+        TextView tabGames = label("GAMES", 10.5f, 0xFFFFD600);
         tabGames.setTypeface(null, Typeface.BOLD);
         tabGames.setPadding(dp(10), dp(4), dp(10), dp(4));
+        Drawable gamesDot = ContextCompat.getDrawable(this, R.drawable.ic_dot_green);
+        if (gamesDot != null) {
+            gamesDot = DrawableCompat.wrap(gamesDot.mutate());
+            DrawableCompat.setTint(gamesDot, 0xFFFFD600);
+            int sz = dp(8);
+            gamesDot.setBounds(0, 0, sz, sz);
+            tabGames.setCompoundDrawables(gamesDot, null, null, null);
+            tabGames.setCompoundDrawablePadding(dp(6));
+        }
         navRow.addView(tabGames);
 
         ImageView padIcon = new ImageView(this);
@@ -2526,7 +2538,7 @@ private ScrollView verticalGameScroll;
         TextView bDesc = label("144Hz DISPLAY SYNC  \u2022  ULTRA TOUCH RESPONSE", 9f, 0xFFFFD600);
         bDetails.addView(bDesc);
 
-        TextView dotIndicator = label("● ○ ○ ○", 8f, 0x88FFD600);
+        TextView dotIndicator = label("PAGE 1 / 4", 8f, 0x88FFD600);
         dotIndicator.setPadding(0, dp(4), 0, 0);
         bDetails.addView(dotIndicator);
 
@@ -3118,11 +3130,17 @@ private ScrollView verticalGameScroll;
         LinearLayout pRow = new LinearLayout(this);
         pRow.setOrientation(LinearLayout.HORIZONTAL);
         pRow.setPadding(0, dp(6), 0, dp(6));
-        String[] profNames = {"BATTERY+", "BALANCE+", "SMOOTH+", "ULTRA+", "ESPORTS+", "APEX+"};
-        int[] profIndices = {0, 1, 4, 5, 6, 7};
+        boolean phoenix = GsmProfileManager.isPhoenixSelected(this);
+        String[] profNames = phoenix
+                ? new String[]{"BATTERY+", "BALANCE+", "SMOOTH+", "ULTRA+", "ESPORTS+", "APEX+"}
+                : new String[]{"DAILY", "BALANCE", "BATTERY", "COOLDOWN", "GAMING", "ULTRA"};
+        int[] profIndices = phoenix
+                ? new int[]{0, 1, 4, 5, 6, 7}
+                : new int[]{0, 1, 2, 3, 4, 5};
         for (int i = 0; i < profNames.length; i++) {
             final int pIdx = profIndices[i];
-            TextView pBtn = label(profNames[i], 9.5f, Color.WHITE);
+            final String pName = profNames[i];
+            TextView pBtn = label(pName, 9.5f, Color.WHITE);
             pBtn.setTypeface(null, Typeface.BOLD);
             pBtn.setGravity(Gravity.CENTER);
             pBtn.setPadding(dp(8), dp(10), dp(8), dp(10));
@@ -3134,7 +3152,7 @@ private ScrollView verticalGameScroll;
             pBtn.setBackground(pb);
             pBtn.setOnClickListener(v -> {
                 applyLauncherProfile(pIdx);
-                Toast.makeText(this, "Profile Armed: " + profNames[pIdx < profNames.length ? pIdx : 0], Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Profile Armed: " + pName, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
             LinearLayout.LayoutParams pLp = new LinearLayout.LayoutParams(0, -2, 1f);
@@ -3338,8 +3356,17 @@ private ScrollView verticalGameScroll;
             card.addView(title);
 
             if (cols <= 3 || isPoster) {
-                TextView tag = label("\u26A1 PLAY", 8f, 0xFF00E5FF);
+                TextView tag = label("PLAY", 8f, 0xFF00E5FF);
                 tag.setTypeface(null, Typeface.BOLD);
+                Drawable tagIcon = ContextCompat.getDrawable(this, R.drawable.ic_play_arrow);
+                if (tagIcon != null) {
+                    tagIcon = DrawableCompat.wrap(tagIcon.mutate());
+                    DrawableCompat.setTint(tagIcon, 0xFF00E5FF);
+                    int sz = dp(11);
+                    tagIcon.setBounds(0, 0, sz, sz);
+                    tag.setCompoundDrawables(tagIcon, null, null, null);
+                    tag.setCompoundDrawablePadding(dp(3));
+                }
                 card.addView(tag);
             }
 
@@ -3451,8 +3478,10 @@ private ScrollView verticalGameScroll;
                 item.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
 
                 if (isSel) {
-                    TextView arrow = label("►", 11f, 0xFF00E5FF);
-                    item.addView(arrow);
+                    ImageView arrow = new ImageView(this);
+                    arrow.setImageResource(R.drawable.ic_play_arrow);
+                    arrow.setColorFilter(0xFF00E5FF);
+                    item.addView(arrow, new LinearLayout.LayoutParams(dp(16), dp(16)));
                 }
 
                 item.setOnClickListener(v -> {
@@ -5155,18 +5184,220 @@ private ScrollView verticalGameScroll;
     private void renderFloatingToolsOptions(LinearLayout panel, SharedPreferences sp, int accentColor) {
         panel.removeAllViews();
 
+        // 1. Section Header: Floating Window Layout Style
+        LinearLayout styleHeader = new LinearLayout(this);
+        styleHeader.setOrientation(LinearLayout.VERTICAL);
+        styleHeader.setPadding(0, 0, 0, dp(8));
+        TextView styleTitle = label("FLOATING WINDOW ARCHITECTURE", 13.5f, accentColor);
+        styleTitle.setTypeface(null, Typeface.BOLD);
+        styleTitle.setLetterSpacing(0.04f);
+        styleHeader.addView(styleTitle);
+        TextView styleDesc = label("Select 1 of 10 distinct, responsive, pro gaming HUD layouts", 9.5f, 0xFFB0B3C0);
+        styleDesc.setPadding(0, dp(2), 0, 0);
+        styleHeader.addView(styleDesc);
+        panel.addView(styleHeader);
+
+        // Horizontal scroll of 10 layout styles
+        HorizontalScrollView styleScroll = new HorizontalScrollView(this);
+        styleScroll.setHorizontalScrollBarEnabled(false);
+        styleScroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        LinearLayout styleRow = new LinearLayout(this);
+        styleRow.setOrientation(LinearLayout.HORIZONTAL);
+        styleRow.setPadding(0, 0, 0, dp(10));
+
+        int currentStyle = sp.getInt("ror_floating_layout_style", 0);
+
+        for (int i = 0; i < FloatingWindowLayoutManager.LAYOUT_NAMES.length; i++) {
+            final int styleIdx = i;
+            final String name = FloatingWindowLayoutManager.LAYOUT_NAMES[i];
+            final String desc = FloatingWindowLayoutManager.LAYOUT_DESCRIPTIONS[i];
+            boolean isCur = (currentStyle == styleIdx);
+
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(dp(12), dp(10), dp(12), dp(10));
+            card.setGravity(Gravity.TOP);
+
+            GradientDrawable cardBg = new GradientDrawable();
+            cardBg.setOrientation(GradientDrawable.Orientation.TL_BR);
+            if (isCur) {
+                cardBg.setColors(new int[]{0xEEFF1744, 0xEE7A0018});
+                cardBg.setStroke(dp(1.8f), 0xFFFFFFFF);
+            } else {
+                cardBg.setColors(new int[]{0xEE1A1A24, 0xEE101016});
+                cardBg.setStroke(dp(1f), 0x44404050);
+            }
+            cardBg.setCornerRadius(dp(12));
+            card.setBackground(cardBg);
+
+            LinearLayout topBadgeRow = new LinearLayout(this);
+            topBadgeRow.setOrientation(LinearLayout.HORIZONTAL);
+            topBadgeRow.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView numBadge = label("#" + (styleIdx + 1), 8.5f, isCur ? 0xFFFFDDE6 : 0xFF8E95AF);
+            numBadge.setTypeface(null, Typeface.BOLD);
+            topBadgeRow.addView(numBadge, new LinearLayout.LayoutParams(0, -2, 1f));
+
+            if (isCur) {
+                TextView activeBadge = label("ACTIVE", 7.5f, Color.WHITE);
+                activeBadge.setTypeface(null, Typeface.BOLD);
+                activeBadge.setPadding(dp(6), dp(1), dp(6), dp(1));
+                GradientDrawable ab = new GradientDrawable();
+                ab.setColor(0x55000000);
+                ab.setCornerRadius(dp(6));
+                activeBadge.setBackground(ab);
+                topBadgeRow.addView(activeBadge);
+            }
+            card.addView(topBadgeRow);
+
+            TextView titleView = label(name, 11f, Color.WHITE);
+            titleView.setTypeface(null, Typeface.BOLD);
+            titleView.setPadding(0, dp(4), 0, dp(3));
+            titleView.setMaxLines(1);
+            titleView.setEllipsize(TextUtils.TruncateAt.END);
+            card.addView(titleView);
+
+            TextView descView = label(desc, 8.5f, isCur ? 0xFFFFF0F5 : 0xFF8E95AF);
+            descView.setMaxLines(2);
+            descView.setEllipsize(TextUtils.TruncateAt.END);
+            card.addView(descView);
+
+            card.setOnClickListener(v -> {
+                try { v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); } catch (Exception ignored) {}
+                sp.edit().putInt("ror_floating_layout_style", styleIdx).apply();
+                renderFloatingToolsOptions(panel, sp, accentColor);
+                Toast.makeText(this, "Active: " + name, Toast.LENGTH_SHORT).show();
+            });
+
+            LinearLayout.LayoutParams cLp = new LinearLayout.LayoutParams(dp(180), dp(84));
+            cLp.setMarginEnd(dp(8));
+            styleRow.addView(card, cLp);
+        }
+        styleScroll.addView(styleRow);
+        panel.addView(styleScroll);
+
+        // 2. Customization Controls Row: Transparency & Scaling & Test
+        LinearLayout customRow = new LinearLayout(this);
+        customRow.setOrientation(LinearLayout.HORIZONTAL);
+        customRow.setGravity(Gravity.CENTER_VERTICAL);
+        customRow.setPadding(0, dp(4), 0, dp(12));
+
+        // Transparency Picker
+        LinearLayout transCol = new LinearLayout(this);
+        transCol.setOrientation(LinearLayout.VERTICAL);
+        TextView transLabel = label("TRANSPARENCY", 9f, 0xFF8E95AF);
+        transLabel.setTypeface(null, Typeface.BOLD);
+        transCol.addView(transLabel);
+
+        LinearLayout transBtns = new LinearLayout(this);
+        transBtns.setOrientation(LinearLayout.HORIZONTAL);
+        int curTrans = sp.getInt("ror_floating_transparency", 96);
+        int[] transPresets = new int[]{80, 90, 96, 100};
+        for (int t : transPresets) {
+            boolean isSel = (curTrans == t);
+            TextView tb = label(t + "%", 8.5f, isSel ? Color.WHITE : 0xFF8E95AF);
+            tb.setTypeface(null, Typeface.BOLD);
+            tb.setPadding(dp(7), dp(4), dp(7), dp(4));
+            GradientDrawable tbBg = new GradientDrawable();
+            tbBg.setColor(isSel ? 0xFFFF1744 : 0x22FFFFFF);
+            tbBg.setCornerRadius(dp(6));
+            tb.setBackground(tbBg);
+            tb.setOnClickListener(v -> {
+                try { v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); } catch (Exception ignored) {}
+                sp.edit().putInt("ror_floating_transparency", t).apply();
+                renderFloatingToolsOptions(panel, sp, accentColor);
+            });
+            LinearLayout.LayoutParams tbLp = new LinearLayout.LayoutParams(-2, -2);
+            tbLp.setMarginEnd(dp(4));
+            transBtns.addView(tb, tbLp);
+        }
+        transCol.addView(transBtns);
+        customRow.addView(transCol, new LinearLayout.LayoutParams(0, -2, 1.2f));
+
+        // Scale Picker
+        LinearLayout scaleCol = new LinearLayout(this);
+        scaleCol.setOrientation(LinearLayout.VERTICAL);
+        TextView scaleLabel = label("SCALE", 9f, 0xFF8E95AF);
+        scaleLabel.setTypeface(null, Typeface.BOLD);
+        scaleCol.addView(scaleLabel);
+
+        LinearLayout scaleBtns = new LinearLayout(this);
+        scaleBtns.setOrientation(LinearLayout.HORIZONTAL);
+        int curScale = sp.getInt("ror_floating_scale", 100);
+        int[] scalePresets = new int[]{85, 100, 115};
+        String[] scaleNames = new String[]{"85%", "100%", "115%"};
+        for (int s = 0; s < scalePresets.length; s++) {
+            final int sc = scalePresets[s];
+            boolean isSel = (curScale == sc);
+            TextView sb = label(scaleNames[s], 8.5f, isSel ? Color.WHITE : 0xFF8E95AF);
+            sb.setTypeface(null, Typeface.BOLD);
+            sb.setPadding(dp(7), dp(4), dp(7), dp(4));
+            GradientDrawable sbBg = new GradientDrawable();
+            sbBg.setColor(isSel ? 0xFF00E5FF : 0x22FFFFFF);
+            sbBg.setCornerRadius(dp(6));
+            sb.setBackground(sbBg);
+            sb.setOnClickListener(v -> {
+                try { v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); } catch (Exception ignored) {}
+                sp.edit().putInt("ror_floating_scale", sc).apply();
+                renderFloatingToolsOptions(panel, sp, accentColor);
+            });
+            LinearLayout.LayoutParams sbLp = new LinearLayout.LayoutParams(-2, -2);
+            sbLp.setMarginEnd(dp(4));
+            scaleBtns.addView(sb, sbLp);
+        }
+        scaleCol.addView(scaleBtns);
+        customRow.addView(scaleCol, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+        // Test Overlay Button
+        LinearLayout testBtn = new LinearLayout(this);
+        testBtn.setOrientation(LinearLayout.HORIZONTAL);
+        testBtn.setGravity(Gravity.CENTER);
+        testBtn.setPadding(dp(10), dp(6), dp(10), dp(6));
+        GradientDrawable testBg = new GradientDrawable();
+        testBg.setColor(0x3300FF66);
+        testBg.setCornerRadius(dp(10));
+        testBg.setStroke(dp(1f), 0xFF00FF66);
+        testBtn.setBackground(testBg);
+        TextView testText = label("TEST OVERLAY", 8.5f, 0xFF00FF66);
+        testText.setTypeface(null, Typeface.BOLD);
+        testBtn.addView(testText);
+        testBtn.setOnClickListener(v -> {
+            try { v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); } catch (Exception ignored) {}
+            if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "Enable Draw Overlays permission first", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
+                return;
+            }
+            Intent bubbleIntent = new Intent(this, GameBubbleService.class)
+                    .putExtra("package", getPackageName())
+                    .putExtra("label", "Game Space HUD");
+            if (Build.VERSION.SDK_INT >= 26) {
+                startForegroundService(bubbleIntent);
+            } else {
+                startService(bubbleIntent);
+            }
+            Toast.makeText(this, "Launched " + FloatingWindowLayoutManager.LAYOUT_NAMES[currentStyle], Toast.LENGTH_SHORT).show();
+        });
+        customRow.addView(testBtn, new LinearLayout.LayoutParams(-2, -2));
+        panel.addView(customRow);
+
+        View div0 = new View(this);
+        div0.setBackgroundColor(0x22FFFFFF);
+        panel.addView(div0, new LinearLayout.LayoutParams(-1, dp(1)));
+
+        // 3. Header Row: Tool Ordering & Set Default
         LinearLayout headerRow = new LinearLayout(this);
         headerRow.setOrientation(LinearLayout.HORIZONTAL);
         headerRow.setGravity(Gravity.CENTER_VERTICAL);
-        headerRow.setPadding(0, 0, 0, dp(6));
+        headerRow.setPadding(0, dp(10), 0, dp(6));
 
         LinearLayout titleCol = new LinearLayout(this);
         titleCol.setOrientation(LinearLayout.VERTICAL);
-        TextView fwTitle = label("FLOATING WINDOWS & INGAME TOOLS", 13.5f, accentColor);
+        TextView fwTitle = label("INGAME TOOLS ORDER & VISIBILITY", 12f, 0xFFFF4A56);
         fwTitle.setTypeface(null, Typeface.BOLD);
         fwTitle.setLetterSpacing(0.04f);
         titleCol.addView(fwTitle);
-        TextView fwDesc = label("Drag, hold or tap ▲ ▼ to re-arrange real-time.", 9.5f, 0xFFB0B3C0);
+        TextView fwDesc = label("Drag, hold or tap arrows to re-arrange real-time.", 9f, 0xFFB0B3C0);
         fwDesc.setPadding(0, dp(2), 0, 0);
         titleCol.addView(fwDesc);
         headerRow.addView(titleCol, new LinearLayout.LayoutParams(0, -2, 1f));
@@ -5448,6 +5679,46 @@ private ScrollView verticalGameScroll;
         }
     }
 
+    private interface OnHunterSliderChanged {
+        void onChange(int value);
+    }
+
+    private View buildHunterDialogSlider(String name, int min, int max, int current, String unit, OnHunterSliderChanged listener) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setPadding(0, dp(4), 0, dp(4));
+
+        LinearLayout labelRow = new LinearLayout(this);
+        labelRow.setOrientation(LinearLayout.HORIZONTAL);
+        TextView title = label(name, 11.5f, 0xFFE0E0E0);
+        title.setTypeface(null, Typeface.BOLD);
+        labelRow.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        TextView valText = label((current > 0 ? "+" : "") + current + unit, 11f, 0xFFFF5252);
+        valText.setTypeface(null, Typeface.BOLD);
+        labelRow.addView(valText, new LinearLayout.LayoutParams(-2, -2));
+        row.addView(labelRow);
+
+        SeekBar sb = new SeekBar(this);
+        sb.setMax(max - min);
+        sb.setProgress(current - min);
+        sb.setPadding(dp(4), dp(4), dp(4), dp(4));
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar s, int progress, boolean fromUser) {
+                int actual = min + progress;
+                valText.setText((actual > 0 ? "+" : "") + actual + unit);
+                if (fromUser && listener != null) {
+                    listener.onChange(actual);
+                }
+            }
+            @Override public void onStartTrackingTouch(SeekBar s) {}
+            @Override public void onStopTrackingTouch(SeekBar s) {}
+        });
+        row.addView(sb);
+        return row;
+    }
+
     private void showHuntingFilterDialog() {
         Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
@@ -5460,15 +5731,25 @@ private ScrollView verticalGameScroll;
         bg.setStroke(dp(1), 0xFF35394C);
         root.setBackground(bg);
 
+        HunterModeEngine engine = HunterModeEngine.getInstance();
+        final HunterModeEngine.HunterConfig cfg = engine.loadConfig(this, null);
+
+        // Header: REDMAGIC HUNTER + Reset + Close
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setPadding(0, 0, 0, dp(12));
+        header.setPadding(0, 0, 0, dp(10));
 
-        TextView title = label("hunting-filter", 16, Color.WHITE);
+        TextView title = label("REDMAGIC HUNTER MODE", 16, Color.WHITE);
         title.setTypeface(null, Typeface.BOLD);
         title.setLetterSpacing(0.04f);
         header.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        TextView resetBtn = label("RESET", 11, 0xFFFF7043);
+        resetBtn.setTypeface(null, Typeface.BOLD);
+        resetBtn.setGravity(Gravity.CENTER);
+        resetBtn.setPadding(dp(8), dp(4), dp(8), dp(4));
+        header.addView(resetBtn, new LinearLayout.LayoutParams(-2, -2));
 
         TextView closeBtn = label("", 18, 0xFFB0B5C6);
         closeBtn.setTypeface(null, Typeface.BOLD);
@@ -5478,85 +5759,270 @@ private ScrollView verticalGameScroll;
         header.addView(closeBtn, new LinearLayout.LayoutParams(-2, -2));
         root.addView(header);
 
+        // Master Switch
+        LinearLayout toggleBar = new LinearLayout(this);
+        toggleBar.setOrientation(LinearLayout.HORIZONTAL);
+        toggleBar.setGravity(Gravity.CENTER_VERTICAL);
+        toggleBar.setPadding(dp(10), dp(8), dp(10), dp(8));
+        GradientDrawable toggleBg = new GradientDrawable();
+        toggleBg.setColor(0x22FFFFFF);
+        toggleBg.setCornerRadius(dp(10));
+        toggleBar.setBackground(toggleBg);
+
+        TextView toggleLabel = label("Master Filter State", 13, Color.WHITE);
+        toggleLabel.setTypeface(null, Typeface.BOLD);
+        toggleBar.addView(toggleLabel, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        Button toggleBtn = new Button(this);
+        toggleBtn.setText(cfg.enabled ? "ACTIVE" : "DISABLED");
+        toggleBtn.setTextColor(Color.WHITE);
+        toggleBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        toggleBtn.setTypeface(null, Typeface.BOLD);
+        GradientDrawable btnBg = new GradientDrawable();
+        btnBg.setColor(cfg.enabled ? 0xFF00E676 : 0xFF546E7A);
+        btnBg.setCornerRadius(dp(8));
+        toggleBtn.setBackground(btnBg);
+        toggleBar.addView(toggleBtn, new LinearLayout.LayoutParams(dp(90), dp(32)));
+        root.addView(toggleBar);
+
         ScrollView scroll = new ScrollView(this);
         scroll.setVerticalScrollBarEnabled(false);
-        LinearLayout list = new LinearLayout(this);
-        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
 
-        SharedPreferences prefs = getSharedPreferences("ror_game_plugins", MODE_PRIVATE);
-        final int[] currentFilter = new int[]{prefs.getInt("hunting_filter_id", 0)};
+        // Presets
+        TextView presetsHeader = label("GAMING PRESETS", 11.5f, 0xFF00E5FF);
+        presetsHeader.setTypeface(null, Typeface.BOLD);
+        presetsHeader.setPadding(0, dp(12), 0, dp(6));
+        content.addView(presetsHeader);
 
-        Runnable rebuildList = () -> {
-            list.removeAllViews();
-            for (int i = 1; i < GameBubbleService.HUNTING_FILTER_NAMES.length; i++) {
-                final int filterId = i;
-                final boolean isSelected = (filterId == currentFilter[0]);
+        HorizontalScrollView presetScroll = new HorizontalScrollView(this);
+        presetScroll.setHorizontalScrollBarEnabled(false);
+        LinearLayout presetList = new LinearLayout(this);
+        presetList.setOrientation(LinearLayout.HORIZONTAL);
 
-                LinearLayout item = new LinearLayout(this);
-                item.setOrientation(LinearLayout.HORIZONTAL);
-                item.setGravity(Gravity.CENTER_VERTICAL);
-                item.setPadding(0, dp(7), 0, dp(7));
+        for (int p = 1; p < HunterModeEngine.PRESET_COUNT; p++) {
+            final int presetId = p;
+            final boolean isPresetActive = (cfg.presetId == presetId);
 
-                FrameLayout thumbFrame = new FrameLayout(this);
-                GradientDrawable tBg = new GradientDrawable();
-                tBg.setCornerRadius(dp(8));
-                tBg.setStroke(dp(isSelected  ?  2 : 1), isSelected  ?  0xFFFF1744 : 0xFF3A3F50);
-                thumbFrame.setBackground(tBg);
-                thumbFrame.setPadding(dp(2), dp(2), dp(2), dp(2));
+            TextView chip = label(HunterModeEngine.PRESET_NAMES[presetId], 11.5f, isPresetActive ? Color.WHITE : 0xFFCFD8DC);
+            chip.setTypeface(null, Typeface.BOLD);
+            chip.setPadding(dp(12), dp(6), dp(12), dp(6));
+            GradientDrawable chipBg = new GradientDrawable();
+            chipBg.setCornerRadius(dp(8));
+            chipBg.setColor(isPresetActive ? 0xFFFF1744 : 0x22FFFFFF);
+            chipBg.setStroke(dp(1), isPresetActive ? 0xFFFF5252 : 0x33FFFFFF);
+            chip.setBackground(chipBg);
 
-                ImageView thumbView = new ImageView(this);
-                thumbView.setScaleType(ImageView.ScaleType.FIT_XY);
-                thumbView.setImageBitmap(GameBubbleService.createFilterThumbnail(filterId, dp(96), dp(52)));
-                thumbFrame.addView(thumbView, new FrameLayout.LayoutParams(-1, -1));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
+            lp.setMargins(0, 0, dp(6), 0);
+            chip.setLayoutParams(lp);
 
-                item.addView(thumbFrame, new LinearLayout.LayoutParams(dp(96), dp(52)));
+            chip.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                cfg.applyPreset(presetId);
+                cfg.enabled = true;
+                engine.saveConfig(this, null, cfg);
+                Intent intent = new Intent(this, GameBubbleService.class);
+                intent.setAction(GameBubbleService.ACTION_SET_HUNTING_FILTER);
+                intent.putExtra("filter_id", cfg.filterId);
+                intent.putExtra("preset_id", presetId);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    startForegroundService(intent);
+                } else {
+                    startService(intent);
+                }
+                dialog.dismiss();
+                showHuntingFilterDialog();
+            });
 
-                LinearLayout info = new LinearLayout(this);
-                info.setOrientation(LinearLayout.VERTICAL);
-                info.setPadding(dp(12), 0, 0, 0);
+            presetList.addView(chip);
+        }
+        presetScroll.addView(presetList, new HorizontalScrollView.LayoutParams(-2, -2));
+        content.addView(presetScroll);
 
-                TextView name = label(GameBubbleService.HUNTING_FILTER_NAMES[filterId], 13.5f, isSelected  ?  0xFFFF1744 : Color.WHITE);
-                name.setTypeface(null, Typeface.BOLD);
-                info.addView(name);
+        // Filters Header
+        TextView filtersHeader = label("VISUAL FILTERS (15)", 11.5f, 0xFF00E5FF);
+        filtersHeader.setTypeface(null, Typeface.BOLD);
+        filtersHeader.setPadding(0, dp(14), 0, dp(6));
+        content.addView(filtersHeader);
 
-                TextView desc = label(GameBubbleService.HUNTING_FILTER_DESCRIPTIONS[filterId], 9.5f, isSelected  ?  0xFFFF7080 : 0xFF9EABB8);
-                desc.setPadding(0, dp(2), 0, 0);
-                info.addView(desc);
+        for (int i = 1; i < GameBubbleService.HUNTING_FILTER_NAMES.length; i++) {
+            final int filterId = i;
+            final boolean isSelected = (filterId == cfg.filterId && cfg.enabled);
 
-                item.addView(info, new LinearLayout.LayoutParams(0, -2, 1f));
+            LinearLayout item = new LinearLayout(this);
+            item.setOrientation(LinearLayout.HORIZONTAL);
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            item.setPadding(0, dp(6), 0, dp(6));
 
-                item.setOnClickListener(v -> {
-                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
-                    if (isSelected) {
-                        currentFilter[0] = 0;
-                        prefs.edit().putInt("hunting_filter_id", 0).putBoolean("screen_filter", false).apply();
-                    } else {
-                        currentFilter[0] = filterId;
-                        prefs.edit().putInt("hunting_filter_id", filterId).putBoolean("screen_filter", true).apply();
-                    }
-                    Intent intent = new Intent(this, GameBubbleService.class);
-                    intent.setAction(GameBubbleService.ACTION_SET_HUNTING_FILTER);
-                    intent.putExtra("filter_id", currentFilter[0]);
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        startForegroundService(intent);
-                    } else {
-                        startService(intent);
-                    }
-                    dialog.dismiss();
-                    Toast.makeText(this, currentFilter[0] > 0  ?  (GameBubbleService.HUNTING_FILTER_NAMES[currentFilter[0]] + " filter applied") : "Filter disabled", Toast.LENGTH_SHORT).show();
-                });
+            FrameLayout thumbFrame = new FrameLayout(this);
+            GradientDrawable tBg = new GradientDrawable();
+            tBg.setCornerRadius(dp(8));
+            tBg.setStroke(dp(isSelected ? 2 : 1), isSelected ? 0xFFFF1744 : 0xFF3A3F50);
+            thumbFrame.setBackground(tBg);
+            thumbFrame.setPadding(dp(2), dp(2), dp(2), dp(2));
 
-                list.addView(item);
+            ImageView thumbView = new ImageView(this);
+            thumbView.setScaleType(ImageView.ScaleType.FIT_XY);
+            thumbView.setImageBitmap(GameBubbleService.createFilterThumbnail(filterId, dp(96), dp(52)));
+            thumbFrame.addView(thumbView, new FrameLayout.LayoutParams(-1, -1));
 
-                View divider = new View(this);
-                divider.setBackgroundColor(0x18FFFFFF);
-                list.addView(divider, new LinearLayout.LayoutParams(-1, dp(1)));
+            item.addView(thumbFrame, new LinearLayout.LayoutParams(dp(96), dp(52)));
+
+            LinearLayout info = new LinearLayout(this);
+            info.setOrientation(LinearLayout.VERTICAL);
+            info.setPadding(dp(12), 0, 0, 0);
+
+            TextView name = label(GameBubbleService.HUNTING_FILTER_NAMES[filterId], 13.5f, isSelected ? 0xFFFF1744 : Color.WHITE);
+            name.setTypeface(null, Typeface.BOLD);
+            info.addView(name);
+
+            TextView desc = label(GameBubbleService.HUNTING_FILTER_DESCRIPTIONS[filterId], 9.5f, isSelected ? 0xFFFF7080 : 0xFF9EABB8);
+            desc.setPadding(0, dp(2), 0, 0);
+            info.addView(desc);
+
+            item.addView(info, new LinearLayout.LayoutParams(0, -2, 1f));
+
+            item.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                if (isSelected) {
+                    cfg.filterId = 0;
+                    cfg.enabled = false;
+                } else {
+                    cfg.filterId = filterId;
+                    cfg.enabled = true;
+                }
+                engine.saveConfig(this, null, cfg);
+                Intent intent = new Intent(this, GameBubbleService.class);
+                intent.setAction(GameBubbleService.ACTION_SET_HUNTING_FILTER);
+                intent.putExtra("filter_id", cfg.filterId);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    startForegroundService(intent);
+                } else {
+                    startService(intent);
+                }
+                dialog.dismiss();
+                Toast.makeText(this, cfg.enabled ? (GameBubbleService.HUNTING_FILTER_NAMES[filterId] + " filter applied") : "Filter disabled", Toast.LENGTH_SHORT).show();
+            });
+
+            content.addView(item);
+
+            View divider = new View(this);
+            divider.setBackgroundColor(0x18FFFFFF);
+            content.addView(divider, new LinearLayout.LayoutParams(-1, dp(1)));
+        }
+
+        // Sliders Header
+        TextView slidersHeader = label("FINE TUNING & SHADER ADJUSTMENTS", 11.5f, 0xFF00E5FF);
+        slidersHeader.setTypeface(null, Typeface.BOLD);
+        slidersHeader.setPadding(0, dp(16), 0, dp(6));
+        content.addView(slidersHeader);
+
+        content.addView(buildHunterDialogSlider("Brightness", -100, 100, cfg.brightness, "", val -> {
+            cfg.brightness = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Contrast", -100, 100, cfg.contrast, "", val -> {
+            cfg.contrast = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Saturation", 0, 200, cfg.saturation, "%", val -> {
+            cfg.saturation = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Gamma", 50, 250, cfg.gamma, "%", val -> {
+            cfg.gamma = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Shadow Boost", 0, 100, cfg.shadowBoost, "", val -> {
+            cfg.shadowBoost = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Sharpness", 0, 100, cfg.sharpness, "", val -> {
+            cfg.sharpness = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Color Temperature (Cool/Warm)", -100, 100, cfg.colorTemp, "", val -> {
+            cfg.colorTemp = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Red Channel Gain", 0, 200, cfg.redGain, "%", val -> {
+            cfg.redGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Green Channel Gain", 0, 200, cfg.greenGain, "%", val -> {
+            cfg.greenGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        content.addView(buildHunterDialogSlider("Blue Channel Gain", 0, 200, cfg.blueGain, "%", val -> {
+            cfg.blueGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        int currentAlphaPct = (int) (cfg.overlayAlpha * 100f);
+        content.addView(buildHunterDialogSlider("Overlay Opacity", 20, 100, currentAlphaPct, "%", val -> {
+            cfg.overlayAlpha = val / 100f;
+            engine.saveConfig(this, null, cfg);
+        }));
+
+        // Reset click
+        resetBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            cfg.reset();
+            engine.saveConfig(this, null, cfg);
+            Intent intent = new Intent(this, GameBubbleService.class);
+            intent.setAction(GameBubbleService.ACTION_SET_HUNTING_FILTER);
+            intent.putExtra("filter_id", 0);
+            if (Build.VERSION.SDK_INT >= 26) {
+                startForegroundService(intent);
+            } else {
+                startService(intent);
             }
-        };
+            dialog.dismiss();
+            showHuntingFilterDialog();
+        });
 
-        rebuildList.run();
+        // Toggle click
+        toggleBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            cfg.enabled = !cfg.enabled;
+            if (cfg.enabled && cfg.filterId == 0) {
+                cfg.filterId = 1;
+            }
+            engine.saveConfig(this, null, cfg);
+            Intent intent = new Intent(this, GameBubbleService.class);
+            intent.setAction(GameBubbleService.ACTION_SET_HUNTING_FILTER);
+            intent.putExtra("filter_id", cfg.enabled ? cfg.filterId : 0);
+            if (Build.VERSION.SDK_INT >= 26) {
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
+            dialog.dismiss();
+            showHuntingFilterDialog();
+        });
 
-        scroll.addView(list, new ScrollView.LayoutParams(-1, -2));
+        scroll.addView(content, new ScrollView.LayoutParams(-1, -2));
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1f));
 
         dialog.setContentView(root);
@@ -6296,14 +6762,20 @@ private ScrollView verticalGameScroll;
             handler.removeCallbacks(heroBadgesBlinker);
             heroBadgesBlinker = null;
         }
+        heroBadges.setOnClickListener(v -> {
+            try {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/revWS")));
+            } catch (Exception ignored) {}
+        });
         Random rng = new Random();
         heroBadgesBlinker = new Runnable() {
             private boolean visible = true;
             @Override public void run() {
                 if (heroBadges == null || isFinishing() || isDestroyed()) return;
-                int dotColor = visible  ?  HERO_DOT_COLORS[rng.nextInt(HERO_DOT_COLORS.length)] : 0x22888888;
+                int dotColor = visible ? HERO_DOT_COLORS[rng.nextInt(HERO_DOT_COLORS.length)] : 0x22888888;
                 SpannableStringBuilder ssb = new SpannableStringBuilder();
-                ssb.append("?  ", new ForegroundColorSpan(dotColor), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append("\u25CF  ", new ForegroundColorSpan(dotColor), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 ssb.append(style.pillText.trim() + "   |   " + style.subtitle);
                 heroBadges.setText(ssb);
                 visible = !visible;
@@ -7217,16 +7689,18 @@ private ScrollView verticalGameScroll;
             // Phoenix Engine: All profiles usable
             profiles.addView(superProfileCard("BATTERY+", "Extended endurance", R.drawable.ic_dashboard, 0), weightedCardParams());
             profiles.addView(superProfileCard("BALANCE+", "Adaptive fluid power", R.drawable.ic_spectrum_balanced, 1), weightedCardParams());
-            profiles.addView(superProfileCard("THERMAL+", "Deep cooling control", R.drawable.ic_battery, 2), weightedCardParams());
-            profiles.addView(superProfileCard("COOLDOWN+", "Emergency cooldown", R.drawable.ic_cooldown, 3), weightedCardParams());
+            profiles.addView(superProfileCard("COOLDOWN+", "Deep cooling control", R.drawable.ic_cooldown, 2), weightedCardParams());
+            profiles.addView(superProfileCard("GAMING MAX+", "Pro esports tuning", R.drawable.ic_spectrum_game, 3), weightedCardParams());
             profiles.addView(superProfileCard("SMOOTH+", "Stable high FPS", R.drawable.ic_spectrum_game, 4), weightedCardParams());
             profiles.addView(superProfileCard("ULTRA GAMING+", "Apex peak overdrive", R.drawable.ic_ultra_gaming, 5), weightedCardParams());
         } else {
-            // Regular Engine: First 4 profiles connected to gsmws / library
+            // Regular Engine: Profiles connected to gsmws / library
             profiles.addView(superProfileCard("DAILY USE", "Smooth defaults", R.drawable.ic_dashboard, 0), weightedCardParams());
             profiles.addView(superProfileCard("BALANCE", "Power and battery", R.drawable.ic_spectrum_balanced, 1), weightedCardParams());
             profiles.addView(superProfileCard("BATTERY", "Maximum endurance", R.drawable.ic_battery, 2), weightedCardParams());
-            profiles.addView(superProfileCard("GAMING", "Maximum performance", R.drawable.ic_spectrum_game, 3), weightedCardParams());
+            profiles.addView(superProfileCard("COOLDOWN", "Thermal cooldown", R.drawable.ic_cooldown, 3), weightedCardParams());
+            profiles.addView(superProfileCard("GAMING", "Maximum performance", R.drawable.ic_spectrum_game, 4), weightedCardParams());
+            profiles.addView(superProfileCard("ULTRA GAMING", "Apex peak overdrive", R.drawable.ic_ultra_gaming, 5), weightedCardParams());
         }
         content.addView(profiles, new LinearLayout.LayoutParams(-1, dp(92)));
 
@@ -7291,7 +7765,7 @@ private ScrollView verticalGameScroll;
                     : "settings put system screen_brightness_mode 0");
             Toast.makeText(this, "Brightness lock " + (next  ?  "enabled (220/255)" : "disabled"), Toast.LENGTH_SHORT).show();
         });
-        addSuperTile(controls, "Hunting Filter", "11 REVROR styles", R.drawable.ic_display, plugins.getBoolean("screen_filter", false), h -> {
+        addSuperTile(controls, "Hunting Filter", "15 REDMAGIC styles", R.drawable.ic_display, plugins.getBoolean("screen_filter", false), h -> {
             showHuntingFilterDialog();
         });
         addSuperTile(controls, "Color boost", "Vivid game colors", R.drawable.ic_sparkle, plugins.getBoolean("color_boost", false), h -> {
@@ -7804,7 +8278,7 @@ private ScrollView verticalGameScroll;
         TextView name = label(title, 9.5f, Color.WHITE);
         name.setTypeface(null, Typeface.BOLD);
         copy.addView(name);
-        TextView subView = label(active  ?  "CTIVE" : subtitle, 7.5f, active  ?  0xFFFFFFFF : 0xFF9999A2);
+        TextView subView = label(active ? "ACTIVE" : subtitle, 7.5f, active ? 0xFFFFFFFF : 0xFF9999A2);
         copy.addView(subView);
         card.addView(copy, new LinearLayout.LayoutParams(0, -2, 1f));
         GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
@@ -7834,7 +8308,7 @@ private ScrollView verticalGameScroll;
         for (SuperProfileItem item : superProfileItems) {
             boolean active = launcherProfile == item.profile;
             item.icon.setColorFilter(active  ?  Color.WHITE : 0xFFFF5964);
-            item.subtitleView.setText(active  ?  "CTIVE" : item.defaultSubtitle);
+            item.subtitleView.setText(active ? "ACTIVE" : item.defaultSubtitle);
             item.subtitleView.setTextColor(active  ?  0xFFFFFFFF : 0xFF9999A2);
             GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                     active  ?  new int[]{0x88FF1744, 0x55B71C1C, 0x88FF2D55} : new int[]{0xEE160E15, 0xF80D080D});
@@ -9533,8 +10007,8 @@ private ScrollView verticalGameScroll;
         if (phoenix) {
             modesRow1.addView(redModeButton("BATTERY+", 0, isCompact));
             modesRow1.addView(redModeButton("BALANCE+", 1, isCompact));
-            modesRow1.addView(redModeButton("THERMAL+", 2, isCompact));
-            modesRow1.addView(redModeButton("COOLDOWN+", 3, isCompact));
+            modesRow1.addView(redModeButton("COOLDOWN+", 2, isCompact));
+            modesRow1.addView(redModeButton("GAMING MAX", 3, isCompact));
             panel.addView(modesRow1);
 
             modesRow2.addView(redModeButton("SMOOTH+", 4, isCompact));
@@ -9547,9 +10021,14 @@ private ScrollView verticalGameScroll;
             modesRow1.addView(redModeButton("DAILY USE", 0, isCompact));
             modesRow1.addView(redModeButton("BALANCE", 1, isCompact));
             modesRow1.addView(redModeButton("BATTERY", 2, isCompact));
-            modesRow1.addView(redModeButton("GAMING", 3, isCompact));
+            modesRow1.addView(redModeButton("GAMING", 4, isCompact));
             panel.addView(modesRow1);
-            seeMoreBtn.setVisibility(View.GONE);
+
+            modesRow2.addView(redModeButton("COOLDOWN", 3, isCompact));
+            modesRow2.addView(redModeButton("ULTRA", 5, isCompact));
+            modesRow2.setVisibility(showMoreProfiles ? View.VISIBLE : View.GONE);
+            panel.addView(modesRow2);
+            seeMoreBtn.setVisibility(View.VISIBLE);
         }
         seeMoreBtn.setGravity(Gravity.CENTER);
         seeMoreBtn.setTypeface(null, Typeface.BOLD);
@@ -9610,7 +10089,7 @@ private ScrollView verticalGameScroll;
         }, accentColor, cardBg1, cardBg2, cardStroke));
         panel.addView(quickToggles);
 
-        panel.addView(redToolButton(R.drawable.ic_flash, "ONE-TOUCH OPTIMIZE", isCompact, () -> applyLauncherProfile(4), accentColor, cardBg1, cardBg2, cardStroke));
+        panel.addView(redToolButton(R.drawable.ic_flash, "ONE-TOUCH OPTIMIZE", isCompact, () -> applyLauncherProfile(phoenix ? 3 : 4), accentColor, cardBg1, cardBg2, cardStroke));
         panel.addView(redToolButton(R.drawable.ic_wifi, "NETWORK BOOST", isCompact, () -> runQuickLauncherAction("network"), accentColor, cardBg1, cardBg2, cardStroke));
         panel.addView(redToolButton(R.drawable.ic_turbo_fan, "CLEAR BACKGROUND APPS", isCompact, () -> runQuickLauncherAction("cleanup"), accentColor, cardBg1, cardBg2, cardStroke));
         floatingToolsButton = redToolButton(R.drawable.ic_floating_window,
@@ -9687,28 +10166,32 @@ private ScrollView verticalGameScroll;
         boolean selected = launcherProfile == profile;
         TextView button = new TextView(this);
         button.setTag(profile);
-        button.setText(selected  ?  text + "\nCTIVE" : text);
-        button.setTextSize(selected  ?  (isCompact  ?  7.5f : 8f) : (isCompact  ?  7f : 7.5f));
-        button.setTextColor(selected  ?  Color.WHITE : 0xFFCCCCCC);
+        button.setText(selected ? text + "\nACTIVE" : text);
+        button.setTextSize(selected ? (isCompact ? 7.5f : 8f) : (isCompact ? 7f : 7.5f));
+        button.setTextColor(selected ? Color.WHITE : 0xFFCCCCCC);
         button.setTypeface(null, Typeface.BOLD);
         button.setGravity(Gravity.CENTER);
-        button.setLines(selected  ?  2 : 1);
-        button.setPadding(dp(isCompact  ?  1 : 2), dp(1), dp(isCompact  ?  1 : 2), dp(1));
+        button.setLines(selected ? 2 : 1);
+        button.setPadding(dp(isCompact ? 1 : 2), dp(1), dp(isCompact ? 1 : 2), dp(1));
         GradientDrawable bg = new GradientDrawable();
         if (selected) {
             bg.setOrientation(GradientDrawable.Orientation.TL_BR);
-            if (profile == 4) { // Gaming: rich cyber crimson ruby
+            boolean phoenix = GsmProfileManager.isPhoenixSelected(this);
+            if (profile == 4 || (phoenix && profile >= 3)) { // Gaming: rich cyber crimson ruby
                 bg.setColors(new int[]{0xFFFF0844, 0xFF990022, 0xFFFF2D55});
                 bg.setStroke(dp(2.0f), 0xFFFFFFFF);
-            } else if (profile == 2) { // Battery: emerald
+            } else if (profile == 2 || (phoenix && profile == 0)) { // Battery: emerald
                 bg.setColors(new int[]{0xFF00C868, 0xFF006633, 0xFF00E676});
                 bg.setStroke(dp(2.0f), 0xFFFFFFFF);
             } else if (profile == 1) { // Balance: royal purple
-                bg.setColors(new int[]{0xFFB12C7, 0xFF581373, 0xFFD46CFF});
+                bg.setColors(new int[]{0xFFB12AC7, 0xFF581373, 0xFFD46CFF});
                 bg.setStroke(dp(2.0f), 0xFFFFFFFF);
-            } else if (profile == 3) { // Cooldown: electric cyan
+            } else if (profile == 3 && !phoenix) { // Cooldown: electric cyan
                 bg.setColors(new int[]{0xFF00E5FF, 0xFF006B80, 0xFF38BDF8});
                 bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+            } else if (profile == 5) { // Ultra Gaming
+                bg.setColors(new int[]{0xFFFF1744, 0xFF880E4F, 0xFFFF5252});
+                bg.setStroke(dp(2.0f), 0xFFFFD700);
             } else if (profile == 7) { // Diablo: flaming orange red
                 bg.setColors(new int[]{0xFFFF3D00, 0xFF7A1400, 0xFFFF6E40});
                 bg.setStroke(dp(2.0f), 0xFFFFFFFF);
@@ -9812,8 +10295,8 @@ private ScrollView verticalGameScroll;
                 switch (prof) {
                     case 0: text = "BATTERY+"; break;
                     case 1: text = "BALANCE+"; break;
-                    case 2: text = "THERMAL+"; break;
-                    case 3: text = "COOLDOWN+"; break;
+                    case 2: text = "COOLDOWN+"; break;
+                    case 3: text = "GAMING MAX"; break;
                     case 4: text = "SMOOTH+"; break;
                     case 5: text = "ULTRA+"; break;
                     case 6: text = "ESPORTS+"; break;
@@ -9825,19 +10308,41 @@ private ScrollView verticalGameScroll;
                     case 0: text = "DAILY USE"; break;
                     case 1: text = "BALANCE"; break;
                     case 2: text = "BATTERY"; break;
-                    case 3: text = "GAMING"; break;
+                    case 3: text = "COOLDOWN"; break;
+                    case 4: text = "GAMING"; break;
+                    case 5: text = "ULTRA"; break;
                     default: text = "MODE"; break;
                 }
             }
-            button.setText(selected  ?  text + "\nCTIVE" : text);
-            button.setLines(selected  ?  2 : 1);
-            button.setTextSize(selected  ?  8.5f : 8f);
-            button.setTextColor(selected  ?  Color.WHITE : 0xFFCCCCCC);
+            button.setText(selected ? text + "\nACTIVE" : text);
+            button.setLines(selected ? 2 : 1);
+            button.setTextSize(selected ? 8.5f : 8f);
+            button.setTextColor(selected ? Color.WHITE : 0xFFCCCCCC);
             GradientDrawable bg = new GradientDrawable();
             if (selected) {
                 bg.setOrientation(GradientDrawable.Orientation.TL_BR);
-                bg.setColors(new int[]{0x88FF1744, 0x55B71C1C, 0x88FF2D55});
-                bg.setStroke(dp(1.8f), 0xFFFF5967);
+                if (prof == 4 || (phoenix && prof >= 3)) { // Gaming: rich cyber crimson ruby
+                    bg.setColors(new int[]{0xFFFF0844, 0xFF990022, 0xFFFF2D55});
+                    bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+                } else if (prof == 2 || (phoenix && prof == 0)) { // Battery: emerald
+                    bg.setColors(new int[]{0xFF00C868, 0xFF006633, 0xFF00E676});
+                    bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+                } else if (prof == 1) { // Balance: royal purple
+                    bg.setColors(new int[]{0xFFB12AC7, 0xFF581373, 0xFFD46CFF});
+                    bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+                } else if (prof == 3 && !phoenix) { // Cooldown: electric cyan
+                    bg.setColors(new int[]{0xFF00E5FF, 0xFF006B80, 0xFF38BDF8});
+                    bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+                } else if (prof == 5) { // Ultra Gaming
+                    bg.setColors(new int[]{0xFFFF1744, 0xFF880E4F, 0xFFFF5252});
+                    bg.setStroke(dp(2.0f), 0xFFFFD700);
+                } else if (prof == 7) { // Diablo
+                    bg.setColors(new int[]{0xFFFF3D00, 0xFF7A1400, 0xFFFF6E40});
+                    bg.setStroke(dp(2.0f), 0xFFFFFFFF);
+                } else {
+                    bg.setColors(new int[]{0x88FF1744, 0x55B71C1C, 0x88FF2D55});
+                    bg.setStroke(dp(1.8f), 0xFFFF5967);
+                }
             } else {
                 bg.setOrientation(GradientDrawable.Orientation.TL_BR);
                 bg.setColors(new int[]{0xE6160F16, 0xF50D080D});
@@ -10791,8 +11296,8 @@ private ScrollView verticalGameScroll;
         if (heroSubtitle != null) {
             heroSubtitle.setText("Tap here or '+' to add your games");
         }
-        if (heroBadges != null) {
-            heroBadges.setText("GAME SPACE  •  NO TITLES REGISTERED");
+        if (statusText != null) {
+            statusText.setText("GAME SPACE  •  NO TITLES REGISTERED");
         }
         if (heroPlayButton != null) {
             heroPlayButton.setText("ADD GAMES");
@@ -11590,7 +12095,6 @@ private ScrollView verticalGameScroll;
         }, 650);
 
         setBusy(true, "Optimizing " + entry.label + "…");
-        GsmProfileManager.apply(this, 4, null);
         long startTime = System.currentTimeMillis();
 
         GameOptimizer.optimize(this, entry.pkg, cleanupEnabled, networkEnabled, (privileged, detail) -> {

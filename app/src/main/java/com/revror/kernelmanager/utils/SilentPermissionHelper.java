@@ -20,6 +20,7 @@ public final class SilentPermissionHelper {
             cmd.append("appops set ").append(pkg).append(" WRITE_SETTINGS allow 2>/dev/null; ");
             cmd.append("pm grant ").append(pkg).append(" android.permission.WRITE_SECURE_SETTINGS 2>/dev/null; ");
             cmd.append("pm grant ").append(pkg).append(" android.permission.POST_NOTIFICATIONS 2>/dev/null; ");
+            cmd.append("pm grant ").append(pkg).append(" android.permission.RECORD_AUDIO 2>/dev/null; ");
             cmd.append("pm grant ").append(pkg).append(" android.permission.PACKAGE_USAGE_STATS 2>/dev/null; ");
             cmd.append("dumpsys deviceidle whitelist +").append(pkg).append(" 2>/dev/null; ");
             cmd.append("settings put global enable_freeform_support 1 2>/dev/null; ");

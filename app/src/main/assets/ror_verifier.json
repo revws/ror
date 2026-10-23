@@ -1,0 +1,10 @@
+{
+  "format": "RorVerifier",
+  "schema": 1,
+  "issuer": "REVROR License Studio",
+  "prefix": "ROR",
+  "algorithm": "REVROR-P256-SHA256",
+  "keyId": "DD146B51CA6C7DBC",
+  "publicKeySpki": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExr8Xkd8wQrepxdO0IBPyPDNUrL8LvWmk1j2wuK02cnJn9swOGipO8m5INV47tNszn_wIHZj31G1GWKj2NrEueA"
+}
+

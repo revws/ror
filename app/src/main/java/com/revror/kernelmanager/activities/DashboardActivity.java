@@ -44,6 +44,10 @@ import android.webkit.WebViewClient;
 import android.webkit.WebResourceRequest;
 import com.revror.kernelmanager.utils.AdBypassHelper;
 import com.revror.kernelmanager.utils.RorLicenseManager;
+import com.revror.kernelmanager.utils.display.HwOverlayManager;
+import com.revror.kernelmanager.utils.display.RefreshRateManager;
+import com.revror.kernelmanager.views.dialog.GyroDelayDialog;
+import com.revror.kernelmanager.views.dialog.AimBoostDialog;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -156,7 +160,43 @@ public class DashboardActivity extends AppCompatActivity {
     private final TextView[] navItems = new TextView[5];
     private boolean rootReady, shizukuReady, rootDialogVisible;
     private int applyingProfile = -1;
-    private boolean profileChangeInFlight;
+    private final com.revror.kernelmanager.utils.kernel.compat.ProfileExecutionCoordinator.StateListener mProfileCoordinatorListener =
+            (state, reqProfile, actProfile, message, opId) -> {
+                if (isFinishing() || isDestroyed()) return;
+                switch (state) {
+                    case PREPARING:
+                        profileStatus.setText("Preparing " + profileName(reqProfile) + "...");
+                        profileStatus.setTextColor(Color.rgb(255, 184, 77));
+                        break;
+                    case APPLYING:
+                        profileStatus.setText("Applying " + profileName(reqProfile) + "...");
+                        profileStatus.setTextColor(Color.rgb(105, 220, 255));
+                        break;
+                    case VERIFYING:
+                        profileStatus.setText("Verifying " + profileName(reqProfile) + "...");
+                        profileStatus.setTextColor(Color.rgb(105, 220, 255));
+                        break;
+                    case APPLIED:
+                        applyingProfile = reqProfile;
+                        selectProfile(reqProfile);
+                        applyProfileAppearance(reqProfile);
+                        profileStatus.setText(message);
+                        profileStatus.setTextColor(Color.rgb(105, 220, 255));
+                        rootReady = true;
+                        setProfileAccess(true);
+                        break;
+                    case FAILED:
+                        profileStatus.setText(message);
+                        profileStatus.setTextColor(Color.rgb(255, 82, 119));
+                        if (message.toLowerCase(Locale.US).contains("root")) {
+                            rootReady = false;
+                        }
+                        setProfileAccess(rootReady || shizukuReady);
+                        break;
+                    case IDLE:
+                        break;
+                }
+            };
     private ValueAnimator activeProfileAnimator;
     private View currentlyAnimatedProfileView;
     private WebView adBanner;
@@ -217,6 +257,8 @@ public class DashboardActivity extends AppCompatActivity {
         handler.postDelayed(() -> AdBypassHelper.showFullScreenAdIfDue(this), 900);
         SilentPermissionHelper.grantAllSilent(this);
         Shizuku.addRequestPermissionResultListener(shizukuPermissionListener);
+        com.revror.kernelmanager.utils.kernel.compat.ProfileExecutionCoordinator.getInstance()
+                .addListener(mProfileCoordinatorListener);
         dashboardScroll = findViewById(R.id.home_scroll);
         pageFlipper = findViewById(R.id.page_flipper);
         dashboardScroll.requestFocus();
@@ -258,10 +300,16 @@ public class DashboardActivity extends AppCompatActivity {
         super.onResume();
         AppIntegrity.enforce(this);
         updateHeroDeviceInfo();
+        View heroPillDot = findViewById(R.id.hero_pill_dot);
+        View heroPillDotGlow = findViewById(R.id.hero_pill_dot_glow);
+        if (heroPillDot != null) {
+            setupPillDotBlinker(heroPillDot, heroPillDotGlow);
+        }
         RorLicenseManager.checkAndSendExpirationReminder(this);
         checkAndEnforceLicenseExpiration();
         updateVipMorePageStatus();
         updateProfileEngineUi();
+        refreshCustomProfilesUi();
         int targetPage = getIntent().getIntExtra("open_page", -1);
         if (targetPage >= 0) {
             showPage(targetPage);
@@ -485,6 +533,7 @@ public class DashboardActivity extends AppCompatActivity {
         if (homeRegularEngine != null) homeRegularEngine.setOnClickListener(v -> switchProfileEngine(false));
         if (homePhoenixEngine != null) homePhoenixEngine.setOnClickListener(v -> switchProfileEngine(true));
         updateProfileEngineUi();
+        refreshCustomProfilesUi();
 
         View homeGameLauncher = findViewById(R.id.home_game_launcher);
         if (homeGameLauncher != null) homeGameLauncher.setOnClickListener(v -> startActivity(new Intent(this, GameLauncherActivity.class)));
@@ -532,11 +581,107 @@ public class DashboardActivity extends AppCompatActivity {
                 }
             });
         }
+
+        View btnAddCustom = findViewById(R.id.btn_add_custom_profile);
+        if (btnAddCustom != null) {
+            btnAddCustom.setOnClickListener(v -> {
+                if (!RorLicenseManager.isPremiumActive(this)) {
+                    RorLicenseManager.showVipRequiredDialog(this, "Custom Profile Studio", () -> {
+                        com.revror.kernelmanager.views.dialog.CustomProfileDialog.showEditor(this, null, this::refreshCustomProfilesUi);
+                    });
+                    return;
+                }
+                com.revror.kernelmanager.views.dialog.CustomProfileDialog.showEditor(this, null, this::refreshCustomProfilesUi);
+            });
+        }
+        refreshCustomProfilesUi();
+    }
+
+    private void refreshCustomProfilesUi() {
+        LinearLayout container = findViewById(R.id.custom_profiles_container);
+        if (container == null) return;
+        container.removeAllViews();
+
+        boolean isVip = RorLicenseManager.isPremiumActive(this);
+        List<com.revror.kernelmanager.utils.profile.CustomProfileManager.CustomProfile> list =
+                com.revror.kernelmanager.utils.profile.CustomProfileManager.getAllProfiles(this);
+        String activeCustomId = com.revror.kernelmanager.utils.profile.CustomProfileManager.getActiveCustomProfileId(this);
+
+        if (list.isEmpty()) {
+            TextView emptyNotice = new TextView(this);
+            emptyNotice.setText("No custom profiles crafted yet • Tap '+ CREATE NEW' to create one");
+            emptyNotice.setTextColor(0xFF7A85A8);
+            emptyNotice.setTextSize(11f);
+            emptyNotice.setPadding(16, 24, 16, 24);
+            emptyNotice.setGravity(android.view.Gravity.CENTER);
+            container.addView(emptyNotice);
+            return;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (com.revror.kernelmanager.utils.profile.CustomProfileManager.CustomProfile p : list) {
+            View card = inflater.inflate(R.layout.item_custom_profile_card, container, false);
+            ImageView icon = card.findViewById(R.id.custom_card_icon);
+            TextView title = card.findViewById(R.id.custom_card_title);
+            TextView subtitle = card.findViewById(R.id.custom_card_subtitle);
+            TextView badge = card.findViewById(R.id.custom_card_badge);
+            ImageView lockIcon = card.findViewById(R.id.custom_card_lock_icon);
+            ImageView options = card.findViewById(R.id.custom_card_options);
+
+            int iconRes = getResources().getIdentifier(p.iconResName, "drawable", getPackageName());
+            if (iconRes == 0) iconRes = R.drawable.ic_cpu;
+            icon.setImageResource(iconRes);
+            try {
+                icon.setColorFilter(Color.parseColor(p.accentColor));
+            } catch (Exception ignored) {
+                icon.setColorFilter(0xFF00E5FF);
+            }
+
+            title.setText(p.name);
+            boolean isActive = p.id.equals(activeCustomId);
+            badge.setVisibility(isActive ? View.VISIBLE : View.GONE);
+
+            StringBuilder sub = new StringBuilder();
+            sub.append(p.policySettings.size()).append(" Policies");
+            if (p.swappiness >= 0) sub.append(" • Swap ").append(p.swappiness).append("%");
+            if (p.dropCaches) sub.append(" • Drop Caches");
+            if (p.compactMemory) sub.append(" • Compact RAM");
+            subtitle.setText(sub.toString());
+
+            if (!isVip) {
+                lockIcon.setVisibility(View.VISIBLE);
+                card.setOnClickListener(v -> RorLicenseManager.showVipRequiredDialog(this, "Custom Profile", () -> {
+                    refreshCustomProfilesUi();
+                }));
+                options.setOnClickListener(v -> RorLicenseManager.showVipRequiredDialog(this, "Custom Profile Options", () -> {
+                    refreshCustomProfilesUi();
+                }));
+            } else {
+                lockIcon.setVisibility(View.GONE);
+                card.setOnClickListener(v -> {
+                    com.revror.kernelmanager.views.dialog.CustomProfileDialog.applyProfile(this, p, () -> {
+                        refreshCustomProfilesUi();
+                        applyingProfile = -1;
+                        selectProfile(-1);
+                        if (profileStatus != null) {
+                            profileStatus.setText("Current profile - " + p.name + " (Custom VIP)");
+                            profileStatus.setTextColor(0xFF00F5D4);
+                        }
+                    });
+                });
+                options.setOnClickListener(v -> {
+                    com.revror.kernelmanager.views.dialog.CustomProfileDialog.showProfileOptions(this, p, this::refreshCustomProfilesUi);
+                });
+            }
+
+            container.addView(card);
+        }
     }
 
     private void switchProfileEngine(boolean phoenix) {
         GsmProfileManager.setEngine(this, phoenix);
         updateProfileEngineUi();
+        refreshCustomProfilesUi();
         applyingProfile = activeProfileForDisplayedEngine();
         selectProfile(applyingProfile);
         if (applyingProfile >= 0) {
@@ -657,7 +802,7 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.tool_clean).setOnClickListener(v -> showCleaner());
         findViewById(R.id.tool_kernel).setOnClickListener(v -> {
             if (!RorLicenseManager.isPremiumActive(this)) {
-                RorLicenseManager.showVipRequiredDialog(this, "Advanced CPU Overlay", null);
+                RorLicenseManager.showVipRequiredDialog(this, "Kernel Tuning", null);
                 return;
             }
             if (!rootReady) {
@@ -686,7 +831,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
             runRootTool("Drop filesystem cache", "sync; echo 3 > /proc/sys/vm/drop_caches");
         });
-        findViewById(R.id.tool_doze).setOnClickListener(v -> runPrivilegedTool("Force Doze", "dumpsys deviceidle force-idle", false));
+        findViewById(R.id.tool_doze).setOnClickListener(v -> com.revror.kernelmanager.views.dialog.ForceDozeDialog.show(this));
         findViewById(R.id.tool_data_saver).setOnClickListener(v -> runPrivilegedTool("Data Saver", "cmd netpolicy set restrict-background true", false));
         findViewById(R.id.tool_save_profile).setOnClickListener(v -> saveCurrentCustomProfile());
         findViewById(R.id.tool_custom_profile).setOnClickListener(v -> showCustomProfiles());
@@ -698,10 +843,39 @@ public class DashboardActivity extends AppCompatActivity {
         if (dnsTool != null) dnsTool.setOnClickListener(v -> DnsChanger.showDialog(this));
         View bootTool = findViewById(R.id.tool_boot_settings);
         if (bootTool != null) bootTool.setOnClickListener(v -> BootTweakManager.showSettingsDialog(this));
+        View gyroTool = findViewById(R.id.tool_gyro_fix);
+        if (gyroTool != null) gyroTool.setOnClickListener(v -> {
+            if (!RorLicenseManager.isPremiumActive(this)) {
+                RorLicenseManager.showVipRequiredDialog(this, "Gyro Delay Fix (Phoenix VIP)", () -> GyroDelayDialog.show(this));
+                return;
+            }
+            GyroDelayDialog.show(this);
+        });
+        View aimTool = findViewById(R.id.tool_aim_boost);
+        if (aimTool != null) aimTool.setOnClickListener(v -> {
+            if (!RorLicenseManager.isPremiumActive(this)) {
+                RorLicenseManager.showVipRequiredDialog(this, "Aim Boost (Phoenix VIP)", () -> AimBoostDialog.show(this));
+                return;
+            }
+            AimBoostDialog.show(this);
+        });
+
         View rebootTool = findViewById(R.id.tool_reboot_manager);
         if (rebootTool != null) rebootTool.setOnClickListener(v -> BootTweakManager.showRebootManagerDialog(this));
+        View chargingTool = findViewById(R.id.tool_charging_cooldown);
+        if (chargingTool != null) chargingTool.setOnClickListener(v -> com.revror.kernelmanager.views.dialog.ChargingCooldownDialog.show(this));
+        View monitorBatteryCard = findViewById(R.id.monitor_battery_card);
+        if (monitorBatteryCard != null) monitorBatteryCard.setOnClickListener(v -> com.revror.kernelmanager.views.dialog.ChargingCooldownDialog.show(this));
+        View tileBattery = findViewById(R.id.tile_battery);
+        if (tileBattery != null) tileBattery.setOnClickListener(v -> com.revror.kernelmanager.views.dialog.ChargingCooldownDialog.show(this));
         View rorAiBanner = findViewById(R.id.banner_ror_ai);
-        if (rorAiBanner != null) rorAiBanner.setOnClickListener(v -> showRorAiDialog());
+        if (rorAiBanner != null) rorAiBanner.setOnClickListener(v -> {
+            if (!RorLicenseManager.isPremiumActive(this)) {
+                RorLicenseManager.showVipRequiredDialog(this, "Phoenix AI Optimizer", this::showRorAiDialog);
+                return;
+            }
+            showRorAiDialog();
+        });
 
         View homeToolUltra = findViewById(R.id.home_tool_ultra);
         if (homeToolUltra != null) homeToolUltra.setOnClickListener(v -> applyProfile(5));
@@ -742,7 +916,7 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.more_update).setOnClickListener(v -> checkForUpdates(true));
         View moreBugReport = findViewById(R.id.more_bug_report);
         if (moreBugReport != null) moreBugReport.setOnClickListener(v -> showBugReportDialog());
-        findViewById(R.id.more_donate).setOnClickListener(v -> openUrl("http://ko-fi.com/revWS"));
+        findViewById(R.id.more_donate).setOnClickListener(v -> openUrl("https://ko-fi.com/revWS"));
         findViewById(R.id.more_about).setOnClickListener(v -> showAbout());
         bindVipSection();
     }
@@ -1108,23 +1282,23 @@ public class DashboardActivity extends AppCompatActivity {
             showRootAccessDialog();
             return;
         }
-        if (profileChangeInFlight) { toast("A profile change is already in progress"); return; }
-        profileChangeInFlight = true;
         applyingProfile = profile;
         selectProfile(profile);
         applyProfileAppearance(profile);
-        profileStatus.setText("Applying Current profile - " + profileName(profile) + "...");
-        toast("Applying Current profile - " + profileName(profile));
+        com.revror.kernelmanager.utils.profile.CustomProfileManager.clearActiveCustomProfile(this);
+        refreshCustomProfilesUi();
         boolean phoenix = GsmProfileManager.usesPhoenixWorker(this, profile);
         String logName = phoenix ? "phx.log" : "ror.log";
         String pName = profileName(profile);
         GsmProfileManager.appendSharedProfileLog(this, logName, pName + " profile applying");
-        if (rootReady) GsmProfileManager.apply(this, profile, this::onProfileResult);
-        else applyShizukuProfile(profile);
+        if (rootReady) {
+            GsmProfileManager.apply(this, profile, this::onProfileResult);
+        } else {
+            applyShizukuProfile(profile);
+        }
     }
 
     private void onProfileResult(boolean success, String detail) {
-        profileChangeInFlight = false;
         if (isFinishing() || isDestroyed()) return;
         String message = detail == null ? "Profile operation finished" : detail;
         profileStatus.setText(message);
@@ -1292,7 +1466,6 @@ public class DashboardActivity extends AppCompatActivity {
                 GsmProfileManager.appendSharedProfileLog(this, logName, profileName(profile) + " profile activated");
             }
             postToUi(() -> {
-                profileChangeInFlight = false;
                 if (isFinishing() || isDestroyed()) return;
                 profileStatus.setText(detail);
                 profileStatus.setTextColor(Color.parseColor(result.success ? "#69DCFF" : "#FF5277"));
@@ -1415,6 +1588,7 @@ public class DashboardActivity extends AppCompatActivity {
         if (heroPill != null) heroPill.setOnClickListener(kofiClick);
         if (heroPillText != null) heroPillText.setOnClickListener(kofiClick);
         if (heroPillDot != null) heroPillDot.setOnClickListener(kofiClick);
+        if (heroPillDotGlow != null) heroPillDotGlow.setOnClickListener(kofiClick);
         View heroPillDotContainer = findViewById(R.id.hero_pill_dot_container);
         if (heroPillDotContainer != null) heroPillDotContainer.setOnClickListener(kofiClick);
 
@@ -1493,6 +1667,14 @@ public class DashboardActivity extends AppCompatActivity {
             pillDotAnimator.cancel();
             pillDotAnimator = null;
         }
+        View.OnClickListener kofiClick = v -> {
+            try {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            } catch (Exception ignored) {}
+            openUrl("https://ko-fi.com/revWS");
+        };
+        dotView.setOnClickListener(kofiClick);
+        if (glowView != null) glowView.setOnClickListener(kofiClick);
         Random rng = new Random();
         pillDotColorA = NEON_PULSE_COLORS[rng.nextInt(NEON_PULSE_COLORS.length)];
         pillDotColorB = NEON_PULSE_COLORS[rng.nextInt(NEON_PULSE_COLORS.length)];
@@ -2739,6 +2921,12 @@ public class DashboardActivity extends AppCompatActivity {
                 () -> openUrl("https://t.me/godTspeed")
         ));
         items.add(new SettingItem(
+                R.drawable.ic_flash, 0xFF00F5D4,
+                "Charging Cooldown (Fast & Cool)",
+                "Intelligent fast charging & low-heat thermal management",
+                () -> com.revror.kernelmanager.views.dialog.ChargingCooldownDialog.show(this)
+        ));
+        items.add(new SettingItem(
                 R.drawable.ic_spectrum_battery, 0xFF2DE49A,
                 "Battery Saver",
                 "System battery optimization and doze modes",
@@ -3198,9 +3386,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void showBackgroundControls() {
         new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Background Apps")
-                .setMessage("Review Android battery optimization, or request Force Doze now. Force Doze is temporary and Android exits it when the device wakes.")
-                .setNegativeButton("Exit Doze", (d, w) -> runPrivilegedTool("Exit Doze", "dumpsys deviceidle unforce", false))
-                .setPositiveButton("Force Doze", (d, w) -> runPrivilegedTool("Force Doze", "dumpsys deviceidle force-idle", false))
+                .setMessage("Review Android battery optimization, or launch Force Doze Controller. Force Doze cleans unneeded user background tasks according to your desired profile.")
+                .setNegativeButton("Exit Doze", (d, w) -> com.revror.kernelmanager.utils.doze.ForceDozeManager.exitDoze(this))
+                .setPositiveButton("Force Doze Controller", (d, w) -> com.revror.kernelmanager.views.dialog.ForceDozeDialog.show(this))
                 .show();
     }
 
@@ -3363,54 +3551,53 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void showOverlayControls() {
-        boolean enabled = getSharedPreferences("ror_tools", MODE_PRIVATE).getBoolean("overlay", false);
-        new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("CPU Info Overlay")
-                .setMessage("A draggable overlay shows every online CPU core and frequency, governor, CPU load, FPS, battery state and temperature, and RAM use. Root improves access to restricted metrics.")
-                .setNegativeButton("Cancel", null).setPositiveButton(enabled ? "Stop overlay" : "Enable overlay", (d, w) -> {
-                    if (enabled) { stopService(new Intent(this, CpuOverlayService.class)); toast("CPU overlay stopped"); }
-                    else startCpuOverlay();
-                }).show();
+        com.revror.kernelmanager.views.dialog.HwOverlayDialog.show(this);
     }
 
     private void startCpuOverlay() {
         SilentPermissionHelper.ensureOverlaySilent(this);
         Intent service = new Intent(this, CpuOverlayService.class);
         if (Build.VERSION.SDK_INT >= 26) startForegroundService(service); else startService(service);
+        getSharedPreferences("ror_tools", MODE_PRIVATE).edit().putBoolean("overlay", true).apply();
         toast("CPU overlay enabled • drag it anywhere");
     }
 
     private void showRefreshRate() {
         android.view.Display display = getWindowManager().getDefaultDisplay();
         float currentHz = display.getRefreshRate();
-        Display.Mode[] modes = Build.VERSION.SDK_INT >= 23 ? display.getSupportedModes() : new Display.Mode[0];
-        List<String> rates = new ArrayList<>();
-        for (Display.Mode mode : modes) {
-            String rate = String.valueOf(Math.round(mode.getRefreshRate()));
-            if (!rates.contains(rate)) rates.add(rate);
+        List<Integer> rates = RefreshRateManager.getAvailableRates(this);
+        boolean isLocked = RefreshRateManager.isRateLocked(this);
+        int lockedHz = RefreshRateManager.getLockedRate(this);
+        boolean is1Hz = RefreshRateManager.isAdaptive1HzActive(this);
+
+        List<String> items = new ArrayList<>();
+        for (int r : rates) {
+            boolean isCur = Math.round(currentHz) == r;
+            boolean isThisLocked = isLocked && lockedHz == r && !is1Hz;
+            items.add(r + " Hz" + (isThisLocked ? "  [LOCKED]" : (isCur ? "  •  CURRENT ACTIVE" : "")));
         }
-        for (String std : new String[]{"60", "90", "120", "144"}) {
-            if (!rates.contains(std)) rates.add(std);
-        }
-        Collections.sort(rates, (a, b) -> Integer.compare(Integer.parseInt(a), Integer.parseInt(b)));
-        String[] items = new String[rates.size() + 1];
-        for (int i = 0; i < rates.size(); i++) {
-            String r = rates.get(i);
-            boolean isCur = Math.round(currentHz) == Integer.parseInt(r);
-            items[i] = r + " Hz" + (isCur ? "  •  CURRENT ACTIVE" : "");
-        }
-        items[items.length - 1] = "Reset to Android system default";
+        items.add("1 Hz Adaptive Minimum (HyperOS / LTPO VRR)" + (is1Hz ? "  [ACTIVE]" : ""));
+        items.add("Reset to Android system default");
+
+        int adaptiveIndex = rates.size();
+        int resetIndex = rates.size() + 1;
+
+        String title = String.format(Locale.US, "Display Refresh Rate  •  %.0f Hz", currentHz)
+                + (isLocked ? (is1Hz ? " (1 Hz Adaptive Locked)" : " (" + lockedHz + " Hz Locked)") : " (System Auto)");
+
         new AlertDialog.Builder(this, R.style.RorDialogTheme)
-                .setTitle(String.format(Locale.US, "Display Refresh Rate  •  %.0f Hz", currentHz))
-                .setItems(items, (d, which) -> {
-                    if (which == rates.size()) {
-                        runPrivilegedTool("Refresh rate default",
-                                "settings delete system peak_refresh_rate; settings delete system min_refresh_rate; settings delete system user_refresh_rate; " +
-                                "settings delete global peak_refresh_rate; settings delete global min_refresh_rate; settings delete global user_refresh_rate", false);
+                .setTitle(title)
+                .setItems(items.toArray(new String[0]), (d, which) -> {
+                    if (which == adaptiveIndex) {
+                        RefreshRateManager.RefreshRateStatus st = RefreshRateManager.setAdaptiveOneHz(this);
+                        toast(st.details);
+                    } else if (which == resetIndex) {
+                        RefreshRateManager.RefreshRateStatus st = RefreshRateManager.resetToDefault(this);
+                        toast(st.details);
                     } else {
-                        String rate = rates.get(which);
-                        runPrivilegedTool(rate + " Hz",
-                                "settings put system peak_refresh_rate " + rate + "; settings put system min_refresh_rate " + rate + "; settings put system user_refresh_rate " + rate + "; " +
-                                "settings put global peak_refresh_rate " + rate + "; settings put global min_refresh_rate " + rate + "; settings put global user_refresh_rate " + rate, false);
+                        int rate = rates.get(which);
+                        RefreshRateManager.RefreshRateStatus st = RefreshRateManager.setFixedRate(this, rate);
+                        toast(st.details);
                     }
                 }).setNegativeButton("Close", null).show();
     }
@@ -3426,7 +3613,7 @@ public class DashboardActivity extends AppCompatActivity {
                     else if (which == 3) showCleanupIntervals();
                     else if (which == 4) runRootTool("Memory compact", "[ -w /proc/sys/vm/compact_memory ] && echo 1 > /proc/sys/vm/compact_memory");
                     else if (which == 5) runRootTool("Filesystem cache", "sync; echo 3 > /proc/sys/vm/drop_caches");
-                    else if (which == 6) runPrivilegedTool("Force Doze", "dumpsys deviceidle force-idle", false);
+                    else if (which == 6) com.revror.kernelmanager.views.dialog.ForceDozeDialog.show(this);
                     else if (which == 7) runPrivilegedTool("Data Saver", "cmd netpolicy set restrict-background true", false);
                     else showCpuStatus();
                 }).setNegativeButton("Close", null).show();
@@ -3482,34 +3669,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void saveCurrentCustomProfile() {
-        if (!rootReady) { toast("Capturing kernel tuning requires root"); showRootAccessDialog(); return; }
-        EditText name = new EditText(this); name.setHint("Profile name");
-        new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Save current tuning").setView(name)
-                .setNegativeButton("Cancel", null).setPositiveButton("Capture", (d,w) -> submitTask(() -> {
-                    String n = name.getText().toString().trim(); if (n.isEmpty()) n = "Custom " + System.currentTimeMillis();
-                    String snapshot = RootUtils.runAndGetOutput(
-                            "for p in /sys/devices/system/cpu/cpufreq/policy*; do echo CPU\\|$p\\|$(cat $p/scaling_min_freq)\\|$(cat $p/scaling_max_freq)\\|$(cat $p/scaling_governor); done; "
-                            + "for p in /sys/class/kgsl/kgsl-3d0/devfreq /sys/class/devfreq/*gpu*; do [ -d \"$p\" ] && echo GPU\\|$p\\|$(cat $p/min_freq)\\|$(cat $p/max_freq)\\|$(cat $p/governor); done; "
-                            + "for p in /sys/block/*/queue/scheduler; do [ -r \"$p\" ] && echo IO\\|$p\\|$(cat $p | sed 's/.*\\[\\([^]]*\\)\\].*/\\1/'); done");
-                    getSharedPreferences("ror_custom", MODE_PRIVATE).edit().putString(n, snapshot).apply();
-                    String finalName=n; postToUi(() -> toast(finalName + " captured"));
-                })).show();
+        if (!RorLicenseManager.isPremiumActive(this)) {
+            RorLicenseManager.showVipRequiredDialog(this, "Custom Profile Studio", () -> saveCurrentCustomProfile());
+            return;
+        }
+        com.revror.kernelmanager.views.dialog.CustomProfileDialog.showEditor(this, null, this::refreshCustomProfilesUi);
     }
 
     private void showCustomProfiles() {
-        java.util.Map<String,?> all = getSharedPreferences("ror_custom", MODE_PRIVATE).getAll();
-        if (all.isEmpty()) { toast("No custom profiles saved yet"); return; }
-        String[] names = all.keySet().toArray(new String[0]);
-        new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Custom profiles").setItems(names, (d,w) -> {
-            String snapshot = String.valueOf(all.get(names[w])); StringBuilder command = new StringBuilder();
-            for (String line : snapshot.split("\\n")) {
-                String[] p=line.split("\\|");
-                if(p.length==5 && "CPU".equals(p[0])) command.append("echo ").append(p[2]).append(" > '").append(p[1]).append("/scaling_min_freq'; echo ").append(p[3]).append(" > '").append(p[1]).append("/scaling_max_freq'; echo '").append(p[4]).append("' > '").append(p[1]).append("/scaling_governor'; ");
-                else if(p.length==5 && "GPU".equals(p[0])) command.append("echo ").append(p[2]).append(" > '").append(p[1]).append("/min_freq'; echo ").append(p[3]).append(" > '").append(p[1]).append("/max_freq'; echo '").append(p[4]).append("' > '").append(p[1]).append("/governor'; ");
-                else if(p.length==3 && "IO".equals(p[0])) command.append("echo '").append(p[2]).append("' > '").append(p[1]).append("'; ");
-            }
-            runRootTool("Custom profile " + names[w], command.toString());
-        }).setNeutralButton("Delete all", (d,w) -> getSharedPreferences("ror_custom", MODE_PRIVATE).edit().clear().apply()).setNegativeButton("Close", null).show();
+        showPage(2);
+        refreshCustomProfilesUi();
+        View container = findViewById(R.id.custom_profiles_section);
+        if (container != null) {
+            container.getParent().requestChildFocus(container, container);
+        }
     }
 
     private void runRootTool(String name, String command) {
@@ -3883,6 +4056,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override protected void onStop() {
         handler.removeCallbacks(metricsUpdater);
+        if (pillDotAnimator != null) {
+            pillDotAnimator.cancel();
+            pillDotAnimator = null;
+        }
         stopHomeBannerAnimation(findViewById(R.id.hero_banner));
         super.onStop();
     }
@@ -3897,6 +4074,8 @@ public class DashboardActivity extends AppCompatActivity {
         try { Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener); } catch (Throwable ignored) {}
         if (adBanner != null) { try { adBanner.stopLoading(); adBanner.destroy(); } catch (RuntimeException ignored) {} }
         if (activeProfileAnimator != null) activeProfileAnimator.cancel();
+        com.revror.kernelmanager.utils.kernel.compat.ProfileExecutionCoordinator.getInstance()
+                .removeListener(mProfileCoordinatorListener);
         executor.shutdownNow(); super.onDestroy();
     }
 

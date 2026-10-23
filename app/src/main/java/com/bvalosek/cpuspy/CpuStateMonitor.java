@@ -13,8 +13,8 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
-import com.smartpack.kernelmanager.utils.Utils;
-import com.smartpack.kernelmanager.utils.kernel.cpu.CPUFreq;
+import com.revror.kernelmanager.utils.Utils;
+import com.revror.kernelmanager.utils.kernel.cpu.CPUFreq;
 
 import java.util.ArrayList;
 import java.util.Collections;

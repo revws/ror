@@ -26,7 +26,7 @@ public final class AppIntegrity {
     public static final String REVROR_SIGNATURE = "revror";
     public static final String PACKAGE_NAME = "com.revror.revws";
     private static final String BRAND = "REVROR";
-    private static final String BRAND_TOKEN = "REVROR::com.revror.revws::51.1";
+    private static final String BRAND_TOKEN = "REVROR::com.revror.revws::51.4";
     private static final String BRAND_META = "com.revror.kernelmanager.BRAND_ID";
     private static final String RELEASE_CERT_SHA256 = "6a1a778ffd20bd24010c62987c1c3a66381c8e12654f6d1a11f9b8326e4c8308";
 

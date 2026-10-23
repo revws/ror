@@ -205,17 +205,8 @@ public class ApplyOnBoot {
                     }
                 }
 
-                if (script) {
-                    StringBuilder s = new StringBuilder("#!/system/bin/sh\n\n");
-                    for (String command : commands) {
-                        s.append(command).append("\n");
-                    }
-                    Utils.create(s.toString(), context.getCacheDir() + "/kerneladiutortmp.sh");
-                    RootFile.execute(new File(context.getCacheDir(), "kerneladiutortmp.sh").getAbsolutePath());
-                } else {
-                    for (String command : commands) {
-                        RootUtils.runCommand(command);
-                    }
+                for (String command : commands) {
+                    com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, command);
                 }
 
                 List<String> profileCommands = new ArrayList<>();
@@ -227,21 +218,13 @@ public class ApplyOnBoot {
                         synchronized (this) {
                             profileCommands.addAll(getApplyCpu(applyCpu, context));
                         }
+                    } else {
+                        profileCommands.add(command);
                     }
-                    profileCommands.add(command);
                 }
 
-                if (script) {
-                    StringBuilder s = new StringBuilder("#!/system/bin/sh\n\n");
-                    for (String command : profileCommands) {
-                        s.append(command).append("\n");
-                    }
-                    Utils.create(s.toString(), context.getCacheDir() + "/kerneladiutortmp.sh");
-                    RootFile.execute(new File(context.getCacheDir(), "kerneladiutortmp.sh").getAbsolutePath());
-                } else {
-                    for (String command : profileCommands) {
-                        RootUtils.runCommand(command);
-                    }
+                for (String command : profileCommands) {
+                    com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, command);
                 }
 
                 RootUtils.closeSU();

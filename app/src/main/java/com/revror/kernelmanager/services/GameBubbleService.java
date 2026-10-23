@@ -51,7 +51,13 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.revror.kernelmanager.utils.AdBypassHelper;
+import com.revror.kernelmanager.utils.media.ScreenCaptureManager;
+import com.revror.kernelmanager.utils.display.HwOverlayManager;
+import com.revror.kernelmanager.utils.display.RefreshRateManager;
+import com.revror.kernelmanager.utils.touch.AimBoostEngine;
 import android.widget.SeekBar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -82,6 +88,7 @@ import androidx.core.content.ContextCompat;
 import com.revror.kernelmanager.R;
 import com.revror.kernelmanager.activities.GameLauncherActivity;
 import com.revror.kernelmanager.utils.AppIntegrity;
+import com.revror.kernelmanager.utils.HunterModeEngine;
 import com.revror.kernelmanager.utils.CpuStatsReader;
 import com.revror.kernelmanager.utils.GameOptimizer;
 import com.revror.kernelmanager.utils.GsmProfileManager;
@@ -119,37 +126,9 @@ public class GameBubbleService extends Service {
     private static final String DEFAULT_AD_BASE_URL = "https://venisonglum.com/";
     private static final String DEFAULT_AD_KEY = "b42fcfe592ba30a160cff1a209bed5f7";
 
-    public static final String[] HUNTING_FILTER_NAMES = {
-        "Off", "Hunter", "Night Vision", "Eagle Eye", "Ultra-Clear", "Pure", "Cyberpunk", "Movie", "B&W Sketch", "Film", "Crayon", "Oil Painting"
-    };
-    public static final String[] HUNTING_FILTER_DESCRIPTIONS = {
-        "Disable screen filter overlay",
-        "Inverts screen colors to help observe enemies",
-        "Brightens up dark environment for clearer visibility",
-        "Enhances outlines to aid target acquisition",
-        "Enhances sharpness and adaptive contrast",
-        "Reduces stray colors to assist focus",
-        "Enhances color saturation and neon contrast",
-        "Transforms the game style into cinematic film tones",
-        "Removes color for a high-contrast black-and-white sketch look",
-        "Converts the game style into a Lomography film look",
-        "Transforms the game style into a crayon drawing",
-        "Transforms the game style into an oil canvas painting"
-    };
-    public static final int[] HUNTING_FILTER_TINTS = {
-        0x00000000, // Off
-        0x28FF3D00, // Hunter (tactical infrared thermal amber/red)
-        0x4800E676, // Night Vision (phosphor tactical green)
-        0x2800B0FF, // Eagle Eye (electric cyan contrast)
-        0x20FFFFFF, // Ultra-Clear (clarity sharpness boost)
-        0x25E0F7FA, // Pure (cool desaturated cyan-grey)
-        0x3000E5FF, // Cyberpunk (neon cyan-violet contrast)
-        0x33FFA000, // Movie (cinematic golden amber)
-        0x4DFAFAFA, // Sketch (monochrome high-key tint)
-        0x35FF5722, // Film (vintage Lomography warm cross-process)
-        0x2EFF80AB, // Crayon (soft pastel illustration pink)
-        0x38FF6F00  // Oil Painting (deep rich impasto copper tone)
-    };
+    public static final String[] HUNTING_FILTER_NAMES = HunterModeEngine.FILTER_NAMES;
+    public static final String[] HUNTING_FILTER_DESCRIPTIONS = HunterModeEngine.FILTER_DESCRIPTIONS;
+    public static final int[] HUNTING_FILTER_TINTS = HunterModeEngine.FILTER_TINTS;
 
     private static volatile GameBubbleService sInstance;
 
@@ -165,7 +144,7 @@ public class GameBubbleService extends Service {
     private WindowManager.LayoutParams params;
     private View overlay;
     private TextView metrics;
-    private final Button[] profileButtons = new Button[6];
+    private final Button[] profileButtons = new Button[8];
     private String targetPackage = "", targetLabel = "Game";
     private boolean userDismissed = false;
 
@@ -181,6 +160,10 @@ public class GameBubbleService extends Service {
 
     // Screen Recording State
     private boolean isRecording = false;
+
+    public static boolean isRecordingActive() {
+        return ScreenCaptureManager.getInstance().isRecording();
+    }
     private long recordingStartTime = 0;
     private String currentRecordingPath = "";
     private View recordPillView;
@@ -380,7 +363,17 @@ public class GameBubbleService extends Service {
                 .setContentIntent(open)
                 .addAction(0, "Stop Controls", stop);
 
-        startForeground(NOTIF_ID, builder.build());
+        try {
+            if (Build.VERSION.SDK_INT >= 34) {
+                startForeground(NOTIF_ID, builder.build(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIF_ID, builder.build(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            } else {
+                startForeground(NOTIF_ID, builder.build());
+            }
+        } catch (Throwable t) {
+            android.util.Log.e("GameBubble", "FGS start error: " + t.getMessage());
+        }
     }
 
     @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -411,13 +404,16 @@ public class GameBubbleService extends Service {
             if (ACTION_SET_HUNTING_FILTER.equals(act)) {
                 int filterId = intent.getIntExtra("filter_id", 0);
                 screenFilterEnabled = (filterId > 0);
-                getSharedPreferences("ror_game_plugins", MODE_PRIVATE).edit()
-                        .putInt("hunting_filter_id", filterId)
-                        .putBoolean("screen_filter", screenFilterEnabled)
-                        .apply();
+                HunterModeEngine.HunterConfig cfg = HunterModeEngine.getInstance().loadConfig(this, targetPackage);
+                cfg.filterId = filterId;
+                cfg.enabled = screenFilterEnabled;
+                if (intent.hasExtra("preset_id")) {
+                    cfg.applyPreset(intent.getIntExtra("preset_id", 0));
+                }
+                HunterModeEngine.getInstance().saveConfig(this, targetPackage, cfg);
                 updateScreenFilterOverlay();
                 if (screenFilterEnabled && filterId < HUNTING_FILTER_NAMES.length) {
-                    showBarrage("Hunting filter", HUNTING_FILTER_NAMES[filterId] + " enabled");
+                    showBarrage("Hunter Mode", HUNTING_FILTER_NAMES[filterId] + " enabled");
                 }
                 return START_STICKY;
             }
@@ -508,9 +504,9 @@ public class GameBubbleService extends Service {
         } else if (bubbleState == 0) {
             // Expanded Panel
             cancelAutoEdgeTimer();
-            params.width = dp(340);
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            params.height = Math.min(dp(540), dm.heightPixels - dp(24));
+            SharedPreferences floatingPrefs = getSharedPreferences("ror_game_space_center", MODE_PRIVATE);
+            int layoutStyle = floatingPrefs.getInt("ror_floating_layout_style", 0);
+            FloatingWindowLayoutManager.configureLayoutParams(this, params, layoutStyle);
             replaceOverlay(buildPanel());
         } else if (bubbleState == 3) {
             // Mini Apps View
@@ -652,13 +648,19 @@ public class GameBubbleService extends Service {
         return dot;
     }
 
-    private void closeOverlay() {
+    void closeOverlay() {
         userDismissed = true;
         hideOverlay();
         toast("Game HUD closed");
     }
 
-    private View buildPanel() {
+    View buildPanel() {
+        SharedPreferences floatingPrefs = getSharedPreferences("ror_game_space_center", MODE_PRIVATE);
+        int layoutStyle = floatingPrefs.getInt("ror_floating_layout_style", 0);
+        return FloatingWindowLayoutManager.buildLayout(this, layoutStyle);
+    }
+
+    private View buildClassicPanel() {
         LinearLayout panel = new LinearLayout(this);
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setPadding(dp(16), dp(14), dp(16), dp(14));
@@ -720,33 +722,26 @@ public class GameBubbleService extends Service {
         content.addView(modesTitle);
 
         boolean phoenix = GsmProfileManager.isPhoenixSelected(this);
+        HorizontalScrollView profileScroll = new HorizontalScrollView(this);
+        profileScroll.setHorizontalScrollBarEnabled(false);
+        profileScroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
         LinearLayout profileRow = new LinearLayout(this);
         profileRow.setOrientation(LinearLayout.HORIZONTAL);
         profileRow.setBaselineAligned(false);
-        if (phoenix) {
-            // Phoenix Engine: All profiles
-            profileButtons[0] = profileButton("Battery+", 0);
-            profileButtons[1] = profileButton("Balance+", 1);
-            profileButtons[2] = profileButton("Thermal+", 2);
-            profileButtons[3] = profileButton("Cool+", 3);
-            profileButtons[4] = profileButton("Smooth+", 4);
-            profileButtons[5] = profileButton("Ultra+", 5);
-            for (int i = 0; i < 6; i++) {
-                if (profileButtons[i] != null) profileRow.addView(profileButtons[i], profileParams());
-            }
-        } else {
-            // Regular Engine: First 4 profiles connected with gsmws / library
-            profileButtons[0] = profileButton("Daily", 0);
-            profileButtons[1] = profileButton("Balance", 1);
-            profileButtons[2] = profileButton("Battery", 2);
-            profileButtons[3] = profileButton("Gaming", 3);
-            profileButtons[4] = null;
-            profileButtons[5] = null;
-            for (int i = 0; i < 4; i++) {
-                if (profileButtons[i] != null) profileRow.addView(profileButtons[i], profileParams());
+
+        List<com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.ProfileDescriptor> profiles =
+                com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.getProfiles(phoenix);
+        for (int i = 0; i < 8; i++) {
+            if (i < profiles.size()) {
+                com.revror.kernelmanager.utils.kernel.compat.ProfileRegistry.ProfileDescriptor desc = profiles.get(i);
+                profileButtons[i] = profileButton(desc.shortName, desc.id);
+                profileRow.addView(profileButtons[i], profileParams());
+            } else {
+                profileButtons[i] = null;
             }
         }
-        content.addView(profileRow);
+        profileScroll.addView(profileRow, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        content.addView(profileScroll);
         updateProfileButtons();
 
         // Brightness is independently hideable from Game Space > Floating Windows.
@@ -897,17 +892,17 @@ public class GameBubbleService extends Service {
         controls.setGravity(Gravity.CENTER);
         controls.setPadding(dp(4), 0, 0, 0);
 
-        TextView upBtn = new TextView(this);
-        upBtn.setText("▲");
-        upBtn.setTextSize(10f);
-        upBtn.setTextColor(index > 0 ? 0xFF8E95B2 : 0x338E95B2);
-        upBtn.setGravity(Gravity.CENTER);
+        ImageView upBtn = new ImageView(this);
+        upBtn.setImageResource(R.drawable.ic_arrow_up);
+        upBtn.setColorFilter(index > 0 ? 0xFF8E95B2 : 0x338E95B2);
         upBtn.setPadding(dp(7), dp(6), dp(7), dp(6));
         GradientDrawable upBg = new GradientDrawable();
         upBg.setColor(0x331C1D2A);
         upBg.setCornerRadius(dp(6));
         upBg.setStroke(dp(1), index > 0 ? 0x44536A99 : 0x11536A99);
         upBtn.setBackground(upBg);
+        LinearLayout.LayoutParams upLp = new LinearLayout.LayoutParams(dp(26), dp(26));
+        upBtn.setLayoutParams(upLp);
         if (index > 0) {
             upBtn.setOnClickListener(v -> {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -916,13 +911,11 @@ public class GameBubbleService extends Service {
         }
         controls.addView(upBtn);
 
-        TextView downBtn = new TextView(this);
-        downBtn.setText("▼");
-        downBtn.setTextSize(10f);
-        downBtn.setTextColor(index < total - 1 ? 0xFF8E95B2 : 0x338E95B2);
-        downBtn.setGravity(Gravity.CENTER);
+        ImageView downBtn = new ImageView(this);
+        downBtn.setImageResource(R.drawable.ic_arrow_down);
+        downBtn.setColorFilter(index < total - 1 ? 0xFF8E95B2 : 0x338E95B2);
         downBtn.setPadding(dp(7), dp(6), dp(7), dp(6));
-        LinearLayout.LayoutParams downLp = new LinearLayout.LayoutParams(-2, -2);
+        LinearLayout.LayoutParams downLp = new LinearLayout.LayoutParams(dp(26), dp(26));
         downLp.setMarginStart(dp(3));
         downBtn.setLayoutParams(downLp);
         GradientDrawable downBg = new GradientDrawable();
@@ -1004,8 +997,8 @@ public class GameBubbleService extends Service {
     }
 
     private LinearLayout.LayoutParams profileParams() {
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, dp(38), 1f);
-        p.setMargins(dp(2), dp(2), dp(2), dp(2));
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(dp(74), dp(36));
+        p.setMargins(dp(3), dp(2), dp(3), dp(2));
         return p;
     }
 
@@ -1201,7 +1194,7 @@ public class GameBubbleService extends Service {
         }
     }
 
-    private void showGamePlugins() {
+    void showGamePlugins() {
         bubbleState = 5;
         params.width = dp(360);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -1486,7 +1479,7 @@ public class GameBubbleService extends Service {
         return root;
     }
 
-    private void toggleCrosshair() {
+    void toggleCrosshair() {
         crosshairEnabled = !crosshairEnabled;
         updateCrosshairOverlay();
         showBarrage("Crosshair", crosshairEnabled ? "Center aim overlay enabled" : "Center aim overlay disabled");
@@ -1580,10 +1573,14 @@ public class GameBubbleService extends Service {
 
     private void toggleHighRefresh() {
         highRefreshEnabled = !highRefreshEnabled;
-        runPrivileged(highRefreshEnabled
-                ? "settings put system min_refresh_rate 120; settings put system peak_refresh_rate 120"
-                : "settings delete system min_refresh_rate; settings delete system peak_refresh_rate",
-                "High refresh rate " + onOff(highRefreshEnabled));
+        if (highRefreshEnabled) {
+            float peak = RefreshRateManager.getPeakRefreshRate(this);
+            RefreshRateManager.setFixedRate(this, Math.round(peak));
+            toast("Peak refresh locked (" + Math.round(peak) + "Hz)");
+        } else {
+            RefreshRateManager.setAdaptiveOneHz(this);
+            toast("1 Hz Adaptive refresh restored");
+        }
         refreshPluginPanel();
     }
 
@@ -1596,7 +1593,7 @@ public class GameBubbleService extends Service {
         refreshPluginPanel();
     }
 
-    private void toggleAntiDisturb() {
+    public void toggleAntiDisturb() {
         antiDisturbEnabled = !antiDisturbEnabled;
         runPrivileged(antiDisturbEnabled
                 ? "settings put global heads_up_notifications_enabled 0; cmd notification set_dnd priority"
@@ -1776,8 +1773,8 @@ public class GameBubbleService extends Service {
 
     public String getHuntingFilterShortName() {
         if (!screenFilterEnabled) return "OFF";
-        SharedPreferences prefs = getSharedPreferences("ror_game_plugins", MODE_PRIVATE);
-        int id = prefs.getInt("hunting_filter_id", 1);
+        HunterModeEngine.HunterConfig cfg = HunterModeEngine.getInstance().loadConfig(this, targetPackage);
+        int id = cfg.filterId;
         if (id > 0 && id < HUNTING_FILTER_NAMES.length) {
             return HUNTING_FILTER_NAMES[id].toUpperCase(Locale.US);
         }
@@ -1785,111 +1782,55 @@ public class GameBubbleService extends Service {
     }
 
     public static Bitmap createFilterThumbnail(int filterId, int width, int height) {
-        Bitmap bm = Bitmap.createBitmap(Math.max(1, width), Math.max(1, height), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        return HunterModeEngine.createFilterThumbnail(filterId, width, height, null);
+    }
 
-        int skyTop = 0xFF547896;
-        int skyBottom = 0xFF87AEC7;
-        int groundColor = 0xFF7CB342;
-        int treeColor = 0xFF1B5E20;
-        int sunColor = 0xFFFFF9C4;
+    private interface OnHunterSliderChanged {
+        void onChange(int value);
+    }
 
-        if (filterId == 1) { // Hunter palette
-            skyTop = 0xFF141E30; skyBottom = 0xFF243B55;
-            groundColor = 0xFFFFD700;
-            treeColor = 0xFFFFFFFF;
-            sunColor = 0xFF80DEEA;
-        } else if (filterId == 2) { // Night Vision palette
-            skyTop = 0xFF0A192F; skyBottom = 0xFF172A45;
-            groundColor = 0xFF134E35;
-            treeColor = 0xFF0A2E20;
-            sunColor = 0xFFE0F7FA;
-        } else if (filterId == 3) { // Eagle Eye palette
-            skyTop = 0xFF0288D1; skyBottom = 0xFF4FC3F7;
-            groundColor = 0xFF689F38;
-            treeColor = 0xFF1B5E20;
-            sunColor = 0xFFFFF59D;
-        } else if (filterId == 4) { // Ultra-Clear palette
-            skyTop = 0xFF0277BD; skyBottom = 0xFF29B6F6;
-            groundColor = 0xFFE0A82E;
-            treeColor = 0xFF2E7D32;
-            sunColor = 0xFFFFFFFF;
-        } else if (filterId == 5) { // Pure
-            skyTop = 0xFF788591; skyBottom = 0xFF9EABB8;
-            groundColor = 0xFF8DA378;
-            treeColor = 0xFF4A5568;
-            sunColor = 0xFFCFD8DC;
-        } else if (filterId == 6) { // Cyberpunk
-            skyTop = 0xFF4A148C; skyBottom = 0xFF00E5FF;
-            groundColor = 0xFFE040FB;
-            treeColor = 0xFF651FFF;
-            sunColor = 0xFF00E5FF;
-        } else if (filterId == 7) { // Movie
-            skyTop = 0xFFB76400; skyBottom = 0xFFFFC107;
-            groundColor = 0xFFD87D2A;
-            treeColor = 0xFF5D4037;
-            sunColor = 0xFFFFE082;
-        } else if (filterId == 8) { // Sketch
-            skyTop = 0xFFE0E0E0; skyBottom = 0xFFFFFFFF;
-            groundColor = 0xFFEEEEEE;
-            treeColor = 0xFF212121;
-            sunColor = 0xFF9E9E9E;
-        } else if (filterId == 9) { // Film
-            skyTop = 0xFF3E2723; skyBottom = 0xFFFF8A65;
-            groundColor = 0xFFA0522D;
-            treeColor = 0xFF2E1C14;
-            sunColor = 0xFFFFCCBC;
-        } else if (filterId == 10) { // Crayon
-            skyTop = 0xFFF8BBD0; skyBottom = 0xFFFFF9C4;
-            groundColor = 0xFFC5E1A5;
-            treeColor = 0xFF81C784;
-            sunColor = 0xFFFFD54F;
-        } else if (filterId == 11) { // Oil Painting
-            skyTop = 0xFFBF360C; skyBottom = 0xFFFFB74D;
-            groundColor = 0xFFCC7A00;
-            treeColor = 0xFF4E2600;
-            sunColor = 0xFFFFD180;
-        }
+    private View buildHunterSlider(String name, int min, int max, int current, String unit, OnHunterSliderChanged listener) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setPadding(0, dp(4), 0, dp(4));
 
-        LinearGradient skyGrad = new LinearGradient(0, 0, 0, height * 0.6f, skyTop, skyBottom, Shader.TileMode.CLAMP);
-        paint.setShader(skyGrad);
-        canvas.drawRect(0, 0, width, height * 0.6f, paint);
-        paint.setShader(null);
+        LinearLayout labelRow = new LinearLayout(this);
+        labelRow.setOrientation(LinearLayout.HORIZONTAL);
+        TextView title = label(name, 11f, 0xFFE0E0E0);
+        title.setTypeface(null, Typeface.BOLD);
+        labelRow.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
 
-        // Sun / horizon light
-        paint.setColor(sunColor);
-        canvas.drawCircle(width * 0.35f, height * 0.45f, height * 0.16f, paint);
+        TextView valText = label((current > 0 ? "+" : "") + current + unit, 11f, 0xFFFF5252);
+        valText.setTypeface(null, Typeface.BOLD);
+        labelRow.addView(valText, new LinearLayout.LayoutParams(-2, -2));
+        row.addView(labelRow);
 
-        // Ground / hill
-        paint.setColor(groundColor);
-        Path groundPath = new Path();
-        groundPath.moveTo(0, height * 0.55f);
-        groundPath.quadTo(width * 0.5f, height * 0.48f, width, height * 0.52f);
-        groundPath.lineTo(width, height);
-        groundPath.lineTo(0, height);
-        groundPath.close();
-        canvas.drawPath(groundPath, paint);
-
-        // Tree
-        paint.setColor(treeColor);
-        canvas.drawCircle(width * 0.28f, height * 0.45f, height * 0.14f, paint);
-        canvas.drawRect(width * 0.27f, height * 0.45f, width * 0.29f, height * 0.62f, paint);
-
-        // Tint overlay
-        if (filterId > 0 && filterId < HUNTING_FILTER_TINTS.length) {
-            paint.setColor(HUNTING_FILTER_TINTS[filterId]);
-            canvas.drawRect(0, 0, width, height, paint);
-        }
-        return bm;
+        SeekBar sb = new SeekBar(this);
+        sb.setMax(max - min);
+        sb.setProgress(current - min);
+        sb.setPadding(dp(4), dp(4), dp(4), dp(4));
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar s, int progress, boolean fromUser) {
+                int actual = min + progress;
+                valText.setText((actual > 0 ? "+" : "") + actual + unit);
+                if (fromUser && listener != null) {
+                    listener.onChange(actual);
+                }
+            }
+            @Override public void onStartTrackingTouch(SeekBar s) {}
+            @Override public void onStopTrackingTouch(SeekBar s) {}
+        });
+        row.addView(sb);
+        return row;
     }
 
     public void showHuntingFilterPanel() {
         cancelAutoEdgeTimer();
         bubbleState = 7;
-        params.width = dp(340);
+        params.width = dp(350);
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        params.height = Math.min(dp(520), dm.heightPixels - dp(24));
+        params.height = Math.min(dp(560), dm.heightPixels - dp(24));
         replaceOverlay(buildHuntingFilterPanel());
     }
 
@@ -1898,22 +1839,42 @@ public class GameBubbleService extends Service {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(dp(16), dp(14), dp(16), dp(14));
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(0xF213151D);
+        bg.setColor(0xF413151D);
         bg.setCornerRadius(dp(18));
         bg.setStroke(dp(1), 0xFF35394C);
         root.setBackground(bg);
 
-        // Header: hunting-filter + Close X
+        HunterModeEngine engine = HunterModeEngine.getInstance();
+        final HunterModeEngine.HunterConfig cfg = engine.loadConfig(this, targetPackage);
+
+        // Header: REDMAGIC HUNTER + Reset + Close X
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setPadding(0, 0, 0, dp(12));
+        header.setPadding(0, 0, 0, dp(10));
 
-        TextView title = label("hunting-filter", 16, Color.WHITE);
+        TextView title = label("REDMAGIC HUNTER", 15, Color.WHITE);
         title.setTypeface(null, Typeface.BOLD);
         title.setLetterSpacing(0.04f);
         header.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
 
+        // Reset Button
+        TextView resetBtn = label("RESET", 11, 0xFFFF7043);
+        resetBtn.setTypeface(null, Typeface.BOLD);
+        resetBtn.setGravity(Gravity.CENTER);
+        resetBtn.setPadding(dp(8), dp(4), dp(8), dp(4));
+        resetBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            cfg.reset();
+            screenFilterEnabled = false;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+            replaceOverlay(buildHuntingFilterPanel());
+            showBarrage("Hunter Mode", "Reset to original display");
+        });
+        header.addView(resetBtn, new LinearLayout.LayoutParams(-2, -2));
+
+        // Close Button
         TextView closeBtn = label("", 18, 0xFFB0B5C6);
         applyLeadingIcon(closeBtn, R.drawable.ic_window_close, 0xFFB0B5C6);
         closeBtn.setTypeface(null, Typeface.BOLD);
@@ -1926,23 +1887,107 @@ public class GameBubbleService extends Service {
         header.addView(closeBtn, new LinearLayout.LayoutParams(-2, -2));
         root.addView(header);
 
-        // ScrollView with all 11 filters
+        // Master Switch Bar
+        LinearLayout toggleBar = new LinearLayout(this);
+        toggleBar.setOrientation(LinearLayout.HORIZONTAL);
+        toggleBar.setGravity(Gravity.CENTER_VERTICAL);
+        toggleBar.setPadding(dp(10), dp(8), dp(10), dp(8));
+        GradientDrawable toggleBg = new GradientDrawable();
+        toggleBg.setColor(0x22FFFFFF);
+        toggleBg.setCornerRadius(dp(10));
+        toggleBar.setBackground(toggleBg);
+
+        TextView toggleLabel = label("Master Filter State", 13, Color.WHITE);
+        toggleLabel.setTypeface(null, Typeface.BOLD);
+        toggleBar.addView(toggleLabel, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        Button toggleBtn = new Button(this);
+        toggleBtn.setText(screenFilterEnabled ? "ACTIVE" : "DISABLED");
+        toggleBtn.setTextColor(Color.WHITE);
+        toggleBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        toggleBtn.setTypeface(null, Typeface.BOLD);
+        GradientDrawable btnBg = new GradientDrawable();
+        btnBg.setColor(screenFilterEnabled ? 0xFF00E676 : 0xFF546E7A);
+        btnBg.setCornerRadius(dp(8));
+        toggleBtn.setBackground(btnBg);
+        toggleBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            screenFilterEnabled = !screenFilterEnabled;
+            cfg.enabled = screenFilterEnabled;
+            if (screenFilterEnabled && cfg.filterId == 0) {
+                cfg.filterId = 1; // Default to Hunter Classic when toggled on
+            }
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+            replaceOverlay(buildHuntingFilterPanel());
+        });
+        toggleBar.addView(toggleBtn, new LinearLayout.LayoutParams(dp(90), dp(32)));
+        root.addView(toggleBar);
+
+        // Main Scrollable Area
         ScrollView scroll = new ScrollView(this);
         scroll.setVerticalScrollBarEnabled(false);
-        LinearLayout list = new LinearLayout(this);
-        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
 
-        SharedPreferences prefs = getSharedPreferences("ror_game_plugins", MODE_PRIVATE);
-        int currentFilter = prefs.getInt("hunting_filter_id", screenFilterEnabled ? 1 : 0);
+        // Presets Section
+        TextView presetsHeader = label("GAMING PRESETS", 11.5f, 0xFF00E5FF);
+        presetsHeader.setTypeface(null, Typeface.BOLD);
+        presetsHeader.setPadding(0, dp(12), 0, dp(6));
+        content.addView(presetsHeader);
+
+        HorizontalScrollView presetScroll = new HorizontalScrollView(this);
+        presetScroll.setHorizontalScrollBarEnabled(false);
+        LinearLayout presetList = new LinearLayout(this);
+        presetList.setOrientation(LinearLayout.HORIZONTAL);
+
+        for (int p = 1; p < HunterModeEngine.PRESET_COUNT; p++) {
+            final int presetId = p;
+            final boolean isPresetActive = (cfg.presetId == presetId);
+
+            TextView chip = label(HunterModeEngine.PRESET_NAMES[presetId], 11.5f, isPresetActive ? Color.WHITE : 0xFFCFD8DC);
+            chip.setTypeface(null, Typeface.BOLD);
+            chip.setPadding(dp(12), dp(6), dp(12), dp(6));
+            GradientDrawable chipBg = new GradientDrawable();
+            chipBg.setCornerRadius(dp(8));
+            chipBg.setColor(isPresetActive ? 0xFFFF1744 : 0x22FFFFFF);
+            chipBg.setStroke(dp(1), isPresetActive ? 0xFFFF5252 : 0x33FFFFFF);
+            chip.setBackground(chipBg);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
+            lp.setMargins(0, 0, dp(6), 0);
+            chip.setLayoutParams(lp);
+
+            chip.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                cfg.applyPreset(presetId);
+                screenFilterEnabled = true;
+                cfg.enabled = true;
+                engine.saveConfig(this, targetPackage, cfg);
+                updateScreenFilterOverlay();
+                replaceOverlay(buildHuntingFilterPanel());
+                showBarrage("Hunter Preset", HunterModeEngine.PRESET_NAMES[presetId] + " activated");
+            });
+
+            presetList.addView(chip);
+        }
+        presetScroll.addView(presetList, new HorizontalScrollView.LayoutParams(-2, -2));
+        content.addView(presetScroll);
+
+        // Filters Section
+        TextView filtersHeader = label("VISUAL FILTERS (15)", 11.5f, 0xFF00E5FF);
+        filtersHeader.setTypeface(null, Typeface.BOLD);
+        filtersHeader.setPadding(0, dp(14), 0, dp(6));
+        content.addView(filtersHeader);
 
         for (int i = 1; i < HUNTING_FILTER_NAMES.length; i++) {
             final int filterId = i;
-            final boolean isSelected = (filterId == currentFilter && screenFilterEnabled);
+            final boolean isSelected = (filterId == cfg.filterId && screenFilterEnabled);
 
             LinearLayout item = new LinearLayout(this);
             item.setOrientation(LinearLayout.HORIZONTAL);
             item.setGravity(Gravity.CENTER_VERTICAL);
-            item.setPadding(0, dp(7), 0, dp(7));
+            item.setPadding(0, dp(6), 0, dp(6));
 
             // Thumbnail Frame
             FrameLayout thumbFrame = new FrameLayout(this);
@@ -1964,7 +2009,7 @@ public class GameBubbleService extends Service {
             info.setOrientation(LinearLayout.VERTICAL);
             info.setPadding(dp(12), 0, 0, 0);
 
-            TextView name = label(HUNTING_FILTER_NAMES[filterId], 13.5f, isSelected ? 0xFFFF1744 : Color.WHITE);
+            TextView name = label(HUNTING_FILTER_NAMES[filterId], 13f, isSelected ? 0xFFFF1744 : Color.WHITE);
             name.setTypeface(null, Typeface.BOLD);
             info.addView(name);
 
@@ -1975,79 +2020,181 @@ public class GameBubbleService extends Service {
             item.addView(info, new LinearLayout.LayoutParams(0, -2, 1f));
 
             item.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                 if (isSelected) {
                     screenFilterEnabled = false;
-                    prefs.edit().putInt("hunting_filter_id", 0).putBoolean("screen_filter", false).apply();
-                    showBarrage("Hunting filter", "Filter disabled");
+                    cfg.enabled = false;
+                    cfg.filterId = 0;
+                    showBarrage("Hunter Mode", "Filter disabled");
                 } else {
                     screenFilterEnabled = true;
-                    prefs.edit().putInt("hunting_filter_id", filterId).putBoolean("screen_filter", true).apply();
-                    showBarrage("Hunting filter", HUNTING_FILTER_NAMES[filterId] + " enabled");
+                    cfg.enabled = true;
+                    cfg.filterId = filterId;
+                    showBarrage("Hunter Mode", HUNTING_FILTER_NAMES[filterId] + " enabled");
                 }
+                engine.saveConfig(this, targetPackage, cfg);
                 updateScreenFilterOverlay();
                 replaceOverlay(buildHuntingFilterPanel());
             });
 
-            list.addView(item);
+            content.addView(item);
 
             View divider = new View(this);
             divider.setBackgroundColor(0x18FFFFFF);
-            list.addView(divider, new LinearLayout.LayoutParams(-1, dp(1)));
+            content.addView(divider, new LinearLayout.LayoutParams(-1, dp(1)));
         }
 
-        scroll.addView(list, new ScrollView.LayoutParams(-1, -2));
+        // Sliders Section
+        TextView slidersHeader = label("FINE TUNING & SHADER ADJUSTMENTS", 11.5f, 0xFF00E5FF);
+        slidersHeader.setTypeface(null, Typeface.BOLD);
+        slidersHeader.setPadding(0, dp(16), 0, dp(6));
+        content.addView(slidersHeader);
+
+        // Brightness (-100 to +100)
+        content.addView(buildHunterSlider("Brightness", -100, 100, cfg.brightness, "", val -> {
+            cfg.brightness = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Contrast (-100 to +100)
+        content.addView(buildHunterSlider("Contrast", -100, 100, cfg.contrast, "", val -> {
+            cfg.contrast = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Saturation (0 to 200%)
+        content.addView(buildHunterSlider("Saturation", 0, 200, cfg.saturation, "%", val -> {
+            cfg.saturation = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Gamma (50 to 250 -> 0.5 to 2.5)
+        content.addView(buildHunterSlider("Gamma", 50, 250, cfg.gamma, "%", val -> {
+            cfg.gamma = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Shadow Boost (0 to 100)
+        content.addView(buildHunterSlider("Shadow Boost", 0, 100, cfg.shadowBoost, "", val -> {
+            cfg.shadowBoost = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Sharpness (0 to 100)
+        content.addView(buildHunterSlider("Sharpness", 0, 100, cfg.sharpness, "", val -> {
+            cfg.sharpness = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Color Temperature (-100 Cool to +100 Warm)
+        content.addView(buildHunterSlider("Color Temperature (Cool/Warm)", -100, 100, cfg.colorTemp, "", val -> {
+            cfg.colorTemp = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Red Gain (0 to 200%)
+        content.addView(buildHunterSlider("Red Channel Gain", 0, 200, cfg.redGain, "%", val -> {
+            cfg.redGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Green Gain (0 to 200%)
+        content.addView(buildHunterSlider("Green Channel Gain", 0, 200, cfg.greenGain, "%", val -> {
+            cfg.greenGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Blue Gain (0 to 200%)
+        content.addView(buildHunterSlider("Blue Channel Gain", 0, 200, cfg.blueGain, "%", val -> {
+            cfg.blueGain = val;
+            cfg.presetId = HunterModeEngine.PRESET_CUSTOM;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        // Overlay Opacity (20 to 100%)
+        int currentAlphaPct = (int) (cfg.overlayAlpha * 100f);
+        content.addView(buildHunterSlider("Overlay Opacity", 20, 100, currentAlphaPct, "%", val -> {
+            cfg.overlayAlpha = val / 100f;
+            engine.saveConfig(this, targetPackage, cfg);
+            updateScreenFilterOverlay();
+        }));
+
+        scroll.addView(content, new ScrollView.LayoutParams(-1, -2));
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1f));
         return root;
     }
 
     private void updateScreenFilterOverlay() {
         if (windowManager == null) return;
-        SharedPreferences prefs = getSharedPreferences("ror_game_plugins", MODE_PRIVATE);
-        int filterId = prefs.getInt("hunting_filter_id", screenFilterEnabled ? 1 : 0);
+        HunterModeEngine engine = HunterModeEngine.getInstance();
+        HunterModeEngine.HunterConfig cfg = engine.loadConfig(this, targetPackage);
 
-        applyGameColorTransform(targetInForeground && screenFilterEnabled ? filterId : 0);
-
-        // Hunter and every other Game Space filter are overlay-only. Never change
-        // Android's global display settings, and never leave the effect visible
-        // when the selected game is not the foreground application.
-        if (!targetInForeground ||
-                (!colorBoostEnabled && (!screenFilterEnabled || filterId <= 0 || filterId >= HUNTING_FILTER_TINTS.length))) {
+        if (!targetInForeground || !screenFilterEnabled || cfg.filterId <= 0) {
+            engine.restoreDisplayState(this);
             removeAuxiliaryOverlay(screenFilterOverlay);
             screenFilterOverlay = null;
             return;
         }
-        int tint = (screenFilterEnabled && filterId > 0 && filterId < HUNTING_FILTER_TINTS.length)
-                ? HUNTING_FILTER_TINTS[filterId]
-                : (colorBoostEnabled ? 0x26FF6A20 : 0x18FF1744);
 
+        // Apply hardware/OS-level display transform if supported
+        engine.applyHardwareTransform(this, cfg);
+
+        // Update or instantiate hardware-accelerated overlay
         if (screenFilterOverlay == null) {
-            screenFilterOverlay = new View(this);
+            HunterModeEngine.HunterOverlayView overlayView = new HunterModeEngine.HunterOverlayView(this);
             screenFilterParams = new WindowManager.LayoutParams(-1, -1, overlayType(),
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                            | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     PixelFormat.TRANSLUCENT);
-            screenFilterParams.alpha = 0.80f;
+            screenFilterParams.alpha = cfg.overlayAlpha;
             screenFilterParams.gravity = Gravity.FILL;
-            screenFilterOverlay.setBackgroundColor(tint);
-            try { windowManager.addView(screenFilterOverlay, screenFilterParams); } catch (Exception ignored) { screenFilterOverlay = null; }
+            overlayView.setConfig(cfg);
+            screenFilterOverlay = overlayView;
+            try {
+                windowManager.addView(screenFilterOverlay, screenFilterParams);
+            } catch (Exception ignored) {
+                screenFilterOverlay = null;
+            }
         } else {
-            screenFilterOverlay.setBackgroundColor(tint);
+            if (screenFilterOverlay instanceof HunterModeEngine.HunterOverlayView) {
+                ((HunterModeEngine.HunterOverlayView) screenFilterOverlay).setConfig(cfg);
+            }
+            if (screenFilterParams != null) {
+                screenFilterParams.alpha = cfg.overlayAlpha;
+                try {
+                    windowManager.updateViewLayout(screenFilterOverlay, screenFilterParams);
+                } catch (Exception ignored) {}
+            }
         }
     }
 
     private void applyGameColorTransform(int filterId) {
-        int desired = filterId == 1 ? 1 : (filterId == 8 ? 8 : 0);
-        if (appliedHardwareColorFilter == desired) return;
-        appliedHardwareColorFilter = desired;
-        String command;
-        if (desired == 1) {
-            command = "settings put secure accessibility_display_daltonizer_enabled 0; settings put secure accessibility_display_inversion_enabled 1";
-        } else if (desired == 8) {
-            command = "settings put secure accessibility_display_inversion_enabled 0; settings put secure accessibility_display_daltonizer 0; settings put secure accessibility_display_daltonizer_enabled 1";
-        } else {
-            command = "settings put secure accessibility_display_inversion_enabled 0; settings put secure accessibility_display_daltonizer_enabled 0";
-        }
-        runPrivileged(command, null);
+        HunterModeEngine.HunterConfig cfg = HunterModeEngine.getInstance().loadConfig(this, targetPackage);
+        cfg.filterId = filterId;
+        cfg.enabled = (filterId > 0);
+        HunterModeEngine.getInstance().applyHardwareTransform(this, cfg);
     }
 
     public void showBarrage(String title, String message) {
@@ -2553,7 +2700,7 @@ public class GameBubbleService extends Service {
     // MINI APPS & FAVORITES MANAGEMENT
     // ==========================================
 
-    private void showMiniApps() {
+    void showMiniApps() {
         bubbleState = 3;
         params.width = dp(340);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -3050,75 +3197,65 @@ public class GameBubbleService extends Service {
     }
 
     private void startScreenRecording(int resolution, boolean includeSound) {
-        if (isRecording) {
+        if (isRecording || ScreenCaptureManager.getInstance().isRecording()) {
             toast("Already recording");
             return;
         }
 
-        File moviesDir = new File("/sdcard/Movies/REVROR_Records");
-        if (!moviesDir.exists()) moviesDir.mkdirs();
+        ScreenCaptureManager.getInstance().startRecording(this, resolution, includeSound, new ScreenCaptureManager.RecordingCallback() {
+            @Override
+            public void onRecordingStarted(@NonNull String filePath) {
+                isRecording = true;
+                currentRecordingPath = filePath;
+                recordingStartTime = ScreenCaptureManager.getInstance().getRecordingStartTime();
+                showFloatingRecordPill();
+                toast("In-game recording started (" + resolution + "p)");
+                showBarrage("Screen Recorder", "Recording active (" + resolution + "p)\nSaving to Movies/ROR");
+            }
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        currentRecordingPath = "/sdcard/Movies/REVROR_Records/rec_" + resolution + "p_" + timeStamp + ".mp4";
+            @Override
+            public void onRecordingSuccess(@NonNull File file, @Nullable Uri mediaUri, long sizeBytes) {
+                isRecording = false;
+                hideFloatingRecordPill();
+                long mb = sizeBytes / (1024 * 1024);
+                toast("Recording saved (" + (mb > 0 ? mb + "MB" : (sizeBytes / 1024) + "KB") + "):\n" + file.getName());
+                showBarrage("Recording Saved", file.getName() + " saved to Movies/ROR\nVisible in Gallery");
+            }
 
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        boolean isPortrait = dm.heightPixels > dm.widthPixels;
-        int w, h, bitrate;
-
-        if (resolution == 1080) {
-            w = isPortrait ? 1080 : 1920;
-            h = isPortrait ? 1920 : 1080;
-            bitrate = 16000000;
-        } else if (resolution == 720) {
-            w = isPortrait ? 720 : 1280;
-            h = isPortrait ? 1280 : 720;
-            bitrate = 8000000;
-        } else {
-            w = isPortrait ? 480 : 854;
-            h = isPortrait ? 854 : 480;
-            bitrate = 4000000;
-        }
-
-        String soundFlag = includeSound ? " --audio-source 1" : "";
-        // Command runs in background and saves PID to /data/local/tmp/ror_record.pid
-        String recordCmd = "screenrecord --size " + w + "x" + h + " --bit-rate " + bitrate + soundFlag + " --time-limit 1800 " + currentRecordingPath + " & echo $! > /data/local/tmp/ror_record.pid";
-
-        runOnWorker(() -> {
-            if (RootUtils.rootAccess()) {
-                RootUtils.runCommand(recordCmd);
-            } else if (ShizukuBridge.granted()) {
-                ShizukuBridge.run(recordCmd);
+            @Override
+            public void onRecordingError(@NonNull String errorMessage) {
+                isRecording = false;
+                hideFloatingRecordPill();
+                toast(errorMessage);
+                showBarrage("Recording Error", errorMessage);
             }
         });
-
-        isRecording = true;
-        recordingStartTime = System.currentTimeMillis();
-        showFloatingRecordPill();
-        toast("In-game recording started (" + resolution + "p)");
     }
 
     private void stopScreenRecording() {
-        if (!isRecording) return;
-        isRecording = false;
+        if (!isRecording && !ScreenCaptureManager.getInstance().isRecording()) return;
+        toast("Finalizing and saving recording...");
+        ScreenCaptureManager.getInstance().stopRecording(this, new ScreenCaptureManager.RecordingCallback() {
+            @Override
+            public void onRecordingStarted(@NonNull String filePath) {}
 
-        runOnWorker(() -> {
-            String killCmd = "p=$(cat /data/local/tmp/ror_record.pid 2>/dev/null); "
-                    + "if [ -n \"$p\" ]; then kill -2 \"$p\"; kill -INT \"$p\"; fi; "
-                    + "killall -2 screenrecord 2>/dev/null; rm -f /data/local/tmp/ror_record.pid";
-            if (RootUtils.rootAccess()) {
-                RootUtils.runCommand(killCmd);
-            } else if (ShizukuBridge.granted()) {
-                ShizukuBridge.run(killCmd);
+            @Override
+            public void onRecordingSuccess(@NonNull File file, @Nullable Uri mediaUri, long sizeBytes) {
+                isRecording = false;
+                hideFloatingRecordPill();
+                long mb = sizeBytes / (1024 * 1024);
+                toast("Recording saved (" + (mb > 0 ? mb + "MB" : (sizeBytes / 1024) + "KB") + "):\n" + file.getName());
+                showBarrage("Recording Saved", file.getName() + " saved to Movies/ROR\nVisible in Gallery");
             }
 
-            // Notify media scanner
-            try {
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(currentRecordingPath))));
-            } catch (Exception ignored) {}
+            @Override
+            public void onRecordingError(@NonNull String errorMessage) {
+                isRecording = false;
+                hideFloatingRecordPill();
+                toast(errorMessage);
+                showBarrage("Recording Error", errorMessage);
+            }
         });
-
-        hideFloatingRecordPill();
-        toast("Recording saved: " + currentRecordingPath);
     }
 
     private void showFloatingRecordPill() {
@@ -3819,7 +3956,7 @@ public class GameBubbleService extends Service {
     /**
      * Minimizes the floating icon to a sleek '>' tab docked at the screen edge.
      */
-    private void minimizeToEdge() {
+    void minimizeToEdge() {
         cancelAutoEdgeTimer();
         bubbleState = 2; // edge tab
         metrics = null;
@@ -3922,7 +4059,7 @@ public class GameBubbleService extends Service {
         });
     }
 
-    private void attachDrag(View view) {
+    void attachDrag(View view) {
         final int touchSlop = Math.max(dp(14), ViewConfiguration.get(view.getContext()).getScaledTouchSlop());
         view.setOnTouchListener(new View.OnTouchListener() {
             int startX, startY; float downX, downY; boolean moved;
@@ -3995,7 +4132,7 @@ public class GameBubbleService extends Service {
         replaceOverlay(buildPanel());
     }
 
-    private void collapse() {
+    void collapse() {
         bubbleState = 1;
         metrics = null;
         params.width = dp(54);
@@ -4007,6 +4144,7 @@ public class GameBubbleService extends Service {
     private void hideOverlay() {
         cancelAutoEdgeTimer();
         targetInForeground = false;
+        HunterModeEngine.getInstance().restoreDisplayState(this);
         applyGameColorTransform(0);
         if (overlay != null && windowManager != null) {
             try {
@@ -4031,27 +4169,19 @@ public class GameBubbleService extends Service {
     }
 
     public void takeQuickScreenshot() {
-        runOnWorker(() -> {
-            File dir = new File("/sdcard/Pictures/Screenshots");
-            if (!dir.exists()) dir.mkdirs();
-            String name = "REVROR_GS_" + System.currentTimeMillis() + ".png";
-            File file = new File(dir, name);
-            String cmd = "screencap -p '" + file.getAbsolutePath() + "'";
-            boolean root = GsmProfileManager.isRootEnabled(this);
-            if (root) {
-                RootUtils.runCommand(cmd);
-            } else if (ShizukuBridge.granted()) {
-                ShizukuBridge.run(cmd);
-            } else {
-                RootUtils.runCommand(cmd);
+        toast("Capturing screenshot...");
+        ScreenCaptureManager.getInstance().takeScreenshot(this, new ScreenCaptureManager.ScreenshotCallback() {
+            @Override
+            public void onScreenshotSuccess(@NonNull File file, @Nullable Uri mediaUri) {
+                showBarrage("Screenshot Saved", file.getName() + "\nSaved to Pictures/ROR/Screenshots");
+                toast("Screenshot captured: " + file.getName());
             }
-            try {
-                MediaScannerConnection.scanFile(this, new String[]{file.getAbsolutePath()}, new String[]{"image/png"}, null);
-            } catch (Exception ignored) {}
-            handler.post(() -> {
-                showBarrage("Screenshot Saved", name + "\nSaved to Pictures/Screenshots");
-                toast("Screenshot captured: " + name);
-            });
+
+            @Override
+            public void onScreenshotError(@NonNull String errorMessage) {
+                toast(errorMessage);
+                showBarrage("Screenshot Failed", errorMessage);
+            }
         });
     }
 
@@ -4608,6 +4738,7 @@ public class GameBubbleService extends Service {
     public void boostTouchSampling() {
         touchBoostEnabled = !touchBoostEnabled;
         getSharedPreferences("ror_game_plugins", MODE_PRIVATE).edit().putBoolean("touch_boost", touchBoostEnabled).apply();
+        AimBoostEngine.applyMode(this, touchBoostEnabled ? AimBoostEngine.MODE_COMPETITIVE : AimBoostEngine.MODE_BALANCED, () -> {});
         if (touchBoostEnabled) {
             runPrivileged("setprop debug.touch.sampling_rate 480; setprop persist.vendor.touch.sampling_rate 480; setprop debug.egl.swapinterval 0; setprop vendor.touch.latency_level 1", null);
             showBarrage("Touch Engine", "480Hz Ultra Touch Sampling & Zero Swap Interval ACTIVE");
@@ -4634,13 +4765,13 @@ public class GameBubbleService extends Service {
         } catch (Exception ignored) {}
 
         if (highRefreshEnabled) {
-            runPrivileged("settings put system peak_refresh_rate " + maxHz + "; settings put system min_refresh_rate " + maxHz + "; settings put global peak_refresh_rate " + maxHz, null);
+            RefreshRateManager.setFixedRate(this, Math.round(maxHz));
             showBarrage("Display Engine", "Display Refresh Locked at " + Math.round(maxHz) + "Hz Peak");
             toast("Display pinned at " + Math.round(maxHz) + "Hz");
         } else {
-            runPrivileged("settings put system min_refresh_rate 60.0; settings put system peak_refresh_rate " + maxHz, null);
-            showBarrage("Display Engine", "Dynamic Refresh Rate restored (60Hz - " + Math.round(maxHz) + "Hz)");
-            toast("Dynamic refresh restored");
+            RefreshRateManager.setAdaptiveOneHz(this);
+            showBarrage("Display Engine", "1 Hz Adaptive Minimum restored (1Hz - " + Math.round(maxHz) + "Hz)");
+            toast("1 Hz Adaptive refresh restored");
         }
         refreshPluginPanel();
     }
@@ -4792,7 +4923,7 @@ public class GameBubbleService extends Service {
                 || com.revror.kernelmanager.utils.GameLauncherRegistry.getGamePackages(this).contains(foreground));
     }
 
-    private String readLiveStats() {
+    String readLiveStats() {
         boolean root = GsmProfileManager.isRootEnabled(this);
         int cpu = cpuStats.readPercent(root);
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
@@ -4801,13 +4932,14 @@ public class GameBubbleService extends Service {
         int ram = mi.totalMem <= 0 ? 0 : Math.round((mi.totalMem - mi.availMem) * 100f / mi.totalMem);
 
         Intent b = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        float temp = b == null ? 0 : b.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f;
+        float rawTemp = b == null ? 0 : b.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
+        float temp = rawTemp > 10000 ? (rawTemp / 1000f) : (rawTemp > 150 ? (rawTemp / 10f) : rawTemp);
         String gpu = readPath("/sys/class/kgsl/kgsl-3d0/gpu_busy_percentage", root);
         if (gpu.isEmpty()) gpu = readPath("/sys/class/kgsl/kgsl-3d0/devfreq/load", root);
         if (gpu.isEmpty()) gpu = "N/A"; else gpu = gpu.replace("%", "") + "%";
         String fps = readFps(root);
 
-        return "CPU " + (cpu < 0 ? "N/A" : cpu + "%") + "   GPU " + gpu + "   RAM " + ram + "%\nFPS " + fps + "   TEMP " + String.format(Locale.US, "%.1fC", temp);
+        return "CPU " + (cpu < 0 ? "N/A" : cpu + "%") + "   GPU " + gpu + "   RAM " + ram + "%\nFPS " + fps + "   TEMP " + String.format(Locale.US, "%.1f°C", temp);
     }
 
     private String readFps(boolean root) {
@@ -4859,8 +4991,34 @@ public class GameBubbleService extends Service {
         }
     }
 
-    private int dp(float value) {
+    int dp(float value) {
         return Math.round(value * getResources().getDisplayMetrics().density);
+    }
+
+    public int getSelectedProfile() {
+        return selectedProfile;
+    }
+
+    public boolean isPhoenixMode() {
+        return GsmProfileManager.isPhoenixSelected(this);
+    }
+
+    public WindowManager getWindowManager() {
+        return windowManager;
+    }
+
+    public void applyProfileDirect(int profile) {
+        selectedProfile = profile;
+        updateProfileButtons();
+        GameOptimizer.applyProfile(this, profile, this::toastResult);
+    }
+
+    public void toggleScreenRecording() {
+        if (isRecording || ScreenCaptureManager.getInstance().isRecording()) {
+            stopScreenRecording();
+        } else {
+            startScreenRecording(1080, true);
+        }
     }
 
     @Override public void onDestroy() {

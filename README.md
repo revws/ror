@@ -1,257 +1,246 @@
-<div align="center">
+<p align="center">
+  <img src="assets/logos/ror.png" width="170" alt="ROR Logo" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/logos/phoenix.png" width="170" alt="Phoenix Logo" />
+</p>
 
-  <img src="docs/screenshots/banner_final.png" alt="REVROR Banner" width="900" style="border-radius: 20px; box-shadow: 0 16px 50px rgba(0,0,0,0.8); margin-bottom: 20px;" />
+<h1 align="center">ROR &bull; Reincarnation of Revolutionary</h1>
 
-  # ⚡ REVROR — Reincarnation of Revolutionary ⚡
-  ### 🎮 Next-Gen Android Performance Architecture • Esports Game Space • Linux Kernel Engine
+<p align="center">
+  <strong>The Ultimate Next-Generation Android Gaming Optimizer, Kernel Tuning Engine & Thermal Management Platform</strong>
+</p>
 
-  <p>
-    <em>Engineered with passion for power-users, esports competitors, and Android enthusiasts by <strong>revWS</strong></em>
-  </p>
+<p align="center">
+  <a href="https://github.com/revror/ROR/actions"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white" alt="Build Status" /></a>
+  <a href="https://github.com/revror/ROR/releases"><img src="https://img.shields.io/badge/Release-v51.4-red?style=for-the-badge&logo=android&logoColor=white" alt="Version" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-crimson?style=for-the-badge&logo=gnu&logoColor=white" alt="License: GPL-3.0" /></a>
+  <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Android-11%20to%2014%20(API%2030--34)-black?style=for-the-badge&logo=android" alt="Target API" /></a>
+  <a href="https://shizuku.rikka.app/"><img src="https://img.shields.io/badge/Privilege-Root%20%2F%20Shizuku-darkred?style=for-the-badge&logo=linux" alt="Root / Shizuku" /></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-Welcome-black?style=for-the-badge&logo=git&logoColor=white" alt="PRs Welcome" /></a>
+</p>
 
-  <p>
-    <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
-    <a href="https://t.me/godspeedmode"><img src="https://img.shields.io/badge/Telegram-Discussion%20Group-29b6f6?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Group" /></a>
-    <a href="https://t.me/revwhiteshadow"><img src="https://img.shields.io/badge/Developer-revWS-8b5cf6?style=for-the-badge&logo=telegram&logoColor=white" alt="Developer Contact" /></a>
-  </p>
-
-  <p>
-    <a href="https://github.com/revws/rorexp"><img src="https://img.shields.io/badge/Version-v6.8%20Titanium-8b5cf6?style=flat-square&logo=android&logoColor=white" alt="Release v6.8" /></a>
-    <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Android-11%20to%2015%20(API%2030--35)-3b82f6?style=flat-square&logo=android" alt="Android 11-15" /></a>
-    <a href="https://github.com/topjohnwu/Magisk"><img src="https://img.shields.io/badge/Root-Magisk%20%7C%20KernelSU%20%7C%20APatch-00bcd4?style=flat-square&logo=android" alt="Root Engines" /></a>
-    <a href="https://github.com/RikkaApps/Shizuku"><img src="https://img.shields.io/badge/Bridge-Shizuku%20v13-10b981?style=flat-square&logo=android" alt="Shizuku" /></a>
-    <a href="#-license"><img src="https://img.shields.io/badge/License-GPL--3.0-ef4444?style=flat-square&logo=gnu&logoColor=white" alt="GPL-3.0 License" /></a>
-    <a href="https://github.com/revws/rorexp"><img src="https://img.shields.io/badge/Arch-arm64--v8a%20%7C%20x86__64-6366f1?style=flat-square" alt="Arch" /></a>
-  </p>
-
-  ---
-
-  **[ 📖 Overview ](#-executive-overview)** • 
-  **[ 📸 Gallery ](#-visual-showcase--previews)** • 
-  **[ ✨ Features ](#-exhaustive-feature-architecture)** • 
-  **[ 🔐 Privileges ](#-multi-tier-privilege-architecture)** • 
-  **[ 🛡️ Security ](#️-open-source-security--intellectual-property-notice)** • 
-  **[ 💬 Community ](#-community-support--official-links)**
-
-</div>
+<p align="center">
+  <em>Designed for competitive esports athletes, performance enthusiasts, and mobile power users who demand deterministic frame stability, zero touch latency, and intelligent thermal management without sacrificing hardware safety.</em>
+</p>
 
 ---
 
-### 🌐 Official Community & Ecosystem Hub
-* 📢 **Official Announcement Channel**: [**@godTspeed**](https://t.me/godTspeed) — *Firmware releases, VIP configs & performance benchmarks*
-* 💬 **Community Discussion Group**: [**@godspeedmode**](https://t.me/godspeedmode) — *Community gaming optimization chats & setup assistance*
-* 👨‍💻 **Lead Architect & Developer**: [**@revwhiteshadow**](https://t.me/revwhiteshadow) — *Direct consultations & inquiries*
-* 📦 **Official Release Downloads**: Available on [Telegram @godTspeed](https://t.me/godTspeed) and [GitHub Releases](https://github.com/revws/ror/releases)
+## ⚡ Index
+1. [Overview](#-overview)
+2. [Key Highlights & Features](#-key-highlights--features)
+3. [Live Screenshots Gallery](#-live-screenshots-gallery)
+4. [Architecture & System Layers](#-architecture--system-layers)
+5. [Smart Fast Charging & Low Heat Optimization](#-smart-fast-charging--low-heat-optimization)
+6. [Game Space & In-Game Floating HUD](#-game-space--in-game-floating-hud)
+7. [Touch Boost, Aim Boost & Gyro Calibration](#-touch-boost-aim-boost--gyro-calibration)
+8. [Dual Engine Architecture (Regular vs Phoenix)](#-dual-engine-architecture)
+9. [Hardware Compatibility Matrix](#-hardware-compatibility-matrix)
+10. [Privilege Models (Root & Shizuku)](#-privilege-models)
+11. [Source Architecture & Policy](#-source-architecture--platform-integration-policy)
+12. [Safety Principles & Zero-Fake Policy](#-safety-principles--zero-fake-policy)
+13. [Community & Contributing](#-community--contributing)
+14. [License](#-license)
 
 ---
 
-## 📖 Executive Overview
+## 🚀 Overview
 
-> [!NOTE]
-> **Reincarnation of Revolutionary (REVROR)** represents the pinnacle of modern Android system tuning, hardware telemetry, and competitive esports mobile gaming.
+**ROR (Reincarnation of Revolutionary)** is an open-source, low-level Android performance and kernel management framework. Built specifically for high-refresh-rate gaming devices and intensive mobile computing, ROR delivers real hardware sysfs orchestration, dynamic frequency governor tuning, input queue optimization, and intelligent fast-charging thermal controls.
 
-Crafted with an obsidian cyberpunk glassmorphic visual aesthetic, REVROR orchestrates Android userland services and deep Linux kernel subsystems (`sysfs`, `schedutil`, `devfreq`, `stune`) into a unified, zero-latency command center.
-
-Whether deployed with full kernel root privileges (**Magisk / KernelSU / APatch**) or through non-invasive **Shizuku wireless debugging**, REVROR dynamically mitigates frame-time jitter, throttles background drainers, and unlocks true peak hardware performance without compromising stability or battery longevity.
+Unlike generic "ram booster" or "battery saver" apps that simply invoke `killBackgroundProcesses()`, ROR interfaces directly with the Linux kernel subsystem (`cpufreq`, `devfreq`, `kgsl-3d0`, block I/O schedulers, and power supply sysfs nodes) via **Root (`libsu`)** or **Shizuku privileged IPC**.
 
 ---
 
-## 📸 Visual Showcase & Previews
+## 🌟 Key Highlights & Features
 
-<div align="center">
-
-### 🚀 Core Performance & Esports Deck
-
-| 🎮 Cyberpunk Master Dashboard | 🚀 Console Trio Game Space | ⚡ GSM Profile Matrix |
-| :---: | :---: | :---: |
-| <img src="docs/screenshots/dashboard_live.png" width="275" alt="Dashboard" /> | <img src="docs/screenshots/gamespace_live.png" width="275" alt="Game Space" /> | <img src="docs/screenshots/profiles_page_live.png" width="275" alt="Profiles Page" /> |
-| *Real-Time Telemetry & Hardware Gauges* | *Esports Carousel & App Launch Deck* | *6-Tier Frequency Scaling Matrix* |
-
-<br>
-
-### 🎯 Tactical Gaming & Precision Armory
-
-| 🔥 Ultra Gaming (Esports VIP) | 🎯 Tactical Crosshair Armory | 🔋 Energy & Power Tuning |
-| :---: | :---: | :---: |
-| <img src="docs/screenshots/ultra_gaming_activated.png" width="275" alt="Ultra Gaming" /> | <img src="docs/screenshots/ror_crosshair_armory.png" width="275" alt="Crosshairs" /> | <img src="docs/screenshots/battery_selected_verified.png" width="275" alt="Battery Mode" /> |
-| *Hard Frequency Clamping & No-Throttle* | *Custom HUD Crosshairs & Colors* | *Aggressive Energy Mitigation* |
-
-<br>
-
-### ⚙️ Deep Tuning, AI Optimizer & Utilities
-
-| ⚙️ Deep Kernel Tuning Suite | 🧠 REVROR AI Optimizer | 🧹 Auto Memory & Cache Cleaner |
-| :---: | :---: | :---: |
-| <img src="docs/screenshots/kerneltuning.png" width="275" alt="Kernel Tuning" /> | <img src="docs/screenshots/ror_ai_dialog_live.png" width="275" alt="AI Optimizer" /> | <img src="docs/screenshots/autocleaner_dialog.png" width="275" alt="Auto Cleaner" /> |
-| *Governors, Swappiness, Schedulers* | *Auto Stutter & Thermal Mitigation* | *Scheduled System Cache Trimming* |
-
-<br>
-
-### 🛡️ SuperBase, Dynamic Themes & Telegram Hub
-
-| 🛡️ SuperBase & System Tools | 🎨 Dynamic Wallpapers & Themes | 💬 Seamless Telegram Hub |
-| :---: | :---: | :---: |
-| <img src="docs/screenshots/superbase_live.png" width="275" alt="SuperBase" /> | <img src="docs/screenshots/screen_verified_wallpapers.png" width="275" alt="Wallpapers" /> | <img src="docs/screenshots/verify_telegram_opened.png" width="275" alt="Telegram Support" /> |
-| *Encrypted DNS, Doze, FPS Unlocker* | *Obsidian & Synthwave Styles* | *Instant Updates & Community Access* |
-
-</div>
+- **🎮 Dual-Engine Profile Architecture**: 6 standardized open-source profiles (Battery, Balance, Daily, Performance, Gaming, Extreme) + 8 Phoenix tournament-grade profiles.
+- **⚡ Smart Fast Charging Suite**: 4 intelligent cooling modes (Eco, Balanced, Fast & Cool, Max Cool) balancing maximum safe wattage with minimal heat build-up.
+- **🕹️ Game Space & Floating HUD Overlay**: Draggable real-time performance telemetry display with live FPS, CPU/GPU temperatures, memory cleaner, and brightness lock.
+- **🎯 Crosshair Studio & Aim Boost**: 5 precision hardware-accelerated crosshair styles and non-linear touch curve stabilization for competitive shooters.
+- **🚀 Touch Boost & Gyro Delay Fix**: Digitizer polling rate elevation and zero-batch IMU sensor polling for near-zero input lag.
+- **🛡️ Hardware Safety & Baseline Restorations**: Non-destructive operation with automatic baseline state snapshots that restore factory settings upon exit or reboot.
+- **📱 Quick Settings Tile Integration**: Instant profile switching and charging cooldown activation directly from the Android status shade.
 
 ---
 
-## ✨ Exhaustive Feature Architecture
+## 📸 Live Screenshots Gallery
 
-```mermaid
-graph LR
-    A["REVROR Master Deck"] --> B["Hardware Telemetry"]
-    A --> C["GSM Profile Engine"]
-    A --> D["Console Game Space"]
-    A --> E["SuperBase Utilities"]
-    A --> F["Deep Kernel Suite"]
-    
-    B --> B1["CPU Clusters & Clocks"]
-    B --> B2["ZRAM & Thermal Graphs"]
-    
-    C --> C1["Battery Endurance"]
-    C --> C2["Balance Smooth"]
-    C --> C3["Gaming Max Power"]
-    C --> C4["Ultra Gaming VIP"]
-    
-    D --> D1["HUD Game Bubble"]
-    D --> D2["Watermarked Screen Recorder"]
-    D --> D3["Tactical Crosshair Armory"]
-    
-    E --> E1["Encrypted Private DNS"]
-    E --> E2["Scheduled Memory Cleaner"]
-    E --> E3["SELinux & Doze Toggles"]
-    
-    F --> F1["Governor & Frequency Tuning"]
-    F --> F2["GPU Adreno/Mali Tables"]
-    F --> F3["I/O Schedulers & Wakelocks"]
+<p align="center">
+  <img src="assets/screenshots/home.png" width="31%" alt="Dashboard" />
+  &nbsp;
+  <img src="assets/screenshots/game-space.png" width="31%" alt="Game Space" />
+  &nbsp;
+  <img src="assets/screenshots/kernel-tuning.png" width="31%" alt="Kernel Tuning" />
+</p>
+<p align="center">
+  <img src="assets/screenshots/tools.png" width="31%" alt="Quick Tools" />
+  &nbsp;
+  <img src="assets/screenshots/charging-cooldown.png" width="31%" alt="Charging Cooldown" />
+</p>
+
+---
+
+## 🏗️ Architecture & System Layers
+
+ROR is built with a decoupled, high-performance architecture ensuring zero main-thread overhead:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                      UI Layer                          │
+│   Dashboard  │  Game Space  │  Kernel Tuning  │ Tools  │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│                   Orchestration Layer                  │
+│    GsmProfileManager       │   SmartChargingManager    │
+│    GameBubbleService       │   TouchBoostManager       │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│               Privilege & Bridge Engine                │
+│    libsu (Root Shell)      │   Shizuku IPC Bridge      │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│              Linux Kernel Sysfs Subsystem              │
+│   /sys/devices/system/cpu/  │  /sys/class/kgsl/kgsl-3d0│
+│   /sys/block/*/queue/       │  /sys/class/power_supply │
+└────────────────────────────────────────────────────────┘
 ```
 
-### 🎛️ 1. Real-Time Hardware Telemetry Matrix
-* **Active Cluster Telemetry**: Real-time frequency readings across all CPU clusters (Efficiency, Performance, and Prime).
-* **Ultra-Low Overhead Graphs**: Native custom-rendered canvas views (60/120 FPS) charting live per-second CPU load, thermal gradients, and memory allocation with near-zero CPU wake locks.
-* **Storage & ZRAM Monitoring**: Instant live visualization of compressed ZRAM pressure, swap footprint, and NVMe/UFS read-write throughput.
-* **Instant Master Toggles**: One-tap toggles for Android Doze mode, SELinux enforcement, I/O CRC verification, Network Data Saver, and PrintK kernel debugging logs.
+---
 
-### ⚡ 2. GSM Intelligent Performance Profiles
-* 🔋 **Battery Endurance**: Power-efficient frequency scaling, energy-conserving CPU governors (`powersave` / `schedutil`), aggressive background app throttling.
-* ⚖️ **Balance Smooth**: Silky everyday responsiveness with balanced thermals and progressive thermal mitigation.
-* 🚀 **Gaming (Max Power)**: Governor touch-boost elevation, high clock rate baseline, zero thermal throttling.
-* 🔥 **Ultra Gaming (Esports VIP)**: Hard frequency clamping to `scaling_max_freq`, governor priority (`performance` fallback to `schedutil`), fixed performance mode (`cmd power set-fixed-performance-mode-enabled true`), zero background interruptions.
-* ❄️ **CoolDown**: Emergency thermal reduction dropping caches and idling aggressive clusters.
-* 🛠️ **Daily Use**: Intelligent baseline tuning for daily social, productivity, and communication workloads.
-* 🔄 **Automated Boundary Restoration**: Switching between profiles automatically unlocks CPU frequency clamps and restores default hardware scaling bounds cleanly.
+## 🔋 Smart Fast Charging & Low Heat Optimization
 
-### 🎮 3. Console Trio & Esports Game Launcher
-* **Multi-Viewport Launcher Styles**: PS5 Horizon, Cyberpunk Arcade, and Console Trio viewports with dynamic wallpaper backdrops, game discoverability, and custom banners.
-* **Floating In-Game HUD (`GameBubbleService`)**:
-  * **Quick In-Game Profile Switching**: Switch between Battery, Balance, Gaming, and Ultra Gaming on the fly with distinct profile color illumination.
-  * **Tactical Crosshairs**: Multiple HUD crosshairs with real-time size, color, and opacity configuration.
-  * **Display Enhancements**: Live saturation, contrast, and night-vision game filters applied strictly when the game is in foreground.
-  * **Built-In Screen Recorder with Watermark**: High-bitrate screen recording (1080p, 720p, 480p) featuring the official ROR logo watermark and automatic MediaStore indexing for instant discovery in any File Manager or Gallery.
-  * **Floating Mini Apps & Multi-Window**: Launch companion guides, calculators, stopwatches, or any installed application in resizable floating windows.
+The **Smart Fast Charging** suite delivers maximum safe charging speed while actively curbing thermal throttling and battery wear:
 
-### 🧠 4. REVROR AI Intelligent Engine
-* Real-time thermal gradient and memory allocation rate monitoring.
-* Dynamically manages governor touch-boost parameters, task scheduler affinity, and virtual memory dirty ratios.
-* Completely eliminates micro-stutters and sudden FPS drops during prolonged competitive matches (PUBG, COD, Free Fire, Genshin Impact, MLBB).
+| Mode | Target Objective | Behavior & Thermal Policy |
+|---|---|---|
+| **Eco Cooling** | Maximum Longevity & Minimal Heat | Downclocks background services; holds battery current to cooler operational thresholds. |
+| **Balanced Cooling** | Daily Fast Charging | Balances factory fast charging rates with gentle workload mitigation. |
+| **Fast & Cool** *(Recommended)* | Intelligent Fast Charging | Unlocks manufacturer fast charging (PD, QC, HyperCharge) while throttling unnecessary CPU/GPU spikes to prevent heat generation. |
+| **Maximum Cooling** | Aggressive Thermal Suppression | Prioritizes minimal device heat for high-ambient-temperature environments. |
 
-### 🛡️ 5. SuperBase & System Armory
-* **Encrypted Private DNS Changer**: Instantly route DNS traffic through Cloudflare (1.1.1.1), Google DNS (8.8.8.8), AdGuard (ad-blocking), NextDNS, Quad9, CleanBrowsing, or custom DoT endpoints.
-* **Scheduled Auto Cleaner (`CleanupReceiver`)**: Automated background maintenance purging stale app caches, orphan APKs, tombstone crash logs, and thumbnail databases.
-* **FPS Unlocker**: Inject hardware display overrides and configure target screen refresh rates up to 120Hz/144Hz.
-* **Floating Hardware Overlay**: Non-intrusive desktop overlay showing per-cluster frequencies, temperatures, and real-time FPS.
-* **App Manager & Process Guard**: Freeze/disable bloatware, force-stop background drainers, and configure per-app network and power boundaries.
-
-### ⚙️ 6. Deep Linux Kernel Tuning Suite
-* **CPU Tuning**: Cluster-by-cluster governor tuning, frequency ceiling/floor configuration, and Devfreq/Dynamic Stune boosts.
-* **GPU & Thermal Controls**: Adreno/Mali frequency table controls, governor selection, and thermal engine throttle thresholds.
-* **Memory & Storage**: Swappiness percentages, VFS cache pressure, dirty ratios, ZRAM disk size tuning, and I/O schedulers (Maple, BFQ, Zen, CFQ, FIOPS).
-* **Wakelock Blocker**: Block battery-draining kernel and driver wakelocks with boot persistence.
+### Real-Time Electrical Telemetry
+- **Battery Temperature**: High-precision milli-Celsius readings converted to °C.
+- **Charging Current**: Instantaneous microampere measurement (`current_now`).
+- **Charging Voltage**: Real-time microvolt rail telemetry (`voltage_now`).
+- **Protocol Detection**: Automatically identifies USB Power Delivery (PD), Qualcomm Quick Charge (QC), and manufacturer-specific fast charging protocols without hardcoded device guessing.
 
 ---
 
-## 🔐 Multi-Tier Privilege Architecture
+## 🎯 Game Space & In-Game Floating HUD
 
-REVROR operates adaptively across all permission tiers:
-
-| Feature / Capability | Standard (Unrooted) | Shizuku (Wireless Debugging) | Root (Magisk / KSU / APatch) |
-| :--- | :---: | :---: | :---: |
-| Live CPU, RAM & Battery Telemetry | ✅ | ✅ | ✅ |
-| Floating Game Space & Crosshairs | ✅ | ✅ | ✅ |
-| Floating Mini Windows & Multi-Apps | ✅ | ✅ | ✅ |
-| In-Game Screen Recorder & Watermark | ✅ | ✅ | ✅ |
-| App Freeze / Disable / Force-Stop | ❌ | ✅ | ✅ |
-| System Refresh Rate & Resolution Override | ❌ | ✅ | ✅ |
-| Android Doze & Data Saver Policies | ❌ | ✅ | ✅ |
-| CPU Frequency Min/Max Clamping | ❌ | ❌ | ✅ |
-| CPU & GPU Governor Switching | ❌ | ❌ | ✅ |
-| Proprietary GSM Hardware Daemon | ❌ | ❌ | ✅ |
-| Kernel Sysfs, I/O & Memory Tuning | ❌ | ❌ | ✅ |
+Built specifically for high-intensity competitive gaming:
+- **Floating HUD (`GameBubbleService`)**: Draggable transparent overlay monitoring real-time frame rates (via `Choreographer` callbacks), CPU/GPU clocks, and thermal zones.
+- **Crosshair Studio**: Precision floating crosshairs (Dot, Cross, Circle-Dot, Chevron, T-Bar) with full RGB color picking, size, and offset calibration.
+- **Barrage Chat (Bullet Comments)**: Renders incoming notifications as flying horizontal banner text across the top of the display so critical gaming controls are never blocked.
+- **One-Tap Memory Purge**: Instantly frees unused page caches (`/proc/sys/vm/drop_caches`) to prevent memory thrashing during gameplay.
 
 ---
 
-## 🛡️ Open Source Security & Intellectual Property Notice
+## ⚡ Touch Boost, Aim Boost & Gyro Calibration
 
-This repository contains the official open-source presentation, architectural layouts, resource definitions, UI components, and privilege orchestration layers of REVROR under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
+- **Touch Boost**: Configures Linux digitizer input queues (`/sys/class/touch/` or `/sys/devices/virtual/input/input*/`) to sustain high sampling rates (up to 240Hz/360Hz/480Hz).
+- **Aim Boost**: Custom non-linear touch acceleration curves tailored for first-person shooters (PUBG Mobile, Call of Duty: Mobile, Free Fire).
+- **Gyro Delay Fix**: Configures Android's `SensorManager` to stream IMU orientation vectors at `SENSOR_DELAY_FASTEST` without batching delays.
+
+---
+
+## ⚙️ Dual Engine Architecture
+
+ROR accommodates both standard open-source environments and advanced tournament hardware:
+
+### 1. Regular Mode (Full Open-Source GPL-3.0)
+- Profiles 0 through 5:
+  - `Profile 0`: Powersave
+  - `Profile 1`: Balance (Stock baseline)
+  - `Profile 2`: Daily Smooth
+  - `Profile 3`: Performance
+  - `Profile 4`: Gaming
+  - `Profile 5`: Extreme
+- Universal compatibility across all rooted devices and rootless Shizuku environments.
+
+### 2. Phoenix Engine (Proprietary Enthusiast Tier)
+- Unlocked 8-tier kernel engine (Profiles 0 through 7).
+- Low-level frequency locking (bypassing vendor DVFS throttling).
+- Hardware bypass charging controls.
+- Cryptographically signed device authorization.
+
+---
+
+## 📱 Hardware Compatibility Matrix
+
+| Chipset Family | Tested SoCs | CPU Tuning | GPU Tuning | Charging Telemetry |
+|---|---|:---:|:---:|:---:|
+| **Qualcomm Snapdragon** | 8 Gen 1/2/3, 888, 870, 7+ Gen 2, 680 | ✅ Full | ✅ KGSL Adreno | ✅ Full PD / QC |
+| **MediaTek Dimensity** | 9300, 9200, 8300, 8100, 7200, G99 | ✅ Full | ✅ Devfreq Mali | ✅ PumpExpress / PD |
+| **Google Tensor** | Tensor G1, G2, G3 | ✅ Full | ✅ Devfreq Mali | ✅ Full USB-PD |
+| **Samsung Exynos** | 2200, 2400, 1380, 1280 | ✅ Full | ✅ Xclipse / Mali | ✅ Adaptive Fast Charge |
+
+---
+
+## 🔐 Privilege Models
+
+ROR provides two secure execution backends:
+
+1. **Root Access (Recommended for full kernel controls)**:
+   - Compatible with **Magisk v24+**, **KernelSU**, and **APatch**.
+   - Grants full access to sysfs frequency scaling, I/O schedulers, and ZRAM tunables.
+2. **Shizuku Privileged Bridge (Rootless)**:
+   - Compatible with any device running the **Shizuku** service.
+   - Provides elevated system commands, display refresh rate locking, and process controls without modifying system partitions.
+
+---
+
+## 🔐 Source Architecture & Platform Integration Policy
 
 > [!IMPORTANT]
-> **Anti-Plagiarism & Security Hardening Policy:**
-> - To safeguard against malicious repackaging, clone-and-monetize piracy, and rogue clones, proprietary compiled binaries (`assets/library`), internal verification modules, and official signing keystores (`*.keystore`, `*.jks`) are strictly excluded from public repository trees.
-> - Automated build wrappers (`gradlew`) and private submodule dependencies (`:scommon-*`, `:seekbar`) are intentionally decoupled from the public showcase.
-> - The application runtime integrity is guarded by cryptographic package and signature assertions against unauthorized modifications.
-> - **End-Users:** Please always download certified, signed, and malware-scanned APKs directly from the [Official Telegram Channel](https://t.me/godTspeed) or [GitHub Releases](https://github.com/revws/ror/releases).
+> REVROR is distributed as a modular research and component framework under **GPL-3.0-only**.
+> Direct unauthenticated standalone APK generation is restricted in this public repository to protect system safety, prevent malicious kernel repackaging, and protect users from unauthorized rebranding.
+
+### Modular Compilation & OEM Provisioning Requirements
+Direct standalone binary assembly requires multi-tier cryptographic platform keys, OEM kernel symbol alignment, and vendor distribution entitlement tokens. 
+
+Downstream maintainers and platform integrators must provide:
+1. **Target Hardware ABI Definition**: Strict alignment for SoC architecture sysfs nodes (`/sys/devices/system/cpu`, `/sys/class/kgsl/kgsl-3d0`, `/proc/gpufreq`).
+2. **Platform Entitlement Token**: Configuration of authorized `REVROR_TOOLCHAIN_TOKEN` and OEM profile entitlement signature hashes.
+3. **Hardware Keystore & Certificate Binding**: Cryptographic key pairing matching target device kernel security domains.
+
+Unauthenticated invocations of standard assembly tasks are gated by `:app:verifyRorCoreToolchainIntegrity` to protect kernel governor safety.
+
+### 📦 Official Pre-Compiled & Verified Releases
+For gamers, power users, and community testers wanting ready-to-install, cryptographically verified APK packages with full performance and thermal suite capabilities:
+
+- **Official GitHub Releases**: [REVROR Releases](https://github.com/revws/ror/releases)
+- **Developer & Project Support**: [revWhiteShadow on Ko-fi](https://ko-fi.com/revWS)
+- **Community & Announcements**: [Telegram @godTspeed](https://t.me/godTspeed)
 
 ---
 
-## 📂 Project Architecture Showcase
+## 🛡️ Safety Principles & Zero-Fake Policy
 
-```
-open-source-without-exposing-main-codes/
-├── app/
-│   ├── src/main/
-│   │   ├── java/com/revror/kernelmanager/
-│   │   │   ├── activities/        # DashboardActivity, GameLauncherActivity, KernelTuningActivity, etc.
-│   │   │   ├── services/          # GameBubbleService, CpuOverlayService, ScreenRecorderService
-│   │   │   ├── utils/             # GsmProfileManager, GameOptimizer, ShizukuBridge, DnsChanger
-│   │   │   ├── views/             # RealtimeSparklineView, RealtimePieGraphView, FloatingDraggableView
-│   │   │   └── RevrorApp.java     # Application life-cycle & state coordinator
-│   │   ├── res/                   # Obsidian cyberpunk styles, layouts, drawables, animations
-│   │   └── AndroidManifest.xml    # Permissions, activities, receivers, and service declarations
-│   └── build.gradle               # Gradle build configuration
-├── docs/
-│   └── screenshots/               # High-resolution visual showcase captures
-├── change-logs.md                 # Detailed version release notes
-├── featuersv2.md                  # Comprehensive functional feature specification
-├── OPEN_SOURCE_SECURITY.md        # Security, privilege architecture & build verification policy
-├── LICENSE                        # GNU General Public License v3.0
-└── README.md                      # Official project documentation
-```
+1. **No Fake Boosts**: ROR does not fabricate simulated speedometers, fake FPS numbers, or artificial battery percentages. All metrics reflect genuine Linux `/sys/` and Android HAL readouts.
+2. **Baseline Snapshotting**: Prior to modifying any governor or frequency, ROR captures an in-memory snapshot of your system's factory parameters.
+3. **Graceful Restoration**: Selecting the default profile or uninstalling restores original hardware states.
+4. **Thermal Protection First**: ROR respects hardware thermal trip points and will never allow device temperatures to exceed critical silicon safety limits.
 
 ---
 
-## 🤝 Community, Support & Official Links
+## 🤝 Community & Contributing
 
-Join our growing community for daily tuning guides, esports configurations, and update notifications:
-
-* 📢 **Telegram Channel & Releases**: [@godTspeed](https://t.me/godTspeed)
-* 💬 **Telegram Community Discussion**: [@godspeedmode](https://t.me/godspeedmode)
-* 👨‍💻 **Lead Developer**: **revWS** ([Telegram @revwhiteshadow](https://t.me/revwhiteshadow))
-* ☕ **Ko-fi Support**: [ko-fi.com/revWS](https://ko-fi.com/revWS)
-* 💰 **Cryptocurrency Contributions**:
-  * **Binance Pay ID**: `113486850`
-  * **USDT (TRC20)**: `TDu77Susy3CzbkJGAjPRCGiVt5obBzypRb`
-  * **USDT (BEP20 / ERC20)**: `0x18d45134688d047f6fc52969980fc8c13f796508`
+We welcome pull requests, bug reports, and hardware suggestions!
+- Read our [Contributing Guidelines](CONTRIBUTING.md) before submitting code.
+- Report security issues following our [Security Policy](SECURITY.md).
+- Follow the discussion in GitHub Issues.
 
 ---
 
 ## 📄 License
 
-REVROR is licensed under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.  
-See the [LICENSE](LICENSE) file for the full terms and conditions.
+This open-source repository and all included application source code are licensed under the **GNU General Public License v3.0 (GPL-3.0-only)**. See the [LICENSE](LICENSE) file for complete details.
 
-<p align="center">
-  <em>Crafted with relentless passion & precision by <strong>revWS</strong>.</em>
-</p>
+```
+Copyright (C) 2026 ROR Developers
+Licensed under the GNU General Public License, Version 3.0.
+```

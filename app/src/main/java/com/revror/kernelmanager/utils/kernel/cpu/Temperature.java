@@ -20,6 +20,9 @@
 package com.revror.kernelmanager.utils.kernel.cpu;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.util.Log;
 
 import com.revror.kernelmanager.R;
@@ -33,7 +36,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by willi on 21.04.16.
+ * Universal Hardware Temperature Manager with Unit Normalization.
  */
 public class Temperature {
 
@@ -58,10 +61,10 @@ public class Temperature {
     private TempJson TEMP_JSON;
 
     private String CPU_NODE;
-    private int CPU_OFFSET;
+    private int CPU_OFFSET = 1;
 
     private String GPU_NODE;
-    private int GPU_OFFSET;
+    private int GPU_OFFSET = 1;
 
     private Temperature(Context context) {
         TEMP_JSON = new TempJson(context);
@@ -70,8 +73,42 @@ public class Temperature {
         }
     }
 
+    /**
+     * Normalizes raw temperature readings from various sysfs nodes across chipsets:
+     * - Millidegrees Celsius (e.g. 37000 -> 37.0°C)
+     * - Tenths of a degree Celsius (e.g. 370 -> 37.0°C)
+     * - Direct degrees Celsius (e.g. 37 -> 37.0°C)
+     * Validates realistic hardware temperature bounds [5.0°C - 115.0°C].
+     * Returns -1 if invalid or unsupported.
+     */
+    public static double normalizeTemperature(double raw) {
+        if (raw <= 0) return -1;
+        // Check millidegrees (e.g. 30000 - 115000)
+        if (raw >= 1000.0) {
+            double milli = raw / 1000.0;
+            if (milli >= 5.0 && milli <= 115.0) {
+                return milli;
+            }
+        }
+        // Check tenths (e.g. 120 - 1150)
+        if (raw >= 120.0) {
+            double tenths = raw / 10.0;
+            if (tenths >= 5.0 && tenths <= 115.0) {
+                return tenths;
+            }
+        }
+        // Direct Celsius
+        if (raw >= 5.0 && raw <= 115.0) {
+            return raw;
+        }
+        return -1;
+    }
+
     public String getGPU(Context context) {
         double temp = getGPUTemp();
+        if (temp < 5.0 || temp > 115.0) {
+            return "N/A";
+        }
         boolean useFahrenheit = Utils.useFahrenheit(context);
         if (useFahrenheit) temp = Utils.celsiusToFahrenheit(temp);
         return Utils.roundTo2Decimals(temp) + context.getString(useFahrenheit ? R.string.fahrenheit
@@ -79,7 +116,14 @@ public class Temperature {
     }
 
     private double getGPUTemp() {
-        return (double) Utils.strToInt(Utils.readFile(GPU_NODE)) / GPU_OFFSET;
+        if (GPU_NODE == null) return -1;
+        int raw = Utils.strToInt(Utils.readFile(GPU_NODE));
+        if (raw <= 0) return -1;
+        if (GPU_OFFSET > 1) {
+            double scaled = (double) raw / GPU_OFFSET;
+            if (scaled >= 5.0 && scaled <= 115.0) return scaled;
+        }
+        return normalizeTemperature(raw);
     }
 
     public boolean hasGPU() {
@@ -99,6 +143,22 @@ public class Temperature {
 
     public String getCPU(Context context) {
         double temp = getCPUTemp();
+        if (temp < 5.0 || temp > 115.0) {
+            // Fallback to battery temperature if sysfs node is unreadable or out of bounds
+            try {
+                Intent b = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                if (b != null) {
+                    int bTemp = b.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
+                    if (bTemp > 0) {
+                        double norm = normalizeTemperature(bTemp);
+                        if (norm >= 5.0 && norm <= 115.0) temp = norm;
+                    }
+                }
+            } catch (Throwable ignored) {}
+        }
+        if (temp < 5.0 || temp > 115.0) {
+            return "N/A";
+        }
         boolean useFahrenheit = Utils.useFahrenheit(context);
         if (useFahrenheit) temp = Utils.celsiusToFahrenheit(temp);
         return Utils.roundTo2Decimals(temp) + context.getString(useFahrenheit ? R.string.fahrenheit
@@ -106,7 +166,14 @@ public class Temperature {
     }
 
     private double getCPUTemp() {
-        return (double) Utils.strToInt(Utils.readFile(CPU_NODE)) / CPU_OFFSET;
+        if (CPU_NODE == null) return -1;
+        int raw = Utils.strToInt(Utils.readFile(CPU_NODE));
+        if (raw <= 0) return -1;
+        if (CPU_OFFSET > 1) {
+            double scaled = (double) raw / CPU_OFFSET;
+            if (scaled >= 5.0 && scaled <= 115.0) return scaled;
+        }
+        return normalizeTemperature(raw);
     }
 
     public boolean hasCPU() {

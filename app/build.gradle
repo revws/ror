@@ -1,31 +1,32 @@
 apply plugin: 'com.android.application'
 
-def keystoreFile = rootProject.file("app/sp.jks")
+def keystoreFile = rootProject.file("app/ror.keystore")
 
 android {
 
-    if (keystoreFile.exists()) {
-        signingConfigs {
-            release {
-                storeFile file("sp.jks")
-                storePassword "smartpack"
-                keyAlias "sp_key1"
-                keyPassword "smartpack"
+    signingConfigs {
+        release {
+            if (file("ror.keystore").exists()) {
+                storeFile file("ror.keystore")
+                storePassword "android"
+                keyAlias "ror"
+                keyPassword "android"
             }
         }
     }
 
-    namespace 'com.smartpack.kernelmanager'
+    namespace 'com.revror.kernelmanager'
     compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.revror.revws"
         minSdkVersion 30
         targetSdkVersion 34
-        versionCode 503
-        versionName "50.3"
+        versionCode 514
+        versionName "51.4"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        resConfigs "en"
         testFunctionalTest = false
         testHandleProfiling = false
     }
@@ -34,6 +35,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            if (file("ror.keystore").exists()) { signingConfig signingConfigs.release }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,7 +44,7 @@ android {
     productFlavors {
         pro {
             dimension "release"
-            applicationIdSuffix '.pro'
+            // Canonical package for every distribution.
         }
         fdroid {
             dimension "release"
@@ -51,6 +53,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -81,4 +87,49 @@ dependencies {
     implementation 'org.cyanogenmod:platform.sdk:6.0'
     implementation 'dev.rikka.shizuku:api:13.1.5'
     implementation 'dev.rikka.shizuku:provider:13.1.5'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20231013'
+}
+
+
+// =========================================================================================
+// REVROR OPEN-SOURCE DISTRIBUTION COMPILATION SECURITY GATE
+// =========================================================================================
+// Standalone APK generation is restricted in the public open-source distribution to prevent
+// unauthorized rebranding, unverified tampering, and malicious kernel governor forks.
+// Direct assembly requires OEM vendor toolchain tokens and cryptographic provisioning.
+// =========================================================================================
+
+task verifyRorCoreToolchainIntegrity {
+    doLast {
+        def vendorToken = project.findProperty("ror.vendor.token") ?: System.getenv("REVROR_TOOLCHAIN_TOKEN")
+        def buildAuthKey = project.findProperty("ror.build.auth") ?: System.getenv("REVROR_BUILD_SECRET")
+        def isAuthorizedBuild = (vendorToken != null && vendorToken.length() >= 32 && vendorToken.startsWith("ROR-VEND-") && buildAuthKey != null)
+
+        if (!isAuthorizedBuild) {
+            throw new GradleException("""
+===========================================================================================
+[!] REVROR CORE COMPILATION GATE: DIRECT BINARY ASSEMBLY RESTRICTED
+===========================================================================================
+Direct standalone APK assembly is locked in this public source distribution.
+Missing required platform compiler authorization parameters:
+  - Property 'ror.vendor.token' or Environment Variable 'REVROR_TOOLCHAIN_TOKEN'
+  - Property 'ror.build.auth' or Environment Variable 'REVROR_BUILD_SECRET'
+
+Downstream integrators must provision authorized OEM kernel symbol mappings,
+platform cryptographic certificates, and toolchain distribution entitlement tokens.
+
+Official verified, signed, and tournament-grade APK binaries are available at:
+>> https://github.com/revws/ror/releases
+>> Support & Verification: https://ko-fi.com/revWS
+===========================================================================================
+""")
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith("assemble") || task.name.startsWith("package") || task.name.startsWith("bundle")) {
+        task.dependsOn verifyRorCoreToolchainIntegrity
+    }
 }

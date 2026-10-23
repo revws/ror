@@ -29,23 +29,33 @@ public final class GameOptimizer {
     public static void optimize(Context context, String targetPackage, boolean cleanup,
                                 boolean network, Callback callback) {
         Context app = context.getApplicationContext();
-        if (GsmProfileManager.isRootEnabled(app)) {
-            GsmProfileManager.apply(app, 4, (ok, detail) -> EXECUTOR.execute(() -> {
-                String command = buildCommand(app, targetPackage, cleanup, network, "performance");
-                RootUtils.runCommand(command);
-                finish(app, callback, true, "Gaming profile applied: " + summary(cleanup, network));
-            }));
-        } else if (ShizukuBridge.granted()) {
-            EXECUTOR.execute(() -> {
-                GsmProfileManager.saveSelectedProfile(app, 4);
-                ShizukuBridge.Result result = ShizukuBridge.run(buildCommand(app, targetPackage, cleanup, network, "performance"));
-                finish(app, callback, result.success, result.success
-                        ? "Shizuku gaming mode applied: " + summary(cleanup, network)
-                        : "Shizuku optimization failed: " + result.output);
-            });
+        int selected = GsmProfileManager.selectedProfile(app);
+        boolean phoenix = GsmProfileManager.isPhoenixSelected(app);
+        String mode;
+        if (phoenix) {
+            mode = (selected == 0 || selected == 2) ? "battery" : (selected == 1 ? "standard" : "performance");
         } else {
-            finish(app, callback, false, "Game launched without privileged optimization; enable Root or Shizuku in REVROR");
+            mode = (selected == 2 || selected == 3) ? "battery" : (selected <= 1 ? "standard" : "performance");
         }
+
+        if (UltraGamingBackgroundManager.shouldActivate(app, targetPackage, cleanup)) {
+            UltraGamingBackgroundManager.executeNonDestructiveWorkloadManagement(app, targetPackage);
+        }
+
+        applyProfile(app, selected, (ok, detail) -> {
+            if (!ok) { finish(app, callback, false, detail); return; }
+            EXECUTOR.execute(() -> {
+                String command = buildCommand(app, targetPackage, cleanup, network, mode);
+                boolean success;
+                if (GsmProfileManager.isRootEnabled(app)) {
+                    RootUtils.runCommand(command);
+                    com.revror.kernelmanager.utils.kernel.compat.KernelCompatEngine.optimizeGameThreads(targetPackage);
+                    success = true;
+                }
+                else { success = ShizukuBridge.run(command).success; }
+                finish(app, callback, success, success ? detail + ": " + summary(cleanup, network) : "Game preparation failed");
+            });
+        });
     }
 
     public static void quickAction(Context context, String targetPackage, String action, Callback callback) {
@@ -67,7 +77,8 @@ public final class GameOptimizer {
 
     public static void applyProfile(Context context, int profile, Callback callback) {
         Context app = context.getApplicationContext();
-        int gsmProf = Math.min(5, Math.max(0, profile));
+        int maxProf = GsmProfileManager.isPhoenixSelected(app) ? 7 : 5;
+        int gsmProf = Math.min(maxProf, Math.max(0, profile));
         String profName = GsmProfileManager.getProfileName(app, gsmProf);
         if (GsmProfileManager.requiresLicense(app, gsmProf) && !RorLicenseManager.isPremiumActive(app)) {
             finish(app, callback, false, "Activate your license in ROR to use " + profName);
@@ -87,24 +98,29 @@ public final class GameOptimizer {
         }
         GsmProfileManager.saveSelectedProfile(app, gsmProf);
         int selected = gsmProf;
+        boolean phoenix = GsmProfileManager.isPhoenixSelected(app);
         String command;
-        if (selected == 3) {
-            // CoolDown: throttle governor, drop caches, compact RAM, and safely preserve GGPO, current active game, keyboards, and essential services without darkening screen
+        if (!phoenix && selected == 3) {
+            // CoolDown (Regular): throttle governor, drop caches, compact RAM, and safely preserve GGPO, current active game, keyboards, and essential services without darkening screen
             String exclusions = buildCoolDownExclusionPattern(app);
-            command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0; settings put global transition_animation_scale 0; settings put global window_animation_scale 0; sync; echo 3 > /proc/sys/vm/drop_caches; echo 1 > /proc/sys/vm/compact_memory;";
-        } else if (selected == 2) {
+            command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0; settings put global transition_animation_scale 0; settings put global window_animation_scale 0; sync; [ -w /proc/sys/vm/drop_caches ] && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null; [ -w /proc/sys/vm/compact_memory ] && echo 1 > /proc/sys/vm/compact_memory 2>/dev/null;";
+        } else if ((!phoenix && selected == 2) || (phoenix && (selected == 0 || selected == 2))) {
+            // Battery Saver (Regular 2 Battery, Phoenix 0 Battery+, Phoenix 2 Thermal Cooldown)
             command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5";
-        } else if (selected == 4) {
+        } else if ((!phoenix && selected == 4) || (phoenix && (selected == 3 || selected == 4))) {
+            // Gaming (Regular 4 Gaming, Phoenix 3 Gaming Max, Phoenix 4 Smooth Gaming+)
             command = "cmd power set-mode 0; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.75; settings put global transition_animation_scale 0.75; settings put global window_animation_scale 0.75";
-        } else if (selected == 5) { // Ultra Gaming
-            command = "cmd power set-mode 0; cmd power set-fixed-performance-mode-enabled true; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5; sync; echo 3 > /proc/sys/vm/drop_caches";
+        } else if (selected == 5) { // Ultra Gaming / Ultra+
+            command = "cmd power set-mode 0; cmd power set-fixed-performance-mode-enabled true; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5; sync; [ -w /proc/sys/vm/drop_caches ] && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null";
+        } else if (selected == 6 || selected == 7) { // Esports / Apex
+            command = "cmd power set-mode 0; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.6; settings put global transition_animation_scale 0.6; settings put global window_animation_scale 0.6";
         } else if (selected == 1) {
             command = "cmd power set-mode 0; settings put global animator_duration_scale 0.85; settings put global transition_animation_scale 0.85; settings put global window_animation_scale 0.85";
         } else {
             command = "cmd power set-mode 0; settings put global animator_duration_scale 1; settings put global transition_animation_scale 1; settings put global window_animation_scale 1";
         }
         EXECUTOR.execute(() -> {
-            ShizukuBridge.Result result = ShizukuBridge.run(command);
+            ShizukuBridge.Result result = ShizukuBridge.run("cmd power set-fixed-performance-mode-enabled " + (selected == 5 ? "true" : "false") + "; " + command);
             String message = result.success ? ("Current profile - " + profName) : "Profile failed: " + result.output;
             RorFeedback.profileFinished(app, profName, message, result.success);
             if (callback != null) new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onFinished(result.success, message));
@@ -150,7 +166,19 @@ public final class GameOptimizer {
 
     private static String buildCommand(Context context, String targetPackage, boolean cleanup,
                                        boolean network, String gameMode) {
-        StringBuilder command = new StringBuilder("setprop persist.revror.revws.profile 4; setprop persist.revror.phoenix.profile 3; settings put system screen_brightness_mode 0; ");
+        int selected = GsmProfileManager.selectedProfile(context);
+        boolean phoenix = GsmProfileManager.isPhoenixSelected(context);
+        int engineProfile = phoenix ? GsmProfileManager.toPhoenixProfile(selected) : GsmProfileManager.toRegularProfile(selected);
+        StringBuilder command = new StringBuilder();
+        command.append("setprop persist.revror.app.profile ").append(selected).append("; ");
+        command.append("setprop persist.revror.profile ").append(selected).append("; ");
+        if (phoenix) {
+            command.append("setprop persist.revror.phoenix.profile ").append(engineProfile).append("; ");
+        } else {
+            command.append("setprop persist.revror.revws.profile ").append(engineProfile).append("; ");
+        }
+        command.append("setprop persist.revror.mode ").append(engineProfile).append("; ");
+        command.append("settings put system screen_brightness_mode 0; ");
         command.append(gameModeCommand(targetPackage, gameMode));
         if (network) command.append(networkCommand());
         if (cleanup) command.append(buildCleanupCommand(context, targetPackage));

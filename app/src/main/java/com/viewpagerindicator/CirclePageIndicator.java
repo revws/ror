@@ -39,7 +39,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewConfigurationCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.smartpack.kernelmanager.R;
+import com.revror.kernelmanager.R;
 
 import java.util.Objects;
 

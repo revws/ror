@@ -641,10 +641,10 @@ public class BannerTextStyleRegistry {
         pillRow.setOnClickListener(v -> {
             try {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/revWS"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             } catch (Exception ignored) {}
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/revWS"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
         });
 
         LinearLayout.LayoutParams pillLp = new LinearLayout.LayoutParams(-2, -2);

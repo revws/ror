@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -16,6 +18,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="cyanogenmod.permission.PUBLISH_CUSTOM_TILE" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
@@ -165,6 +171,18 @@ android:roundIcon="@mipmap/ic_launcher_round" android:label="ROR"
                 android:value="User-enabled in-game optimization control overlay" />
         </service>
         <service
+            android:name=".services.media.RorScreenRecordService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />
+        <activity
+            android:name=".activities.RorCapturePermissionActivity"
+            android:exported="false"
+            android:theme="@style/RorTranslucentTheme"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" />
+        <service
             android:name="revror.kernelmanager.services.PowerButtonGestureService"
             android:exported="false"
             android:foregroundServiceType="specialUse">
@@ -174,6 +192,14 @@ android:roundIcon="@mipmap/ic_launcher_round" android:label="ROR"
         </service>
         <receiver android:name=".services.ProfileScheduleReceiver" android:exported="false" />
         <receiver android:name=".services.CleanupReceiver" android:exported="false" />
+        <receiver
+            android:name=".charging.ChargingCooldownReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
         <service android:name=".services.boot.ApplyOnBootService" android:exported="false" />
         <receiver android:name=".services.boot.ApplyOnBoot$CancelReceiver" android:exported="false" />
         <receiver android:name=".services.profile.Widget" android:exported="false">

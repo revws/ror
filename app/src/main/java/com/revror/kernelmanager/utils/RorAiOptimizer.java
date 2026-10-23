@@ -125,8 +125,8 @@ public final class RorAiOptimizer {
 
             // 2. AI GPU Turbo Boost
             if (gpuBoost) {
-                cmd.append("for f in /sys/class/kgsl/kgsl-3d0/devfreq/governor; do ");
-                cmd.append("  [ -w \"$f\" ] && echo msm-adreno-tz > \"$f\" 2>/dev/null; ");
+                cmd.append("for f in /sys/class/kgsl/kgsl-3d0/devfreq/governor /sys/class/devfreq/*mali*/governor /sys/class/devfreq/*gpu*/governor; do ");
+                cmd.append("  [ -w \"$f\" ] && echo msm-adreno-tz > \"$f\" 2>/dev/null || echo performance > \"$f\" 2>/dev/null; ");
                 cmd.append("done; ");
                 cmd.append("echo 0 > /sys/class/kgsl/kgsl-3d0/bus_split 2>/dev/null; ");
                 cmd.append("echo 1 > /sys/class/kgsl/kgsl-3d0/force_bus_on 2>/dev/null; ");

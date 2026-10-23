@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">ROR</string>
-    <string name="brand_integrity_token" translatable="false">REVROR::com.revror.revws::51.1</string>
+    <string name="brand_integrity_token" translatable="false">REVROR::com.revror.revws::51.4</string>
 
     <string name="checking_info">Checking info…</string>
     <string name="checking_root">Checking root access</string>
@@ -103,6 +103,7 @@
     <string name="reset">Reset</string>
     <string name="restore">Restore</string>
     <string name="restore_sure_message">Are you sure to restore %s?</string>
+    <string name="cluster_prime" translatable="false">Prime</string>
     <string name="cluster_big" translatable="false">big</string>
     <string name="cluster_middle" translatable="false">Middle</string>
     <string name="cluster_little" translatable="false">LITTLE</string>

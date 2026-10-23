@@ -10,11 +10,11 @@
         tools:targetApi="n_mr1" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.smartpack.kernelmanager.activities.StartActivity"
-            android:targetPackage="com.smartpack.kernelmanager" >
+            android:targetClass="com.revror.kernelmanager.activities.StartActivity"
+            android:targetPackage="com.revror.kernelmanager" >
             <extra
                 android:name="selection"
-                android:value="com.smartpack.kernelmanager.fragments.other.SettingsFragment" />
+                android:value="com.revror.kernelmanager.fragments.other.SettingsFragment" />
         </intent>
         <categories android:name="android.shortcut.conversation" />
     </shortcut>

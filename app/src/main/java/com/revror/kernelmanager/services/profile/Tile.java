@@ -72,7 +72,7 @@ public class Tile extends BroadcastReceiver {
                 }
 
                 for (String command : adjustedCommands) {
-                    RootUtils.runCommand(command);
+                    com.revror.kernelmanager.utils.kernel.compat.ProfileCompatBridge.applyCommandSafe(context, command);
                 }
             }
         }
