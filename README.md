@@ -6,6 +6,8 @@
     <img src="assets/logos/phoenix.png" alt="Phoenix Pro Logo" width="150" />
   </p>
 
+
+
   # ROR | Reincarnation of Revolutionary
   ### Android Game Launcher, Kernel Manager & Gaming Optimization Tools
 
@@ -13,6 +15,9 @@
     <em>The next-generation open-core esports console, dynamic kernel governor manager, and mobile gaming optimization platform for Android.</em>
   </p>
 
+<p><p align="center">
+    <a href="https://github.com/revws/ror"><img src="https://komarev.com/ghpvc/?username=revws&color=e11d48&style=for-the-badge&label=PROFILE+VIEWS" alt="Repo Views" /></a>
+</p>
   <p>
     <a href="https://github.com/revws/ror"><img src="https://img.shields.io/badge/Official%20Source-github.com%2Frevws%2Fror-e11d48?style=for-the-badge&logo=github&logoColor=white" alt="Official Source" /></a>
     <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
