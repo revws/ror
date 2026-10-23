@@ -1,6 +1,6 @@
 # ROR (Reincarnation of Revolutionary) — Comprehensive Features Guide
 
-> **Version:** 51.4 (Build 514 — Esports Gaming & Dynamic Kernel Edition)  
+> **Version:** 51.5 (Build 515 — Esports Gaming & Dynamic Kernel Edition)  
 > **Package:** `com.revror.revws`  
 > **Platform Support:** Android 10 (API 29) through Android 17 (API 37) and Upcoming Releases  
 > **Architectures:** `arm64-v8a`, `armeabi-v7a`, `x86_64`
