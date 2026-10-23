@@ -1,9 +1,10 @@
+
 <div align="center">
 
   <p align="center">
     <img src="cover.png" alt="ROR Project Cover" width="100%" />
   </p>
-
+——
   <p align="center">
     <img src="assets/logos/ror.png" alt="ROR Official Logo" width="150" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
