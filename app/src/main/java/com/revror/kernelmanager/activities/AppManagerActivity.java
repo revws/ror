@@ -182,8 +182,10 @@ public class AppManagerActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (finalSuccess) {
                     Toast.makeText(this, actionName + " succeeded", Toast.LENGTH_SHORT).show();
+                } else if (ShizukuBridge.granted()) {
+                    Toast.makeText(this, actionName + " failed: " + (finalOut.isEmpty() ? "Operation rejected" : finalOut), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, actionName + " requires Root or Shizuku", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, actionName + " requires Root or Shizuku authorization", Toast.LENGTH_SHORT).show();
                 }
                 if (onDone != null) onDone.run();
             });

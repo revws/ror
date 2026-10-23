@@ -224,6 +224,32 @@ public class DashboardActivity extends AppCompatActivity {
                     }
                 }
             });
+    private final ShizukuBridge.OnConnectionListener shizukuConnectionListener = new ShizukuBridge.OnConnectionListener() {
+        @Override
+        public void onShizukuConnected(boolean hasPermission) {
+            runOnUiThread(() -> {
+                shizukuReady = hasPermission;
+                setProfileAccess(rootReady || shizukuReady);
+                if (!rootReady && shizukuReady) {
+                    profileStatus.setText("Shizuku active - Android-level profiles ready");
+                    profileStatus.setTextColor(Color.rgb(105, 220, 255));
+                }
+            });
+        }
+
+        @Override
+        public void onShizukuDisconnected() {
+            runOnUiThread(() -> {
+                shizukuReady = false;
+                setProfileAccess(rootReady);
+                if (!rootReady) {
+                    profileStatus.setText("Shizuku service disconnected");
+                    profileStatus.setTextColor(Color.rgb(255, 82, 119));
+                }
+            });
+        }
+    };
+
     private final Shizuku.OnRequestPermissionResultListener shizukuPermissionListener = (requestCode, grantResult) -> {
         if (requestCode != SHIZUKU_PERMISSION) return;
         shizukuReady = ShizukuBridge.granted();
@@ -257,6 +283,7 @@ public class DashboardActivity extends AppCompatActivity {
         handler.postDelayed(() -> AdBypassHelper.showFullScreenAdIfDue(this), 900);
         SilentPermissionHelper.grantAllSilent(this);
         Shizuku.addRequestPermissionResultListener(shizukuPermissionListener);
+        ShizukuBridge.addConnectionListener(shizukuConnectionListener);
         com.revror.kernelmanager.utils.kernel.compat.ProfileExecutionCoordinator.getInstance()
                 .addListener(mProfileCoordinatorListener);
         dashboardScroll = findViewById(R.id.home_scroll);
@@ -299,6 +326,17 @@ public class DashboardActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         AppIntegrity.enforce(this);
+        boolean prevShizuku = shizukuReady;
+        boolean prevRoot = rootReady;
+        rootReady = GsmProfileManager.isRootEnabled(this);
+        shizukuReady = ShizukuBridge.granted();
+        if (prevShizuku != shizukuReady || prevRoot != rootReady) {
+            setProfileAccess(rootReady || shizukuReady);
+            if (!rootReady && shizukuReady) {
+                profileStatus.setText("Shizuku active - Android-level profiles ready");
+                profileStatus.setTextColor(Color.rgb(105, 220, 255));
+            }
+        }
         updateHeroDeviceInfo();
         View heroPillDot = findViewById(R.id.hero_pill_dot);
         View heroPillDotGlow = findViewById(R.id.hero_pill_dot_glow);
@@ -1444,13 +1482,13 @@ public class DashboardActivity extends AppCompatActivity {
         String command;
         if (profile == 3) {
             String exclusions = GameOptimizer.buildCoolDownExclusionPattern(this);
-            command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0; settings put global transition_animation_scale 0; settings put global window_animation_scale 0; sync; echo 3 > /proc/sys/vm/drop_caches; echo 1 > /proc/sys/vm/compact_memory;";
+            command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0; settings put global transition_animation_scale 0; settings put global window_animation_scale 0; sync; [ -w /proc/sys/vm/drop_caches ] && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true; [ -w /proc/sys/vm/compact_memory ] && echo 1 > /proc/sys/vm/compact_memory 2>/dev/null || true;";
         } else if (profile == 2) {
             command = "cmd power set-mode 1; cmd netpolicy set restrict-background true; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5";
         } else if (profile == 4) {
             command = "cmd power set-mode 0; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.75; settings put global transition_animation_scale 0.75; settings put global window_animation_scale 0.75";
         } else if (profile == 5) { // Ultra Gaming
-            command = "cmd power set-mode 0; cmd power set-fixed-performance-mode-enabled true; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5; sync; echo 3 > /proc/sys/vm/drop_caches";
+            command = "cmd power set-mode 0; cmd power set-fixed-performance-mode-enabled true; cmd netpolicy set restrict-background false; settings put global animator_duration_scale 0.5; settings put global transition_animation_scale 0.5; settings put global window_animation_scale 0.5; sync; [ -w /proc/sys/vm/drop_caches ] && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true";
         } else if (profile == 1) {
             command = "cmd power set-mode 0; settings put global animator_duration_scale 0.85; settings put global transition_animation_scale 0.85; settings put global window_animation_scale 0.85";
         } else {
@@ -3032,10 +3070,44 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void showShizukuStatus() {
-        new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Shizuku access active")
-                .setMessage("Android shell-level profiles, app controls, Doze, display, and system settings can run directly in REVROR. Kernel/sysfs tuning remains locked until root is enabled.")
-                .setNegativeButton("Forget in REVROR", (d,w) -> { shizukuReady=false; setProfileAccess(rootReady); profileStatus.setText("Shizuku disabled in this session"); })
-                .setPositiveButton("OK", null).show();
+        String summary = ShizukuBridge.getStatusSummary();
+        int uid = ShizukuBridge.getUid();
+        int ver = ShizukuBridge.getVersion();
+        String selinux = ShizukuBridge.getSELinuxContext();
+        String details = "Status: " + summary + "\n"
+                + "Server UID: " + uid + (uid == 0 ? " (Root)" : uid == 2000 ? " (Shell)" : "") + "\n"
+                + "Protocol Version: " + ver + "\n"
+                + "SELinux Domain: " + selinux + "\n\n"
+                + "Active Shizuku Capabilities:\n"
+                + "• Android Performance Modes (cmd power set-mode)\n"
+                + "• Network Policy & Background Restriction\n"
+                + "• Window & Animation Scaling\n"
+                + "• Refresh Rate & Display Tuning\n"
+                + "• HW Overlay & Freeform Management\n"
+                + "• Background Process Trimming & AppOps\n"
+                + "• Non-destructive Charging Cooldown Supervision\n\n"
+                + "(Note: Direct /sys and /proc kernel node tuning requires Root access).";
+
+        new AlertDialog.Builder(this, R.style.RorDialogTheme)
+                .setTitle("Shizuku Bridge Telemetry")
+                .setMessage(details)
+                .setNeutralButton("Test Shell", (d, w) -> {
+                    submitTask(() -> {
+                        ShizukuBridge.Result testRes = ShizukuBridge.run("id; getprop ro.product.model; getprop ro.build.version.release");
+                        postToUi(() -> new AlertDialog.Builder(this, R.style.RorDialogTheme)
+                                .setTitle(testRes.success ? "Shizuku Shell Active" : "Test Failed")
+                                .setMessage(testRes.success ? "Command executed with UID " + uid + ":\n\n" + testRes.output : "Error: " + testRes.output)
+                                .setPositiveButton("OK", null)
+                                .show());
+                    });
+                })
+                .setNegativeButton("Forget in REVROR", (d, w) -> {
+                    shizukuReady = false;
+                    setProfileAccess(rootReady);
+                    profileStatus.setText("Shizuku disabled in this session");
+                })
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void showCpuStatus() {
@@ -4071,6 +4143,7 @@ public class DashboardActivity extends AppCompatActivity {
             pillDotAnimator = null;
         }
         stopHomeBannerAnimation(findViewById(R.id.hero_banner));
+        ShizukuBridge.removeConnectionListener(shizukuConnectionListener);
         try { Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener); } catch (Throwable ignored) {}
         if (adBanner != null) { try { adBanner.stopLoading(); adBanner.destroy(); } catch (RuntimeException ignored) {} }
         if (activeProfileAnimator != null) activeProfileAnimator.cancel();

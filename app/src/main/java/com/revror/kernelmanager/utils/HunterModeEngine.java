@@ -645,6 +645,8 @@ public final class HunterModeEngine {
             try {
                 if (com.revror.kernelmanager.utils.root.RootUtils.rootAccess()) {
                     Shell.cmd(command).exec();
+                } else if (com.revror.kernelmanager.utils.ShizukuBridge.granted()) {
+                    com.revror.kernelmanager.utils.ShizukuBridge.run(command);
                 } else {
                     // Try direct system secure settings if granted via Shizuku/ADB
                     String[] parts = command.split(";");

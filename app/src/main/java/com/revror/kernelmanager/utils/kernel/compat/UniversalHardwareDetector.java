@@ -143,6 +143,14 @@ public final class UniversalHardwareDetector {
             return accessLevel == AccessLevel.AUTHORIZED_ROOT;
         }
 
+        public boolean isShizukuPrivileged() {
+            return accessLevel == AccessLevel.SHIZUKU_PRIVILEGED;
+        }
+
+        public boolean isPrivileged() {
+            return accessLevel == AccessLevel.AUTHORIZED_ROOT || accessLevel == AccessLevel.SHIZUKU_PRIVILEGED;
+        }
+
         @Nullable
         public DetectedCluster getClusterByRole(ClusterRole role) {
             for (DetectedCluster c : clusters) {
@@ -231,6 +239,8 @@ public final class UniversalHardwareDetector {
         try {
             if (RootUtils.rootAccess()) {
                 return AccessLevel.AUTHORIZED_ROOT;
+            } else if (com.revror.kernelmanager.utils.ShizukuBridge.granted()) {
+                return AccessLevel.SHIZUKU_PRIVILEGED;
             }
         } catch (Throwable ignored) {}
         return AccessLevel.NON_ROOT_RESTRICTED;
