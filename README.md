@@ -39,6 +39,53 @@
 
   ---
 
+---
+
+<div align="center">
+
+## ⚠️ ROR | DISTRIBUTION POLICY
+
+<img src="https://img.shields.io/badge/OFFICIAL-DISTRIBUTION-DC143C?style=for-the-badge&labelColor=111111" alt="Official Distribution"/>
+<img src="https://img.shields.io/badge/DMCA-PROTECTED-DC143C?style=for-the-badge&labelColor=111111" alt="DMCA Protected"/>
+
+<br>
+
+**🔴 ORIGINAL BUILDS • OFFICIAL LINKS ONLY**
+
+All YouTubers, websites, and creators **MUST use the official GitHub Releases link** when sharing the original ROR APK.
+
+**[⬇️ DOWNLOAD OFFICIAL ROR](https://github.com/revws/ror/releases)**
+
+⚠️ Copyright-infringing redistribution may result in **DMCA takedown without prior warning.**
+
+---
+
+**🟢 CREATE YOUR OWN VERSION**
+
+`FORK` → `MODIFY` → `BUILD` → `SHARE`
+
+Build and distribute your own modified version anywhere, subject to the project's license.
+
+**[⑂ FORK THE SOURCE](https://github.com/revws/ror/fork)**
+
+---
+
+**🌐 OFFICIAL DISTRIBUTION & COMMUNITY**
+
+**Distributor:** [magiskmodule.gitlab.io](https://magiskmodule.gitlab.io/magisk-modules-repo/ror-android-game-launcher-and-kernel-manager/)
+
+**Telegram:** [@GodTspeed](https://t.me/GodTspeed) • [@godspeedmode](https://t.me/godspeedmode)
+
+**Developer:** [@revWhiteShadow](https://github.com/revws)
+
+<br>
+
+<sub>© 2026 revWhiteShadow | REINCARNATION OF REVOLUTIONARY</sub>
+
+</div>
+
+---
+
   **[ Overview ](#1-project-overview)** •
   **[ Features Guide (features.md) ](features.md)** •
   **[ Game Space ](#5-game-space)** •
