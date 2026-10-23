@@ -1,6 +1,10 @@
 <div align="center">
 
   <p align="center">
+    <img src="cover.png" alt="ROR Project Cover" width="100%" />
+  </p>
+
+  <p align="center">
     <img src="assets/logos/ror.png" alt="ROR Official Logo" width="150" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <img src="assets/logos/phoenix.png" alt="Phoenix Pro Logo" width="150" />
@@ -15,7 +19,7 @@
     <em>The next-generation open-core esports console, dynamic kernel governor manager, and mobile gaming optimization platform for Android.</em>
   </p>
 
-<p><p align="center">
+<p align="center">
     <a href="https://github.com/revws/ror"><img src="https://komarev.com/ghpvc/?username=revws&color=e11d48&style=for-the-badge&label=PROFILE+VIEWS" alt="Repo Views" /></a>
 </p>
   <p>
@@ -35,7 +39,7 @@
   ---
 
   **[ Overview ](#1-project-overview)** •
-  **[ Features ](#4-main-features)** •
+  **[ Features Guide (features.md) ](features.md)** •
   **[ Game Space ](#5-game-space)** •
   **[ Kernel Tuning ](#7-kernel-tuning)** •
   **[ Screenshots ](#12-screenshots)** •
@@ -46,6 +50,8 @@
 
 ---
 
+> 🎮 **Complete Features Catalog**: For an exhaustive technical breakdown of all 21 Armory tools, Phoenix Pro engines, 4 Gaming Profiles, Canvas Vector banners, and kernel tuning nodes, read [features.md](features.md) (or [featuers.md](featuers.md)).
+>
 > 📖 **In-Depth Technical Whitepaper**: For detailed architecture diagrams, sysfs governor mechanics, DVFS benchmarks, and competitor comparisons, read our comprehensive article in [articel.md](articel.md).
 
 ---
