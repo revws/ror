@@ -340,7 +340,7 @@ A: The Aim Boost module operates purely as a system window overlay and does not 
 ## 19. Official Links
 
 - **Official Source Repository**: [https://github.com/revws/ror](https://github.com/revws/ror)
-- **Experimental Development Repository**: [https://github.com/revws/rorexp](https://github.com/revws/rorexp)
+
 - **Official Telegram Channel**: [https://t.me/godTspeed](https://t.me/godTspeed)
 - **Discussion Community**: [https://t.me/godspeedmode](https://t.me/godspeedmode)
 - **Architecture & Benchmark Article**: [articel.md](articel.md)
