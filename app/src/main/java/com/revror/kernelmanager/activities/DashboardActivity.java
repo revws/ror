@@ -985,6 +985,8 @@ public class DashboardActivity extends AppCompatActivity {
         if (moreBugReport != null) moreBugReport.setOnClickListener(v -> showBugReportDialog());
         findViewById(R.id.more_donate).setOnClickListener(v -> openUrl("https://ko-fi.com/revWS"));
         findViewById(R.id.more_about).setOnClickListener(v -> showAbout());
+        int srcId = getResources().getIdentifier("more_source_code", "id", getPackageName()); View mSrc = srcId != 0 ? findViewById(srcId) : null;
+        if (mSrc != null) mSrc.setOnClickListener(v -> openUrl("https://github.com/revws/ror"));
         bindVipSection();
     }
 

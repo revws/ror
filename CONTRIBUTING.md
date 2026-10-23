@@ -1,67 +1,46 @@
 # Contributing to ROR (Reincarnation of Revolutionary)
 
-Thank you for your interest in contributing to **ROR**! We welcome community contributions to help make Android gaming and kernel management more efficient, smooth, and accessible.
+First off, thank you for considering contributing to ROR! Open-source contributions from power users, Android developers, and esports enthusiasts help make ROR better for everyone.
 
 ---
 
-## 1. Code of Conduct
-We are committed to providing a friendly, safe, and welcoming environment for all contributors, regardless of experience level, background, or identity. Please remain respectful, constructive, and collaborative.
+## Code of Conduct
+
+We are committed to providing a welcoming, inspiring, and harassment-free community for everyone. Be respectful and constructive in all discussions, pull requests, and issue reports.
 
 ---
 
-## 2. Getting Started & Development Setup
+## How Can I Contribute?
 
-### Prerequisites
-- **JDK**: OpenJDK 17 LTS (e.g. Eclipse Temurin 17)
-- **Android SDK**: API Level 34 (Android 14)
-- **Build Tools**: 34.0.0
-- **Android Studio**: Hedgehog or newer recommended
+### 1. Reporting Bugs
+- Check the [Issues tab](https://github.com/revws/rorexp/issues) to ensure the bug hasn't already been reported.
+- Use our **Bug Report Template** (`.github/ISSUE_TEMPLATE/bug_report.md`).
+- Provide your device model, Android version, kernel version, root status (Magisk, KernelSU, APatch, or non-root/Shizuku), and step-by-step reproduction instructions.
+- Attach `adb logcat` output whenever relevant.
 
-### Code Verification & Syntax Analysis
-```bash
-# Clone the repository
-git clone https://github.com/revror/ROR.git
-cd ROR
+### 2. Suggesting Features
+- Submit feature suggestions using the **Feature Request Template** (`.github/ISSUE_TEMPLATE/feature_request.md`).
+- Detail the problem the feature addresses and why it benefits mobile gamers or kernel tuners.
 
-# Verify code integrity and syntax
-./gradlew :app:compileFdroidReleaseJavaWithJavac
-```
-
-> [!NOTE]
-> Direct standalone APK assembly requires authorized maintainer-level OEM toolchain tokens (`REVROR_TOOLCHAIN_TOKEN`). Contributors should focus on modular code changes, UI layouts, and sysfs patches verified via static checks.
-
----
-
-## 3. How to Contribute
-
-### Reporting Bugs
-- Check the [existing issues](https://github.com/revror/ROR/issues) first to avoid duplicates.
-- Use the **Bug Report** template.
-- Include your **device model**, **SoC**, **Android version**, **root status (Magisk/KernelSU/Shizuku)**, and relevant **logcat** logs:
+### 3. Submitting Pull Requests
+- Fork the repository and create your feature branch from `main`:
   ```bash
-  adb logcat -d -s ROR:V RorService:V SmartCharging:V
+  git checkout -b feature/your-feature-name
   ```
-
-### Suggesting Enhancements
-- Open an issue using the **Feature Request** template.
-- Detail the motivation, target gaming titles or use cases, and sysfs kernel nodes if known.
-
-### Pull Requests (PRs)
-1. **Fork the repo** and create your branch from `main`:
-   ```bash
-   git checkout -b feature/my-cool-feature
-   ```
-2. **Follow Code Conventions**:
-   - Write clean, idiomatically structured Kotlin / Java code.
-   - Do not perform disk I/O or shell commands on the Android main thread.
-   - Never commit machine-specific paths, personal keystores, or private credentials.
-   - Maintain hardware safety: ensure fallback defaults are present if a kernel sysfs node is absent.
-3. **Test thoroughly**:
-   - Verify that your code adheres to architecture standards and compiles via `./gradlew :app:compileFdroidReleaseJavaWithJavac` without syntax errors.
-   - Test on an actual physical Android device or emulator.
-4. **Submit your PR** with a clear description of changes and attach before/after screenshots if UI elements were modified.
+- Follow Android standard Java/Kotlin code conventions.
+- Maintain documentation integrity and do not remove existing docstrings or copyright headers.
+- Test your changes thoroughly on a physical device or emulator before opening a PR.
+- Target PRs to the `main` branch with a descriptive explanation of changes.
 
 ---
 
-## 4. Licensing
-By contributing to ROR, you agree that your contributions will be licensed under the **GNU General Public License v3.0 (GPL-3.0-only)**.
+## Development Guidelines
+
+- **Target SDK**: Android 14 (API level 34)
+- **Minimum SDK**: Android 10 (API level 29)
+- **Architecture**: Keep UI presentation decoupled from Linux kernel sysfs operations.
+- **Safety Safeguards**: Always validate sysfs nodes before writing; never hardcode paths without fallback guards.
+
+---
+
+*Thank you for helping push Android mobile gaming performance forward!*

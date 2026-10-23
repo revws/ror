@@ -1,31 +1,38 @@
 # Security Policy
 
+The ROR (Reincarnation of Revolutionary) project takes user security, device stability, and thermal safety very seriously.
+
+---
+
 ## Supported Versions
 
-We provide security and bug updates for the active release branch of ROR.
+Security updates are actively applied to the following release series:
 
-| Version | Supported          | Notes |
-| ------- | ------------------ | ----- |
-| 51.x    | :white_check_mark: | Current active release branch |
-| < 51.0  | :x:                | Deprecated |
+| Version Series | Supported | Notes |
+| :--- | :---: | :--- |
+| **v6.x / Current** | :white_check_mark: | Actively supported and maintained |
+| **v5.x** | :warning: | Critical security patches only |
+| **< v5.0** | :x: | End of life |
 
 ---
 
 ## Reporting a Vulnerability
 
-The ROR team takes security and hardware safety seriously. Because ROR operates with elevated system permissions (`root` via `libsu` and `Shizuku`), ensuring that command injection or privilege escalations are prevented is critical.
+If you discover a security vulnerability or potential root privilege escalation flaw in ROR:
 
-If you believe you have found a security vulnerability in ROR:
-1. **Do not disclose the vulnerability publicly** in GitHub issues, forums, or social media.
-2. Please report security issues privately through [GitHub Private Vulnerability Reporting](https://github.com/revror/ROR/security/advisories/new) or by emailing the project maintainers directly.
+1. **Do not disclose the issue publicly** on GitHub Issues or Telegram chat.
+2. Contact the lead developer directly via Telegram:
+   - Developer: [@revwhiteshadow](https://t.me/revwhiteshadow)
 3. Include:
-   - Type of vulnerability (e.g. arbitrary command injection, privilege leak, unsafe IPC).
-   - Step-by-step reproduction instructions or a minimal Proof of Concept (PoC).
-   - Affected devices, OS versions, and ROR build numbers.
+   - Device model and Android OS / ROM version.
+   - Steps to reproduce the security vulnerability.
+   - Proof of concept (PoC) code or script if available.
+4. We aim to acknowledge reports within 48 hours and coordinate a validated fix prior to public disclosure.
 
 ---
 
-## Response Timeline
-- **Initial Acknowledgement**: Within 48 hours.
-- **Triage & Assessment**: Within 5 business days.
-- **Fix & Public Advisory**: Coordinated release within 30 days of confirmed triage.
+## Safety Safeguards in ROR
+
+- **Volatile Execution**: Kernel node alterations operate in RAM (`/sys/`, `/proc/`); standard reboots revert all states.
+- **Thermal Circuit Breakers**: Performance profiles immediately disconnect if battery temperatures exceed 47°C.
+- **No Third-Party SDKs**: ROR incorporates no analytical tracking libraries, commercial spyware, or remote code loaders.

@@ -107,7 +107,7 @@ public class AboutFragment extends RecyclerViewFragment {
         sourcecode.setDrawable(getResources().getDrawable(R.drawable.ic_source));
         sourcecode.setTitle(getString(R.string.source_code));
         sourcecode.setSummary(getString(R.string.source_code_summary));
-        sourcecode.setOnItemClickListener(item -> Utils.launchUrl("https://revror.pages.dev/", requireActivity()));
+        sourcecode.setOnItemClickListener(item -> Utils.launchUrl("https://github.com/revws/ror", requireActivity()));
 
         DescriptionView changelogs = new DescriptionView();
         changelogs.setDrawable(getResources().getDrawable(R.drawable.ic_changelog));

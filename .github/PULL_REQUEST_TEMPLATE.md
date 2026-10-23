@@ -1,22 +1,23 @@
-## Description
-Provide a concise explanation of the changes introduced by this pull request.
+## Description of Changes
+
+Please provide a clear and concise summary of the changes proposed in this Pull Request.
+
+- What feature, bug fix, or optimization does this introduce?
+- Which files or subsystems are modified?
 
 ## Type of Change
-- [ ] Bug fix (non-breaking change fixing an issue)
-- [ ] New feature (non-breaking change adding hardware tuning or UI enhancement)
-- [ ] Breaking change (fix or feature that changes existing behavior)
-- [ ] Documentation update
-- [ ] Code refactoring or cleanup
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Performance optimization / Kernel tuning improvement
+- [ ] Documentation update (README, whitepaper, guides)
 
-## Hardware & System Tested On
-- **Device**:
-- **Android Version**:
-- **Root / Shizuku**:
-- **Kernel Version**:
+## Hardware & Environment Tested
+- **Device**: 
+- **Android Version**: 
+- **Root Status**: 
 
-## Checklist
-- [ ] My code adheres to the project's coding standards.
-- [ ] I have tested these changes on a real device or emulator.
-- [ ] All existing profiles and features continue to function as expected.
-- [ ] I have not committed any proprietary secrets, keystores, or machine-specific paths.
-- [ ] Documentation and comments have been updated where applicable.
+## Verification Checklist
+- [ ] Code follows project style guidelines.
+- [ ] My changes generate no new compiler warnings or build breaks.
+- [ ] Verified live on actual hardware or Android emulator.
+- [ ] No proprietary keys, keystores, or personal tokens are included.

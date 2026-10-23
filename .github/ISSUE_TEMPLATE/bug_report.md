@@ -2,33 +2,36 @@
 name: Bug Report
 about: Create a report to help us improve ROR
 title: "[BUG] "
-labels: ["bug", "triage"]
+labels: bug
 assignees: ''
 
 ---
 
-## Device & Environment Information
-- **Device Model**: (e.g. POCO F5, Samsung Galaxy S23, OnePlus 11)
-- **SoC / Chipset**: (e.g. Snapdragon 7+ Gen 2, Dimensity 9200)
-- **Android Version**: (e.g. Android 13, Android 14)
-- **Custom ROM / Stock OS**: (e.g. HyperOS, One UI 6, LineageOS 21)
-- **Privilege Backend**: [ ] Root (Magisk / KernelSU / APatch)  [ ] Shizuku  [ ] Unrooted
-- **ROR Version**: (e.g. v51.4)
-
-## Bug Description
+**Describe the Bug**
 A clear and concise description of what the bug is.
 
-## Steps to Reproduce
-1. Go to '...'
-2. Tap on '....'
-3. Scroll down to '....'
+**Device & OS Information:**
+- Device Model: [e.g. Xiaomi POCO F3, OnePlus 9 Pro]
+- Android Version: [e.g. Android 13, Android 14]
+- ROM: [e.g. Stock MIUI, LineageOS 21, PixelOS]
+- Kernel Version: [e.g. 5.4.x, 5.15.x]
+- Root Solution: [e.g. Magisk v26.4, KernelSU, APatch, Non-Root/Shizuku]
+- ROR Version: [e.g. v6.8.0]
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Open ROR
+2. Navigate to '...'
+3. Tap on '....'
 4. See error
 
-## Expected Behavior
+**Expected Behavior**
 A clear and concise description of what you expected to happen.
 
-## Screenshots / Logcat
-If applicable, attach logcat output or screenshots to help explain the problem.
-```
-adb logcat -d -s ROR:V RorService:V SmartCharging:V
+**Screenshots / Screen Recordings**
+If applicable, attach screenshots or short video clips to help explain your problem.
+
+**Logcat / Terminal Output**
+```text
+Paste relevant logcat or shell output here
 ```

@@ -1,45 +1,45 @@
 # Changelog
 
-All notable changes to the **ROR (Reincarnation of Revolutionary)** open-source project will be documented in this file.
+All notable changes to the ROR (Reincarnation of Revolutionary) public open-source project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [51.4.0] - 2026-10-23
+## [Unreleased] - 2026-10-23
 
 ### Added
-- **Smart Fast Charging & Low Heat Optimization Suite**:
-  - **Four Specialized Charging Modes**: Eco Cooling, Balanced Cooling, Fast & Cool, and Maximum Cooling.
-  - **Fast & Cool Mode**: Maintains manufacturer-supported fast charging while intelligently throttling unnecessary background CPU/GPU spikes to curb heat build-up.
-  - **Intelligent Fast Charging Detection**: Detects USB Power Delivery (PD), Qualcomm Quick Charge (QC), and vendor-specific fast charging protocols from hardware sysfs nodes without brand guessing.
-  - **Real-Time Charging Dashboard**: Live monitoring for battery temperature (°C), charging current (mA), voltage (mV), thermal status, and cooling optimization delta.
-  - **Auto Fast & Cool Daemon**: Automated foreground monitoring service tracking charger connection and disconnection with low memory overhead.
-  - **Quick Settings Tile**: `ChargingCooldownTileService` allowing instantaneous one-tap mode switching directly from Android notification shade.
-- **Dual Source Code Distribution**:
-  - Independent Private Developer Source with 12 AI context reference guides.
-  - Clean Public GitHub Open-Source distribution under GNU General Public License v3.0 (`GPL-3.0-only`).
-  - Automated public export and privacy auditing pipeline (`export_public_source.ps1`).
+- Comprehensive technical whitepaper article: `articel.md` covering complete architecture, benchmarks, and Linux sysfs mechanics.
+- High-resolution real application screenshot gallery featuring live cyberpunk dashboard, kernel tuning, and Game Space launcher.
+- Official branding asset gallery (`assets/logos/ror.png` and `assets/logos/phoenix.png`).
+- Open-source governance files: `CONTRIBUTING.md`, `SECURITY.md`, and GitHub issue/PR templates.
 
-### Fixed
-- Fixed profile mapping discrepancy in Game Space ensuring Regular Mode profiles apply accurate governor clamps.
-- Resolved Shizuku execution thread blocking on high-frequency UI updates.
+### Changed
+- Official in-app Source Code destination updated to `https://github.com/revws/ror`.
+- Completely revamped `README.md` with dark crimson gaming identity, side-by-side logos, responsive feature matrices, and full 21 documentation sections.
+- Refined `.gitignore` rules to safeguard developer credentials and build outputs.
 
 ---
 
-## [51.0.0] - 2026-09-15
+## [6.8.0] - 2026-10-18
 
 ### Added
-- **Game Space & Floating Gaming HUD**:
-  - Floating bubble overlay with real-time FPS counter, CPU/GPU temperature, and clock frequency display.
-  - Quick RAM cleaner and brightness lock.
-- **Crosshair Studio**:
-  - Draggable precision floating crosshair with 5 styles (Dot, Cross, Circle, Chevron, T-Bar).
-- **Touch & Motion Enhancements**:
-  - Touch Boost digitizer polling overclock.
-  - Aim Boost non-linear touch curve stabilization.
-  - Gyro Delay Fix with zero-batching IMU sensor event streaming.
-- **Dual Engine Architecture**:
-  - Standard Regular Profiles (0–5: Battery, Balance, Daily, Performance, Gaming, Extreme).
-  - High-tier Phoenix Profiles (0–7) with frequency lock support.
+- Esports Landscape Game Space Console with dynamic game library carousel.
+- 21-tile live Optimization Armory including Fast & Cool, Aim Boost, and Gyro Delay Fix.
+- Charging Cooldown & Hardware Charging Bypass module to eliminate gaming thermal throttling.
+- Real-time battery telemetry gauge with Screen-On Time (SOT) and discharge current analytics.
+- Phoenix VIP licensing verification engine with zero network dependencies.
+
+### Fixed
+- Fixed scheduler governor reset issues on Android 14 Linux 5.15+ kernels.
+- Resolved overlay positioning variances during rapid display rotation.
+
+---
+
+## [6.0.0] - 2026-09-10
+
+### Added
+- Complete rewrite of dashboard presentation into Obsidian Cyberpunk aesthetic.
+- Interactive multi-cluster CPU topology viewer for LITTLE, BIG, and PRIME cores.
+- Dual-tier performance profile selector (Eco, Balanced, Gaming, Phoenix Peak).
