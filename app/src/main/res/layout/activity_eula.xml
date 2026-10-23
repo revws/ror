@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:letterSpacing="0.04"
-                    android:text="HYPER KERNEL SUITE • TOURNAMENT EDITION"
+                    android:text="COMMERCIAL GAMING SUITE • VIP TOURNAMENT EDITION"
                     android:textColor="#FF3D60"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -94,21 +94,35 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Precision Architecture • Zero Compromise"
+                android:text="Precision Architecture • Paid Access"
                 android:textColor="#94A3B8"
                 android:textSize="13sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/ror_welcome_chip_paid"
+                android:paddingStart="8dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
+                android:text="★ PAID LICENSE REQUIRED"
+                android:textColor="#FFD54F"
+                android:textSize="9.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/ror_chip"
-                android:paddingStart="10dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="4dp"
+                android:paddingStart="8dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
                 android:text="● 100% ON-DEVICE"
                 android:textColor="#00E676"
-                android:textSize="10sp"
+                android:textSize="9.5sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -119,7 +133,7 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp"
             android:letterSpacing="0.08"
-            android:text="SYSTEM &amp; HARDWARE GOVERNANCE"
+            android:text="COMMERCIAL TERMS &amp; SYSTEM GOVERNANCE"
             android:textColor="#64748B"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -137,6 +151,160 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <!-- Card 0: Commercial License & Paid Access Requirement -->
+                <LinearLayout
+                    android:id="@+id/card_commercial_license"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_red"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="12dp"
+                            android:src="@drawable/ic_vip_active_badge"
+                            app:tint="#FFD700" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="COMMERCIAL PAID SOFTWARE"
+                                android:textColor="#FFD700"
+                                android:textSize="13.5sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Purchase License Required for Full Access"
+                                android:textColor="#FF6B81"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ror_welcome_chip_paid"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
+                            android:text="NOT FREE"
+                            android:textColor="#FFB300"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:lineSpacingExtra="3dp"
+                        android:text="REVROR is not free software. To unlock and enjoy all features, Ultra Gaming profiles, Phoenix Kernel Overclocking, Game Space floating tools, and Aim Boost, you must purchase an official commercial license from @revWhiteShadow."
+                        android:textColor="#E2E8F0"
+                        android:textSize="12sp" />
+
+                    <!-- Quick Action Buttons Inside Card -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btn_welcome_purchase_license"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/ror_welcome_btn_accept"
+                            android:gravity="center"
+                            android:text="🛒 Buy License"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btn_welcome_activate_key"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/ror_welcome_btn_outline"
+                            android:gravity="center"
+                            android:text="🔑 Enter Key"
+                            android:textColor="#FFD700"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Card 0.5: Official Source Code Card -->
+                <LinearLayout
+                    android:id="@+id/card_source_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ror_eula_card_slate"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Official GitHub Source Code"
+                            android:textColor="#38BDF8"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="github.com/revws/rorexp • UI &amp; Design Repo"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btn_welcome_view_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:background="@drawable/ror_welcome_chip_source"
+                        android:gravity="center"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="View Source ➔"
+                        android:textColor="#38BDF8"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <!-- Card 1: System Optimization (Teal / Cyan) -->
                 <LinearLayout
@@ -485,7 +653,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:letterSpacing="0.05"
-                    android:text="TEXT-ONLY OFFICIAL TERMS • GNU GPL-3.0"
+                    android:text="TEXT-ONLY OFFICIAL TERMS • COMMERCIAL EULA &amp; PAID LICENSE"
                     android:textColor="#FF3D60"
                     android:textSize="11sp"
                     android:textStyle="bold" />

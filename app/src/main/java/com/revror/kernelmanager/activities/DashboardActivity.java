@@ -126,13 +126,13 @@ import android.text.TextUtils;
 
 public class DashboardActivity extends AppCompatActivity {
     public static final String REVROR_SIGNATURE = "revror";
-    private static final String UPDATE_SITE = "https://github.com/revws/ror";
-    private static final String UPDATE_RELEASE_PAGE = "https://github.com/revws/ror/releases";
-    private static final String UPDATE_RELEASE_JSON = "https://github.com/revws/ror/releases/latest/download/release.json";
-    private static final String UPDATE_API = "https://api.github.com/repos/revws/ror/releases/latest";
-    private static final String UPDATE_RAW_JSON = "https://raw.githubusercontent.com/revws/ror/master/release.json";
-    private static final String UPDATE_RAW_JSON_MAIN = "https://raw.githubusercontent.com/revws/ror/main/release.json";
-    private static final String UPDATE_MANIFEST = "https://raw.githubusercontent.com/revws/ror/master/release.json";
+    private static final String UPDATE_SITE = "https://github.com/revws/rorexp";
+    private static final String UPDATE_RELEASE_PAGE = "https://github.com/revws/rorexp/releases";
+    private static final String UPDATE_RELEASE_JSON = "https://github.com/revws/rorexp/releases/latest/download/release.json";
+    private static final String UPDATE_API = "https://api.github.com/repos/revws/rorexp/releases/latest";
+    private static final String UPDATE_RAW_JSON = "https://raw.githubusercontent.com/revws/rorexp/master/release.json";
+    private static final String UPDATE_RAW_JSON_MAIN = "https://raw.githubusercontent.com/revws/rorexp/main/release.json";
+    private static final String UPDATE_MANIFEST = "https://raw.githubusercontent.com/revws/rorexp/master/release.json";
     private static final int SHIZUKU_PERMISSION = 6310;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -4057,28 +4057,36 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void showAbout() {
         new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Reincarnation of Revolutionary")
-                .setMessage("REVROR " + BuildConfig.VERSION_NAME + " • by revWhiteshadow\n\n"
-                        + "Official Releases: https://github.com/revws/ror\n\n"
-                        + "A single-app performance dashboard with built-in profiles, Shizuku fallback, live monitoring, kernel controls, and Android system tools.\n\n"
-                        + "Credits: revWhiteshadow\nTelegram: @godTspeed • @godspeedmode\n\n"
-                        + "Open-source components and retained upstream credits are documented under GPL-3.0-or-later.")
-                .setNeutralButton("Ko-fi / Support", (d, w) -> openUrl("https://ko-fi.com/revWS"))
-                .setNegativeButton("Licenses", (d, w) -> showOpenSourceLicenses())
-                .setPositiveButton("Close", null).show();
+                .setMessage("REVROR " + BuildConfig.VERSION_NAME + " • by revWhiteShadow\n\n"
+                        + "COMMERCIAL SOFTWARE • PURCHASE LICENSE FOR FULL ACCESS\n\n"
+                        + "REVROR is not free software. To unlock complete access to Ultra Gaming profiles, Phoenix Kernel Overclocking, Game Space floating HUD tools, Aim Boost, and hardware governors, you must purchase an official license.\n\n"
+                        + "Official Purchase & Developer Channels:\n"
+                        + "• Telegram: @revWhiteShadow (https://t.me/revWhiteShadow)\n"
+                        + "• Ko-fi / Support: https://ko-fi.com/revWS\n\n"
+                        + "Official GitHub Source (UI & Design):\n"
+                        + "• https://github.com/revws/rorexp\n\n"
+                        + "Public UI source code is available for design transparency and community theme contributions. All core hardware optimization engines remain proprietary.")
+                .setNeutralButton("Purchase License", (d, w) -> openUrl("https://t.me/revWhiteShadow"))
+                .setNegativeButton("GitHub Source", (d, w) -> openUrl("https://github.com/revws/rorexp"))
+                .setPositiveButton("Licenses & Terms", (d, w) -> showOpenSourceLicenses()).show();
     }
 
     private void showOpenSourceLicenses() {
         new AlertDialog.Builder(this, R.style.RorDialogTheme)
-                .setTitle("Open Source Licenses & Compliance")
-                .setMessage("REVROR • Reincarnation of Revolutionary is licensed under GNU General Public License v3.0 or later • GPL-3.0-or-later.\n\n"
-                        + "This application includes and builds upon trusted open source components:\n"
+                .setTitle("Commercial License & Source Terms")
+                .setMessage("REVROR • Reincarnation of Revolutionary\n"
+                        + "Commercial End User License & Source Policy\n\n"
+                        + "1. Commercial Paid Model:\n"
+                        + "This software is not free. A purchased license is required for complete access and execution of all performance modules.\n\n"
+                        + "2. Official Source Repository:\n"
+                        + "https://github.com/revws/rorexp\n"
+                        + "Provides the UI presentation layer and design stubs. Core kernel overclocking and license algorithms remain proprietary.\n\n"
+                        + "3. Third-Party Open Source Components:\n"
                         + "• TopJohnWu libsu: Apache 2.0\n"
                         + "• AndroidX Libraries: Apache 2.0\n"
                         + "• Google Material Components: Apache 2.0\n"
-                        + "• Linux Kernel sysfs interfaces & Android tuners: GPL-3.0\n\n"
-                        + "In compliance with GNU GPL-3.0, the license terms and open-source notices are preserved.\n"
-                        + "Full license text is available at:\nhttps://www.gnu.org/licenses/gpl-3.0.html")
-                .setPositiveButton("View GPL-3.0", (d, w) -> openUrl("https://www.gnu.org/licenses/gpl-3.0.html"))
+                        + "• Linux sysfs kernel interfaces: Dual GPL-2.0 / Sysfs API")
+                .setPositiveButton("View Source", (d, w) -> openUrl("https://github.com/revws/rorexp"))
                 .setNegativeButton("Close", null)
                 .show();
     }

@@ -11,13 +11,19 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/revror/ROR/actions"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white" alt="Build Status" /></a>
-  <a href="https://github.com/revror/ROR/releases"><img src="https://img.shields.io/badge/Release-v51.4-red?style=for-the-badge&logo=android&logoColor=white" alt="Version" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-crimson?style=for-the-badge&logo=gnu&logoColor=white" alt="License: GPL-3.0" /></a>
-  <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Android-11%20to%2014%20(API%2030--34)-black?style=for-the-badge&logo=android" alt="Target API" /></a>
-  <a href="https://shizuku.rikka.app/"><img src="https://img.shields.io/badge/Privilege-Root%20%2F%20Shizuku-darkred?style=for-the-badge&logo=linux" alt="Root / Shizuku" /></a>
-  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-Welcome-black?style=for-the-badge&logo=git&logoColor=white" alt="PRs Welcome" /></a>
+  <a href="https://github.com/revws/rorexp/actions"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=for-the-badge&logo=githubactions&logoColor=white" alt="Build Status" /></a>
+  <a href="https://github.com/revws/rorexp/releases"><img src="https://img.shields.io/badge/Release-v51.4-red?style=for-the-badge&logo=android&logoColor=white" alt="Version" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Commercial%20%2F%20Paid-crimson?style=for-the-badge&logo=keycdn&logoColor=white" alt="License: Commercial" /></a>
+  <a href="https://t.me/revWhiteShadow"><img src="https://img.shields.io/badge/Purchase%20License-Telegram-blue?style=for-the-badge&logo=telegram&logoColor=white" alt="Purchase License" /></a>
+  <a href="https://github.com/revws/rorexp"><img src="https://img.shields.io/badge/Source-GitHub-darkblue?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Source" /></a>
+  <a href="https://ko-fi.com/revWS"><img src="https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white" alt="Ko-fi" /></a>
 </p>
+
+> [!IMPORTANT]
+> **COMMERCIAL APPLICATION • PAID LICENSE REQUIRED FOR FULL ACCESS**  
+> REVROR is **not free software**. While the UI presentation layer and design components are published here on GitHub for transparency and community design contributions, **complete access to all features, kernel overclocking profiles, Game Space floating HUD tools, and Aim Boost requires a purchased commercial license**.  
+> - **Official Purchase Channels**: [@revWhiteShadow on Telegram](https://t.me/revWhiteShadow) &bull; [Ko-fi](https://ko-fi.com/revWS)  
+> - **Official Source Code**: [https://github.com/revws/rorexp](https://github.com/revws/rorexp)
 
 <p align="center">
   <em>Designed for competitive esports athletes, performance enthusiasts, and mobile power users who demand deterministic frame stability, zero touch latency, and intelligent thermal management without sacrificing hardware safety.</em>
@@ -236,11 +242,16 @@ We welcome pull requests, bug reports, and hardware suggestions!
 
 ---
 
-## 📄 License
+## 📄 Commercial License & Source Access Policy
 
-This open-source repository and all included application source code are licensed under the **GNU General Public License v3.0 (GPL-3.0-only)**. See the [LICENSE](LICENSE) file for complete details.
+REVROR is commercial proprietary software developed by **revWhiteShadow**.
+
+- **Software Status**: Paid commercial software. This application is **NOT free software**.
+- **Purchase Requirement**: Full access to all kernel tuning capabilities, Ultra Gaming profiles, and VIP Game Space features requires purchasing an authentic commercial license from [@revWhiteShadow on Telegram](https://t.me/revWhiteShadow) or [Ko-fi](https://ko-fi.com/revWS).
+- **Official Source Code**: Hosted at [https://github.com/revws/rorexp](https://github.com/revws/rorexp). Contains the UI presentation layer, vector assets, and design stubs for design transparency. Core kernel overclocking, root execution engines, and cryptographic licensing systems remain proprietary.
+- See the [LICENSE](LICENSE) file for complete commercial terms and conditions.
 
 ```
-Copyright (C) 2026 ROR Developers
-Licensed under the GNU General Public License, Version 3.0.
+Copyright (C) 2026 revWhiteShadow. All rights reserved.
+Commercial Software • Paid License Required for Full Access.
 ```
