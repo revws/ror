@@ -101,7 +101,7 @@ public class AboutFragment extends RecyclerViewFragment {
         licence.setDrawable(getResources().getDrawable(R.drawable.ic_gpl));
         licence.setTitle(getString(R.string.licence));
         licence.setSummary(getString(R.string.licence_summary));
-        licence.setOnItemClickListener(item -> Utils.launchWebView(getString(R.string.licence), "https://www.gnu.org/licenses/gpl-3.0-standalone.html", requireActivity()));
+        licence.setOnItemClickListener(item -> Utils.launchWebView(getString(R.string.licence), "https://www.apache.org/licenses/LICENSE-2.0", requireActivity()));
 
         DescriptionView sourcecode = new DescriptionView();
         sourcecode.setDrawable(getResources().getDrawable(R.drawable.ic_source));

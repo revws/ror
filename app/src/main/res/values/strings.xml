@@ -1154,7 +1154,7 @@
     <string name="donate_me_summary">Support development of this project</string>
     <string name="purchase_app">Buy Donation App</string>
     <string name="licence">License</string>
-    <string name="licence_summary">View GPL V3</string>
+    <string name="licence_summary">View Apache 2.0 License</string>
     <string name="share_app">Share App</string>
     <string name="share_app_summary">Share this app with your friends</string>
     <string name="share_app_message">Get REVROR %s from</string>
