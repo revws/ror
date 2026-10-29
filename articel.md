@@ -103,7 +103,7 @@ flowchart TD
 
 The ROR ecosystem features an integrated dual-tier architecture: the **Standard Open-Source Tier** and the **Phoenix Pro Performance System**.
 
-| Feature Capability | ROR Standard (GPL-3.0) | Phoenix Pro Gaming Tier |
+| Feature Capability | ROR Standard (Apache-2.0) | Phoenix Pro Gaming Tier |
 | :--- | :---: | :---: |
 | **Console Game Space** | Standard Tri-Deck Grid | Custom Esports Themes & Dynamic Shaders |
 | **Gaming Profiles** | Balanced, Gaming, Battery | Esports Peak, Extreme Cold, Competitive 144Hz |
@@ -227,7 +227,7 @@ pie title Feature Coverage Distribution
 
 | Evaluation Criteria | ROR Gaming Suite | Xiaomi Game Turbo | ASUS Armoury Crate | Franco Kernel Manager |
 | :--- | :---: | :---: | :---: | :---: |
-| **License & Transparency** | **Open Core (GPL-3.0)** | Closed Proprietary | Closed Proprietary | Closed Commercial |
+| **License & Transparency** | **Open Core (Apache-2.0)** | Closed Proprietary | Closed Proprietary | Closed Commercial |
 | **Universal ROM Support** | **YES (AOSP, MIUI, etc.)**| NO (MIUI/HyperOS only)| NO (ROG Phone only) | YES (Root Only) |
 | **Landscape Game Space** | **YES** | YES | YES | NO |
 | **Deep Kernel Tuning** | **YES** | NO | Partial | YES |
@@ -243,7 +243,7 @@ When modifying system kernel nodes and hardware parameters, safety is paramount.
 - **Thermal Safety Cut-Offs**: Hardcoded daemon safeguards terminate performance profiles if battery thermals breach 47°C, immediately dropping clocks to prevent hardware degradation.
 - **Volatile Tweaks by Default**: Sysfs kernel modifications are applied directly to volatile RAM interfaces (`/sys/`, `/proc/`). In the unlikely event of system instability, a standard device reboot instantly restores default factory kernel parameters.
 - **Zero Third-Party Telemetry**: ROR contains zero invasive tracking libraries, analytical trackers, or proprietary advertisement SDKs.
-- **Open GPL-3.0 Inspection**: The public distribution allows independent security review of application logic and superuser commands.
+- **Open Apache-2.0 Inspection**: The public distribution allows independent security review of application logic and superuser commands.
 
 ---
 

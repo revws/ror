@@ -20,9 +20,9 @@
     <em>The next-generation open-core esports console, dynamic kernel governor manager, and mobile gaming optimization platform for Android.</em>
   </p>
 
-<p align="center">
-    <a href="https://github.com/revws/ror"><img src="https://komarev.com/ghpvc/?username=revws&color=e11d48&style=for-the-badge&label=PROFILE+VIEWS" alt="Repo Views" /></a>
-</p>
+ <a href="https://github.com/revws">
+    <img src="https://profileviews.blueorbitdevs.workers.dev/?username=revws&amp;color=e11d48&amp;style=for-the-badge&amp;label=PROFILE+VIEWS" alt="Repo Views" />
+  </a>
   <p>
     <a href="https://github.com/revws/ror"><img src="https://img.shields.io/badge/Official%20Source-github.com%2Frevws%2Fror-e11d48?style=for-the-badge&logo=github&logoColor=white" alt="Official Source" /></a>
     <a href="https://t.me/godTspeed"><img src="https://img.shields.io/badge/Telegram-Official%20Channel-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel" /></a>
@@ -34,7 +34,7 @@
     <img src="https://img.shields.io/badge/Platform-Android%2010%20to%2017%2B%20%26%20Upcoming%20(API%2029--37%2B)-3b82f6?style=flat-square&logo=android" alt="Android Support" />
     <img src="https://img.shields.io/badge/Privilege-Root%20(Magisk%20%7C%20KSU%20%7C%20APatch)%20%2F%20Shizuku-06b6d4?style=flat-square&logo=android" alt="Root & Shizuku" />
     <img src="https://img.shields.io/badge/Architecture-arm64--v8a%20%7C%20armeabi--v7a%20%7C%20x86__64-6366f1?style=flat-square" alt="Supported Architectures" />
-    <img src="https://img.shields.io/badge/License-GPL--3.0-ef4444?style=flat-square&logo=gnu&logoColor=white" alt="GPL-3.0 License" />
+    <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square&logo=apache&logoColor=white" alt="Apache 2.0 License" />
   </p>
 
   ---
@@ -120,7 +120,7 @@ Build and distribute your own modified version anywhere, subject to the project'
 13. [Android Compatibility](#13-android-compatibility)
 14. [Root & Shizuku Requirements](#14-root--shizuku-requirements)
 15. [Installation](#15-installation)
-16. [GPL-3.0 License](#16-gpl-30-license)
+16. [Apache 2.0 License](#16-apache-20-license)
 17. [Frequently Asked Questions (FAQ)](#17-frequently-asked-questions)
 18. [Developer Information & Credits](#18-developer-information--credits)
 19. [Official Links](#19-official-links)
@@ -147,7 +147,7 @@ The ROR aesthetic is defined by an uncompromising high-contrast obsidian dark pa
 ## 3. Phoenix Premium System
 
 ROR incorporates a dual-tier modular architecture:
-- **Standard Edition (GPL-3.0 Public Open-Source)**: Delivers full core functionality including Game Space, Hardware Telemetry, Profile Governors, Kernel Sysfs controls, Screen Recorder, and the 21-tile Optimization Armory.
+- **Standard Edition (Apache 2.0 Public Open-Source)**: Delivers full core functionality including Game Space, Hardware Telemetry, Profile Governors, Kernel Sysfs controls, Screen Recorder, and the 21-tile Optimization Armory.
 - **Phoenix Pro System**: An enhanced tier featuring automated thread priority escalations, specialized hardware crosshairs with dynamic scaling, low-overhead IMU sensor polling loops, and direct Adreno/Mali GPU frequency clamping.
 
 Phoenix Pro utilizes a cryptographic license validation protocol (`KeygenService`) ensuring zero network telemetry or tracking.
@@ -306,12 +306,12 @@ Launch ROR and grant the required overlay and battery optimization permissions. 
 
 ---
 
-## 16. GPL-3.0 License
+## 16. Apache 2.0 License
 
-This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
-You are free to inspect, modify, and redistribute this software in accordance with the terms of the GPL-3.0 license.
+This project is licensed under the **Apache License, Version 2.0 (Apache-2.0)**.
+You are free to inspect, modify, distribute, and use this software for private or commercial purposes in accordance with the terms of the Apache License 2.0.
 
-*Note on Open-Source Distribution*: This public repository contains the modular source code and architectural components of ROR under GPL-3.0. Standalone build configurations and proprietary modules (such as specialized esports telemetry algorithms and Phoenix Pro binary assets) are decoupled and distributed exclusively through official compiled release packages.
+*Note on Open-Source Distribution*: This public repository contains the modular source code and architectural components of ROR under Apache-2.0. Standalone build configurations and proprietary modules (such as specialized esports telemetry algorithms and Phoenix Pro binary assets) are decoupled and distributed exclusively through official compiled release packages.
 
 ---
 
@@ -331,7 +331,7 @@ A: The Aim Boost module operates purely as a system window overlay and does not 
 ## 18. Developer Information & Credits
 
 - **Lead Architect & Developer**: revWS (revWhiteShadow)
-- **Technical Support**: [wahyu6070](https://github.com/wahyu6070) & [mshan](https://t.me/M_Shan_Op) [Spectrum](https://github.com/frap129/spectrum)
+- **Technical Support**: [wahyu6070](https://github.com/wahyu6070) & [mshan](https://t.me/M_Shan_Op) and [frap129 for Spectrum](https://github.com/frap129/spectrum)
 - **Telegram Contact**: [@revwhiteshadow](https://t.me/revwhiteshadow)
 - **Ecosystem**: Reincarnation of Revolutionary (ROR)
 
