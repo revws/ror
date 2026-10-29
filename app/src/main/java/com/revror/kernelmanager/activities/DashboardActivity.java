@@ -126,13 +126,13 @@ import android.text.TextUtils;
 
 public class DashboardActivity extends AppCompatActivity {
     public static final String REVROR_SIGNATURE = "revror";
-    private static final String UPDATE_SITE = "https://github.com/revws/rorexp";
-    private static final String UPDATE_RELEASE_PAGE = "https://github.com/revws/rorexp/releases";
-    private static final String UPDATE_RELEASE_JSON = "https://github.com/revws/rorexp/releases/latest/download/release.json";
-    private static final String UPDATE_API = "https://api.github.com/repos/revws/rorexp/releases/latest";
-    private static final String UPDATE_RAW_JSON = "https://raw.githubusercontent.com/revws/rorexp/master/release.json";
-    private static final String UPDATE_RAW_JSON_MAIN = "https://raw.githubusercontent.com/revws/rorexp/main/release.json";
-    private static final String UPDATE_MANIFEST = "https://raw.githubusercontent.com/revws/rorexp/master/release.json";
+    private static final String UPDATE_SITE = "https://github.com/revws/ror";
+    private static final String UPDATE_RELEASE_PAGE = "https://github.com/revws/ror/releases";
+    private static final String UPDATE_RELEASE_JSON = "https://github.com/revws/ror/releases/latest/download/release.json";
+    private static final String UPDATE_API = "https://api.github.com/repos/revws/ror/releases/latest";
+    private static final String UPDATE_RAW_JSON = "https://raw.githubusercontent.com/revws/ror/master/release.json";
+    private static final String UPDATE_RAW_JSON_MAIN = "https://raw.githubusercontent.com/revws/ror/main/release.json";
+    private static final String UPDATE_MANIFEST = "https://raw.githubusercontent.com/revws/ror/master/release.json";
     private static final int SHIZUKU_PERMISSION = 6310;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -184,6 +184,7 @@ public class DashboardActivity extends AppCompatActivity {
                         profileStatus.setTextColor(Color.rgb(105, 220, 255));
                         rootReady = true;
                         setProfileAccess(true);
+                        GsmProfileManager.saveSelectedProfile(DashboardActivity.this, reqProfile);
                         break;
                     case FAILED:
                         profileStatus.setText(message);
@@ -356,31 +357,16 @@ public class DashboardActivity extends AppCompatActivity {
         updateVipMorePageStatus();
         updateProfileEngineUi();
         refreshCustomProfilesUi();
+        int restoredProf = activeProfileForDisplayedEngine();
+        if (restoredProf >= 0 && applyingProfile < 0) {
+            applyingProfile = restoredProf;
+            selectProfile(applyingProfile);
+            applyProfileAppearance(applyingProfile);
+        }
         int targetPage = getIntent().getIntExtra("open_page", -1);
         if (targetPage >= 0) {
             showPage(targetPage);
             getIntent().removeExtra("open_page");
-        }
-        if (getIntent().hasExtra("open_vip_feature")) {
-            String feat = getIntent().getStringExtra("open_vip_feature");
-            RorLicenseManager.showVipRequiredDialog(this, feat, null);
-            getIntent().removeExtra("open_vip_feature");
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        int targetPage = intent.getIntExtra("open_page", -1);
-        if (targetPage >= 0) {
-            showPage(targetPage);
-            intent.removeExtra("open_page");
-        }
-        if (intent.hasExtra("open_vip_feature")) {
-            String feat = intent.getStringExtra("open_vip_feature");
-            RorLicenseManager.showVipRequiredDialog(this, feat, null);
-            intent.removeExtra("open_vip_feature");
         }
     }
 
@@ -764,14 +750,24 @@ public class DashboardActivity extends AppCompatActivity {
 
     private String activeProfileEngine() {
         String active = getSharedPreferences("ror_profiles", MODE_PRIVATE).getString("active_engine", "");
-        return "phoenix".equals(active) ? "Phoenix" : "regular".equals(active) ? "Regular" : "";
+        if (active.isEmpty()) {
+            active = GsmProfileManager.isPhoenixSelected(this) ? "phoenix" : "regular";
+        }
+        return "phoenix".equalsIgnoreCase(active) ? "Phoenix" : "Regular";
     }
 
     private int activeProfileForDisplayedEngine() {
+        int prof = getSharedPreferences("ror_profiles", MODE_PRIVATE).getInt("active_profile", -1);
+        if (prof < 0) {
+            prof = GsmProfileManager.selectedProfile(this);
+        }
         String active = activeProfileEngine();
-        if ((GsmProfileManager.isPhoenixSelected(this) && !"Phoenix".equals(active))
-                || (!GsmProfileManager.isPhoenixSelected(this) && !"Regular".equals(active))) return -1;
-        return getSharedPreferences("ror_profiles", MODE_PRIVATE).getInt("active_profile", -1);
+        boolean phoenixSelected = GsmProfileManager.isPhoenixSelected(this);
+        if ((phoenixSelected && !"Phoenix".equals(active))
+                || (!phoenixSelected && !"Regular".equals(active))) {
+            return GsmProfileManager.selectedProfile(this);
+        }
+        return prof >= 0 ? prof : GsmProfileManager.selectedProfile(this);
     }
 
     private void updateProfileEngineUi() {
@@ -1372,6 +1368,7 @@ public class DashboardActivity extends AppCompatActivity {
         applyingProfile = profile;
         selectProfile(profile);
         applyProfileAppearance(profile);
+        GsmProfileManager.saveSelectedProfile(this, profile);
         com.revror.kernelmanager.utils.profile.CustomProfileManager.clearActiveCustomProfile(this);
         refreshCustomProfilesUi();
         boolean phoenix = GsmProfileManager.usesPhoenixWorker(this, profile);
@@ -3976,22 +3973,185 @@ public class DashboardActivity extends AppCompatActivity {
 
             postToUi(() -> {
                 if (hasUpdate) {
-                    new AlertDialog.Builder(this, R.style.RorDialogTheme)
-                            .setTitle("REVROR update available • " + finalVer)
-                            .setMessage(finalNotes.isEmpty() ? "A new update is available on GitHub releases." : finalNotes)
-                            .setNegativeButton("Later", null)
-                            .setPositiveButton("Download update", (d, w) -> openUrl(finalUrl))
-                            .show();
+                    showUpdateAvailableDialog(finalVer, finalNotes, finalUrl, true);
                 } else if (interactive) {
-                    new AlertDialog.Builder(this, R.style.RorDialogTheme)
-                            .setTitle("REVROR is up to date")
-                            .setMessage("Installed version: " + BuildConfig.VERSION_NAME + "\nChecked against official GitHub releases.")
-                            .setNegativeButton("Close", null)
-                            .setPositiveButton("Releases page", (d, w) -> openUrl(UPDATE_RELEASE_PAGE))
-                            .show();
+                    showUpToDateDialog(finalVer, finalNotes, finalUrl);
                 }
             });
         });
+    }
+
+    private void showUpdateAvailableDialog(String versionTitle, String releaseNotes, String downloadUrl, boolean hasUpdate) {
+        if (isFinishing() || isDestroyed()) return;
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_ror_update, null);
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.RorDialogTheme)
+                .setView(dialogView)
+                .create();
+
+        TextView titleView = dialogView.findViewById(R.id.update_dialog_header_title);
+        TextView subView = dialogView.findViewById(R.id.update_dialog_header_sub);
+        TextView curVerView = dialogView.findViewById(R.id.update_current_version);
+        TextView newVerView = dialogView.findViewById(R.id.update_new_version);
+        TextView portalLink = dialogView.findViewById(R.id.update_portal_link);
+        View cardPortal = dialogView.findViewById(R.id.card_download_portal);
+        LinearLayout changelogContainer = dialogView.findViewById(R.id.update_changelog_container);
+        TextView fallbackNotes = dialogView.findViewById(R.id.update_fallback_notes);
+        TextView creditsText = dialogView.findViewById(R.id.update_credits_text);
+        View btnClose = dialogView.findViewById(R.id.btn_update_close);
+        TextView btnLater = dialogView.findViewById(R.id.btn_update_later);
+        View btnGithub = dialogView.findViewById(R.id.btn_update_github);
+        TextView btnDownload = dialogView.findViewById(R.id.btn_update_download);
+
+        String displayVer = (versionTitle == null || versionTitle.isEmpty()) ? ("v" + BuildConfig.VERSION_NAME) : (versionTitle.startsWith("v") ? versionTitle : "v" + versionTitle);
+
+        if (curVerView != null) curVerView.setText("v" + BuildConfig.VERSION_NAME);
+        if (newVerView != null) newVerView.setText(displayVer);
+        if (btnDownload != null) {
+            btnDownload.setText(hasUpdate ? ("DOWNLOAD (" + displayVer + ")") : "DOWNLOAD PORTAL");
+        }
+
+        if (!hasUpdate && titleView != null) {
+            titleView.setText("What's New in " + displayVer);
+            if (subView != null) subView.setText("Official Release Highlights & Changelog");
+        }
+
+        // Determine portal URL: official download link portal
+        String officialPortal = "https://magiskmodule.gitlab.io/magisk-modules-repo/ror-android-game-launcher-and-kernel-manager/";
+        String portalTargetUrl = officialPortal;
+        if (downloadUrl != null && (downloadUrl.contains("magiskmodule.gitlab.io") || downloadUrl.endsWith(".apk"))) {
+            portalTargetUrl = downloadUrl;
+        }
+
+        final String finalPortalUrl = portalTargetUrl;
+        if (portalLink != null) {
+            portalLink.setText("🔗 " + finalPortalUrl);
+            portalLink.setOnClickListener(v -> openUrl(finalPortalUrl));
+        }
+        if (cardPortal != null) {
+            cardPortal.setOnClickListener(v -> openUrl(finalPortalUrl));
+        }
+
+        // Parse release notes markdown into structured changelog cards
+        boolean parsedAny = false;
+        if (releaseNotes != null && !releaseNotes.trim().isEmpty()) {
+            String[] lines = releaseNotes.split("\r?\n");
+            for (String rawLine : lines) {
+                String line = rawLine.trim();
+                if (line.startsWith("- ") || line.startsWith("* ")) {
+                    String content = line.substring(2).trim();
+                    String itemTitle = "";
+                    String itemDetail = "";
+
+                    // Look for **Title**: or **Title** - pattern
+                    if (content.startsWith("**")) {
+                        int endBold = content.indexOf("**", 2);
+                        if (endBold != -1) {
+                            itemTitle = content.substring(2, endBold).trim();
+                            String rest = content.substring(endBold + 2).trim();
+                            if (rest.startsWith(":") || rest.startsWith("-")) {
+                                rest = rest.substring(1).trim();
+                            }
+                            itemDetail = rest;
+                        }
+                    }
+
+                    if (itemTitle.isEmpty()) {
+                        int colonIdx = content.indexOf(":");
+                        if (colonIdx > 0 && colonIdx < 40) {
+                            itemTitle = content.substring(0, colonIdx).replace("**", "").replace("*", "").trim();
+                            itemDetail = content.substring(colonIdx + 1).replace("**", "").replace("*", "").trim();
+                        } else {
+                            itemTitle = content.replace("**", "").replace("*", "").trim();
+                        }
+                    }
+
+                    if (!itemTitle.isEmpty()) {
+                        View itemView = getLayoutInflater().inflate(R.layout.dialog_ror_update_item, changelogContainer, false);
+                        TextView tvTitle = itemView.findViewById(R.id.update_item_title);
+                        TextView tvDetail = itemView.findViewById(R.id.update_item_detail);
+
+                        if (tvTitle != null) tvTitle.setText(itemTitle);
+                        if (tvDetail != null) {
+                            if (!itemDetail.isEmpty()) {
+                                tvDetail.setText(itemDetail);
+                                tvDetail.setVisibility(View.VISIBLE);
+                            } else {
+                                tvDetail.setVisibility(View.GONE);
+                            }
+                        }
+                        changelogContainer.addView(itemView);
+                        parsedAny = true;
+                    }
+                } else if (line.toLowerCase(Locale.US).contains("lead architect") || line.toLowerCase(Locale.US).contains("credits")) {
+                    if (creditsText != null) {
+                        String cleanCredits = line.replaceAll("<[^>]*>", "").replace("**", "").replace("<sub>", "").replace("</sub>", "").trim();
+                        creditsText.setText(cleanCredits);
+                    }
+                }
+            }
+        }
+
+        if (!parsedAny && fallbackNotes != null) {
+            fallbackNotes.setText(releaseNotes == null || releaseNotes.isEmpty() ? "A new update is available on GitHub releases." : releaseNotes);
+            fallbackNotes.setVisibility(View.VISIBLE);
+        }
+
+        if (btnClose != null) btnClose.setOnClickListener(v -> dialog.dismiss());
+        if (btnLater != null) {
+            btnLater.setText(hasUpdate ? "LATER" : "CLOSE");
+            btnLater.setOnClickListener(v -> dialog.dismiss());
+        }
+        if (btnGithub != null) btnGithub.setOnClickListener(v -> {
+            dialog.dismiss();
+            openUrl(UPDATE_RELEASE_PAGE);
+        });
+        if (btnDownload != null) btnDownload.setOnClickListener(v -> {
+            dialog.dismiss();
+            openUrl(finalPortalUrl);
+        });
+
+        dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.94);
+            int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.85);
+            dialog.getWindow().setLayout(width, height);
+        }
+    }
+
+    private void showUpToDateDialog(String versionTitle, String releaseNotes, String downloadUrl) {
+        if (isFinishing() || isDestroyed()) return;
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_ror_up_to_date, null);
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.RorDialogTheme)
+                .setView(dialogView)
+                .create();
+
+        TextView verText = dialogView.findViewById(R.id.up_to_date_version_text);
+        if (verText != null) {
+            verText.setText("Installed Version: v" + BuildConfig.VERSION_NAME + " (Build " + BuildConfig.VERSION_CODE + ")");
+        }
+
+        View btnClose = dialogView.findViewById(R.id.btn_up_to_date_close);
+        TextView btnReleases = dialogView.findViewById(R.id.btn_up_to_date_releases);
+        TextView btnDone = dialogView.findViewById(R.id.btn_up_to_date_done);
+
+        if (btnReleases != null) {
+            btnReleases.setText("VIEW CHANGELOG");
+            btnReleases.setOnClickListener(v -> {
+                dialog.dismiss();
+                showUpdateAvailableDialog(versionTitle, releaseNotes, downloadUrl, false);
+            });
+        }
+
+        if (btnClose != null) btnClose.setOnClickListener(v -> dialog.dismiss());
+        if (btnDone != null) btnDone.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.92);
+            dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     private JSONObject fetchJsonFromUrl(String urlString) throws Exception {
@@ -4059,36 +4219,28 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void showAbout() {
         new AlertDialog.Builder(this, R.style.RorDialogTheme).setTitle("Reincarnation of Revolutionary")
-                .setMessage("REVROR " + BuildConfig.VERSION_NAME + " • by revWhiteShadow\n\n"
-                        + "COMMERCIAL SOFTWARE • PURCHASE LICENSE FOR FULL ACCESS\n\n"
-                        + "REVROR is not free software. To unlock complete access to Ultra Gaming profiles, Phoenix Kernel Overclocking, Game Space floating HUD tools, Aim Boost, and hardware governors, you must purchase an official license.\n\n"
-                        + "Official Purchase & Developer Channels:\n"
-                        + "• Telegram: @revWhiteShadow (https://t.me/revWhiteShadow)\n"
-                        + "• Ko-fi / Support: https://ko-fi.com/revWS\n\n"
-                        + "Official GitHub Source (UI & Design):\n"
-                        + "• https://github.com/revws/rorexp\n\n"
-                        + "Public UI source code is available for design transparency and community theme contributions. All core hardware optimization engines remain proprietary.")
-                .setNeutralButton("Purchase License", (d, w) -> openUrl("https://t.me/revWhiteShadow"))
-                .setNegativeButton("GitHub Source", (d, w) -> openUrl("https://github.com/revws/rorexp"))
-                .setPositiveButton("Licenses & Terms", (d, w) -> showOpenSourceLicenses()).show();
+                .setMessage("REVROR " + BuildConfig.VERSION_NAME + " • by revWhiteshadow\n\n"
+                        + "Official Releases: https://github.com/revws/ror\n\n"
+                        + "A single-app performance dashboard with built-in profiles, Shizuku fallback, live monitoring, kernel controls, and Android system tools.\n\n"
+                        + "Credits: revWhiteshadow\nTelegram: @godTspeed • @godspeedmode\n\n"
+                        + "Open-source components and retained upstream credits are documented under GPL-3.0-or-later.")
+                .setNeutralButton("Ko-fi / Support", (d, w) -> openUrl("https://ko-fi.com/revWS"))
+                .setNegativeButton("Licenses", (d, w) -> showOpenSourceLicenses())
+                .setPositiveButton("Close", null).show();
     }
 
     private void showOpenSourceLicenses() {
         new AlertDialog.Builder(this, R.style.RorDialogTheme)
-                .setTitle("Commercial License & Source Terms")
-                .setMessage("REVROR • Reincarnation of Revolutionary\n"
-                        + "Commercial End User License & Source Policy\n\n"
-                        + "1. Commercial Paid Model:\n"
-                        + "This software is not free. A purchased license is required for complete access and execution of all performance modules.\n\n"
-                        + "2. Official Source Repository:\n"
-                        + "https://github.com/revws/rorexp\n"
-                        + "Provides the UI presentation layer and design stubs. Core kernel overclocking and license algorithms remain proprietary.\n\n"
-                        + "3. Third-Party Open Source Components:\n"
+                .setTitle("Open Source Licenses & Compliance")
+                .setMessage("REVROR • Reincarnation of Revolutionary is licensed under GNU General Public License v3.0 or later • GPL-3.0-or-later.\n\n"
+                        + "This application includes and builds upon trusted open source components:\n"
                         + "• TopJohnWu libsu: Apache 2.0\n"
                         + "• AndroidX Libraries: Apache 2.0\n"
                         + "• Google Material Components: Apache 2.0\n"
-                        + "• Linux sysfs kernel interfaces: Dual GPL-2.0 / Sysfs API")
-                .setPositiveButton("View Source", (d, w) -> openUrl("https://github.com/revws/rorexp"))
+                        + "• Linux Kernel sysfs interfaces & Android tuners: GPL-3.0\n\n"
+                        + "In compliance with GNU GPL-3.0, the license terms and open-source notices are preserved.\n"
+                        + "Full license text is available at:\nhttps://www.gnu.org/licenses/gpl-3.0.html")
+                .setPositiveButton("View GPL-3.0", (d, w) -> openUrl("https://www.gnu.org/licenses/gpl-3.0.html"))
                 .setNegativeButton("Close", null)
                 .show();
     }

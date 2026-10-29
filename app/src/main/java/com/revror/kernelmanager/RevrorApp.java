@@ -14,6 +14,12 @@ public class RevrorApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        try {
+            com.topjohnwu.superuser.Shell.setDefaultBuilder(
+                    com.topjohnwu.superuser.Shell.Builder.create()
+                            .setFlags(com.topjohnwu.superuser.Shell.FLAG_REDIRECT_STDERR)
+                            .setTimeout(15));
+        } catch (Throwable ignored) {}
         com.revror.kernelmanager.utils.ProfileDiagnostics.install(this);
         AppIntegrity.enforce(this);
     }

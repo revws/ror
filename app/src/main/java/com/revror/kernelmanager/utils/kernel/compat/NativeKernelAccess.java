@@ -138,6 +138,30 @@ public final class NativeKernelAccess {
     /**
      * Ensures node has writable permissions.
      */
+    /**
+     * Executes atomic batch writes across multiple sysfs/kernel nodes in a single root IPC roundtrip.
+     */
+    public static void writeBatch(String... pathValuePairs) {
+        if (pathValuePairs == null || pathValuePairs.length < 2) return;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < pathValuePairs.length - 1; i += 2) {
+            String p = pathValuePairs[i];
+            String v = pathValuePairs[i + 1];
+            if (p == null || v == null) continue;
+            String cleanVal = v.trim();
+            sb.append("[ -e '").append(p).append("' ] && { [ ! -w '").append(p)
+              .append("' ] && chmod 0644 '").append(p).append("' 2>/dev/null; echo '")
+              .append(cleanVal.replace("'", "'\\''")).append("' > '").append(p).append("' 2>/dev/null; }; ");
+        }
+        if (sb.length() > 0) {
+            try {
+                RootUtils.runCommand(sb.toString());
+            } catch (Throwable t) {
+                Log.w(TAG, "Batch write failed: " + t.getMessage());
+            }
+        }
+    }
+
     public static void ensureWritable(@NonNull String path) {
         if (path == null || path.isEmpty()) return;
         RootUtils.runCommand("[ -e '" + path + "' ] && [ ! -w '" + path + "' ] && chmod 0644 '" + path + "' 2>/dev/null");

@@ -58,11 +58,11 @@ public final class RorLicenseManager {
     public static boolean applyLicense(Context context, String token) { return false; }
     public static void removeLicense(Context context) {}
     public static boolean isPremiumActive(Context context) { return false; }
-    public static String getLicenseStatusDescription(Context context) { return "Open-Source Community Edition"; }
+    public static String getLicenseStatusDescription(Context context) { return "Commercial License Required (Evaluation)"; }
     public static boolean isExpired(String expiresStr) { return false; }
-    public static String getExpiresTimestamp(Context context) { return "LIFETIME"; }
-    public static boolean isLifetime(Context context) { return true; }
-    public static String formatRemainingTime(String expiresStr) { return "Permanent (Community)"; }
+    public static String getExpiresTimestamp(Context context) { return "EVALUATION"; }
+    public static boolean isLifetime(Context context) { return false; }
+    public static String formatRemainingTime(String expiresStr) { return "License Purchase Required"; }
     public static void showVipRequiredDialog(Activity activity, String featureName, Runnable onUnlocked) {}
     public static final String KEY_LAST_EXPIRY_REMINDER = "last_expiry_reminder_day";
     public static void checkAndSendExpirationReminder(Context context) {}

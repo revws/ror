@@ -47,7 +47,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public final class ProfileExecutionCoordinator {
 
     private static final String TAG = "ProfileExecutionCoord";
-    private static final long OPERATION_TIMEOUT_MS = 10_000L; // 10s watchdog
+    private static final long OPERATION_TIMEOUT_MS = 25_000L; // 10s watchdog
 
     public enum State {
         IDLE("Idle"),
@@ -106,7 +106,18 @@ public final class ProfileExecutionCoordinator {
     private volatile Future<?> mCurrentTask = null;
 
     // Concurrency & Dispatchers
-    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor(r -> {
+    private synchronized void resetExecutor() {
+        try {
+            mExecutor.shutdownNow();
+        } catch (Throwable ignored) {}
+        mExecutor = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r, "RorProfileCoordinatorWorker");
+            t.setPriority(Thread.MAX_PRIORITY);
+            return t;
+        });
+    }
+
+    private ExecutorService mExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r, "RorProfileCoordinatorWorker");
         t.setPriority(Thread.MAX_PRIORITY);
         return t;
@@ -211,16 +222,15 @@ public final class ProfileExecutionCoordinator {
 
             try {
                 // 1. Root and Capability Verification
-                transitionTo(State.PREPARING, profile, "Verifying privileged access...", opId);
                 ProfileDiagnostics.stage(context, "coordinator-prepare", profile);
 
-                boolean hasRoot = RootUtils.rootAccess();
+                boolean hasRoot = GsmProfileManager.isRootEnabled(context) || RootUtils.rootAccess();
                 if (!hasRoot) {
                     throw new IllegalStateException("Privileged root access was not granted or denied by SU manager");
                 }
 
                 // 2. Applying Kernel Configuration
-                transitionTo(State.APPLYING, profile, "Applying native kernel tweaks...", opId);
+                transitionTo(State.APPLYING, profile, "Applying " + GsmProfileManager.getProfileName(context, profile) + "...", opId);
                 ProfileDiagnostics.stage(context, "coordinator-apply", profile);
                 logDebug(opId, "Applying native kernel configuration for profile " + profile);
 
@@ -313,6 +323,7 @@ public final class ProfileExecutionCoordinator {
                     if (mCurrentTask != null && !mCurrentTask.isDone()) {
                         mCurrentTask.cancel(true);
                     }
+                    resetExecutor();
                     transitionTo(State.FAILED, profile, "Profile operation timed out. Safe state restored.", opId);
                     mState.set(State.IDLE);
                     mCurrentApplyingProfile = -1;

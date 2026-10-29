@@ -134,7 +134,7 @@ public final class UniversalProfileResolver {
             platformLogs.addAll(backend.applyGamingOptimizations(true));
         } else if (isGamingProfile) {
             platformLogs.addAll(backend.applyGamingOptimizations(false));
-        } else if ((!isPhoenix && (profileId == 2 || profileId == 3)) || (isPhoenix && (profileId == 0 || profileId == 2))) {
+        } else if (profileId == 2 || (!isPhoenix && profileId == 3)) {
             platformLogs.addAll(backend.applyBatteryOptimizations());
         } else {
             platformLogs.addAll(backend.applyBalancedOptimizations());
@@ -172,13 +172,15 @@ public final class UniversalProfileResolver {
         int count = 0;
         for (KernelCompatEngine.BlockDevice bdev : hw.blockDevices) {
             String chosen = KernelCompatEngine.resolveIoScheduler(preferredSched, bdev.availableSchedulers);
-            NativeKernelAccess.writeString(bdev.schedulerPath, chosen);
-            NativeKernelAccess.writeString(bdev.queuePath + "/read_ahead_kb", String.valueOf(raKb));
-            NativeKernelAccess.writeString(bdev.queuePath + "/iostats", isGamingProfile ? "0" : "1");
-            NativeKernelAccess.writeString(bdev.queuePath + "/rq_affinity", "2");
-            NativeKernelAccess.writeString(bdev.queuePath + "/add_random", "0");
-            NativeKernelAccess.writeString(bdev.queuePath + "/rotational", "0");
-            NativeKernelAccess.writeString(bdev.queuePath + "/nomerges", isGamingProfile ? "2" : "0");
+            NativeKernelAccess.writeBatch(
+                    bdev.schedulerPath, chosen,
+                    bdev.queuePath + "/read_ahead_kb", String.valueOf(raKb),
+                    bdev.queuePath + "/iostats", isGamingProfile ? "0" : "1",
+                    bdev.queuePath + "/rq_affinity", "2",
+                    bdev.queuePath + "/add_random", "0",
+                    bdev.queuePath + "/rotational", "0",
+                    bdev.queuePath + "/nomerges", isGamingProfile ? "2" : "0"
+            );
             count++;
         }
         logs.add("Optimized " + count + " block storage devices (Scheduler=" + preferredSched + ", ReadAhead=" + raKb + "KB)");
@@ -195,7 +197,7 @@ public final class UniversalProfileResolver {
         String dirtyBgRatio;
 
         boolean isGamingProfile = (profileId == 4 || profileId == 5 || profileId == 6 || profileId == 7 || (isPhoenix && profileId == 3));
-        if ((!isPhoenix && (profileId == 2 || profileId == 3)) || (isPhoenix && (profileId == 0 || profileId == 2))) {
+        if (profileId == 2 || (!isPhoenix && profileId == 3)) {
             // Battery / CoolDown
             swappiness = (ramMb > 6000) ? "20" : "40";
             vfsCachePressure = "50";
@@ -221,22 +223,23 @@ public final class UniversalProfileResolver {
             dirtyBgRatio = "10";
         }
 
-        NativeKernelAccess.writeString("/proc/sys/vm/swappiness", swappiness);
-        NativeKernelAccess.writeString("/proc/sys/vm/vfs_cache_pressure", vfsCachePressure);
-        NativeKernelAccess.writeString("/proc/sys/vm/dirty_ratio", dirtyRatio);
-        NativeKernelAccess.writeString("/proc/sys/vm/dirty_background_ratio", dirtyBgRatio);
-        NativeKernelAccess.writeString("/proc/sys/vm/dirty_expire_centisecs", isGamingProfile ? "500" : "1500");
-        NativeKernelAccess.writeString("/proc/sys/vm/dirty_writeback_centisecs", isGamingProfile ? "250" : "1000");
-        NativeKernelAccess.writeString("/proc/sys/vm/laptop_mode", "0");
-        NativeKernelAccess.writeString("/proc/sys/vm/oom_dump_tasks", "0");
+        NativeKernelAccess.writeBatch(
+                "/proc/sys/vm/swappiness", swappiness,
+                "/proc/sys/vm/vfs_cache_pressure", vfsCachePressure,
+                "/proc/sys/vm/dirty_ratio", dirtyRatio,
+                "/proc/sys/vm/dirty_background_ratio", dirtyBgRatio,
+                "/proc/sys/vm/dirty_expire_centisecs", isGamingProfile ? "500" : "1500",
+                "/proc/sys/vm/dirty_writeback_centisecs", isGamingProfile ? "250" : "1000",
+                "/proc/sys/vm/laptop_mode", "0",
+                "/proc/sys/vm/oom_dump_tasks", "0",
+                "/proc/sys/vm/oom_kill_allocating_task", "0"
+        );
 
         if (profileId == 3 || profileId == 5) {
-            NativeKernelAccess.writeString("/proc/sys/vm/drop_caches", "3");
-            NativeKernelAccess.writeString("/proc/sys/vm/compact_memory", "1");
-        }
-
-        if (NativeKernelAccess.exists("/proc/sys/vm/oom_kill_allocating_task")) {
-            NativeKernelAccess.writeString("/proc/sys/vm/oom_kill_allocating_task", "0");
+            NativeKernelAccess.writeBatch(
+                    "/proc/sys/vm/drop_caches", "3",
+                    "/proc/sys/vm/compact_memory", "1"
+            );
         }
 
         logs.add("VM tuned for " + ramMb + "MB RAM (Swappiness=" + swappiness + ", CachePressure=" + vfsCachePressure + ")");
@@ -245,57 +248,65 @@ public final class UniversalProfileResolver {
     private static void applySchedulerOptimizations(UniversalHardwareDetector.DeviceHardwareProfile hw,
                                                    int profileId, boolean isPhoenix, List<String> logs) {
         boolean isGamingProfile = (profileId == 4 || profileId == 5 || profileId == 6 || profileId == 7 || (isPhoenix && profileId == 3));
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_boost", isGamingProfile ? "1" : "0");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_tunable_scaling", "0");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_latency_ns", isGamingProfile ? "4000000" : "10000000");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_min_granularity_ns", isGamingProfile ? "500000" : "2000000");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_wakeup_granularity_ns", isGamingProfile ? "1000000" : "2500000");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_child_runs_first", "0");
-        NativeKernelAccess.writeString("/proc/sys/kernel/sched_autogroup_enabled", isGamingProfile ? "0" : "1");
+
+        NativeKernelAccess.writeBatch(
+                "/proc/sys/kernel/sched_boost", isGamingProfile ? "1" : "0",
+                "/proc/sys/kernel/sched_tunable_scaling", "0",
+                "/proc/sys/kernel/sched_latency_ns", isGamingProfile ? "4000000" : "10000000",
+                "/proc/sys/kernel/sched_min_granularity_ns", isGamingProfile ? "500000" : "2000000",
+                "/proc/sys/kernel/sched_wakeup_granularity_ns", isGamingProfile ? "1000000" : "2500000",
+                "/proc/sys/kernel/sched_child_runs_first", "0",
+                "/proc/sys/kernel/sched_autogroup_enabled", isGamingProfile ? "0" : "1"
+        );
 
         // Android 12+ UCLAMP vs Android 11- SchedTune
         if (hw.hasUclamp) {
             String uclampMin = (profileId == 5) ? (isPhoenix ? "60" : "50") : (isGamingProfile ? "30" : "0");
-            NativeKernelAccess.writeString("/dev/cpuctl/top-app/cpu.uclamp.min", uclampMin);
-            if (NativeKernelAccess.exists("/dev/cpuctl/top-app/cpu.uclamp.latency_sensitive")) {
-                NativeKernelAccess.writeString("/dev/cpuctl/top-app/cpu.uclamp.latency_sensitive", isGamingProfile ? "1" : "0");
-            }
+            NativeKernelAccess.writeBatch(
+                    "/dev/cpuctl/top-app/cpu.uclamp.min", uclampMin,
+                    "/dev/cpuctl/top-app/cpu.uclamp.latency_sensitive", isGamingProfile ? "1" : "0"
+            );
             logs.add("Applied Android 12+ UCLAMP boost (Min=" + uclampMin + "%)");
         } else if (hw.hasSchedtune) {
             String stuneBoost = (profileId == 5) ? (isPhoenix ? "50" : "40") : (isGamingProfile ? "20" : "0");
-            NativeKernelAccess.writeString("/dev/stune/top-app/schedtune.boost", stuneBoost);
-            NativeKernelAccess.writeString("/dev/stune/top-app/schedtune.prefer_idle", isGamingProfile ? "1" : "0");
+            NativeKernelAccess.writeBatch(
+                    "/dev/stune/top-app/schedtune.boost", stuneBoost,
+                    "/dev/stune/top-app/schedtune.prefer_idle", isGamingProfile ? "1" : "0"
+            );
             logs.add("Applied EAS SchedTune boost (Boost=" + stuneBoost + "%)");
         }
 
         // Sched features
         if (NativeKernelAccess.exists("/sys/kernel/debug/sched_features")) {
-            NativeKernelAccess.writeString("/sys/kernel/debug/sched_features", isGamingProfile ? "NO_GENTLE_FAIR_SLEEPERS" : "GENTLE_FAIR_SLEEPERS");
-            NativeKernelAccess.writeString("/sys/kernel/debug/sched_features", "NO_START_DEBIT");
-            NativeKernelAccess.writeString("/sys/kernel/debug/sched_features", "NEXT_BUDDY");
+            NativeKernelAccess.writeBatch(
+                    "/sys/kernel/debug/sched_features", isGamingProfile ? "NO_GENTLE_FAIR_SLEEPERS" : "GENTLE_FAIR_SLEEPERS",
+                    "/sys/kernel/debug/sched_features", "NO_START_DEBIT",
+                    "/sys/kernel/debug/sched_features", "NEXT_BUDDY"
+            );
         }
     }
 
     private static void applyNetworkOptimizations(int profileId, boolean isPhoenix, List<String> logs) {
-        NativeKernelAccess.writeString("/proc/sys/net/ipv4/tcp_low_latency", (profileId >= 4) ? "1" : "0");
-        NativeKernelAccess.writeString("/proc/sys/net/ipv4/tcp_fastopen", "3");
-        NativeKernelAccess.writeString("/proc/sys/net/ipv4/tcp_tw_reuse", "1");
-        NativeKernelAccess.writeString("/proc/sys/net/ipv4/tcp_slow_start_after_idle", "0");
-        if (NativeKernelAccess.exists("/proc/sys/net/ipv4/tcp_notsent_lowat")) {
-            NativeKernelAccess.writeString("/proc/sys/net/ipv4/tcp_notsent_lowat", (profileId >= 4) ? "16384" : "4294967295");
-        }
-        NativeKernelAccess.writeString("/proc/sys/net/core/netdev_max_backlog", (profileId >= 4) ? "10000" : "2500");
+        NativeKernelAccess.writeBatch(
+                "/proc/sys/net/ipv4/tcp_low_latency", (profileId >= 4) ? "1" : "0",
+                "/proc/sys/net/ipv4/tcp_fastopen", "3",
+                "/proc/sys/net/ipv4/tcp_tw_reuse", "1",
+                "/proc/sys/net/ipv4/tcp_slow_start_after_idle", "0",
+                "/proc/sys/net/ipv4/tcp_notsent_lowat", (profileId >= 4) ? "16384" : "4294967295",
+                "/proc/sys/net/core/netdev_max_backlog", (profileId >= 4) ? "10000" : "2500"
+        );
         logs.add("TCP/IP tuned for " + (profileId >= 4 ? "low latency gaming" : "energy efficiency"));
     }
 
     private static void applyTouchAndKernelOptimizations(int profileId, List<String> logs) {
-        NativeKernelAccess.writeString("/proc/touchpanel/game_switch_enable", (profileId >= 4) ? "1" : "0");
-        NativeKernelAccess.writeString("/sys/class/touch/switch/set_touchscreen", (profileId >= 4) ? "1" : "0");
-        NativeKernelAccess.writeString("/sys/devices/virtual/touch/touch_dev/bump_sample_rate", (profileId >= 4) ? "1" : "0");
-
-        NativeKernelAccess.writeString("/proc/sys/kernel/panic", "0");
-        NativeKernelAccess.writeString("/proc/sys/kernel/panic_on_oops", "0");
-        NativeKernelAccess.writeString("/sys/module/kernel/parameters/initcall_debug", "0");
+        NativeKernelAccess.writeBatch(
+                "/proc/touchpanel/game_switch_enable", (profileId >= 4) ? "1" : "0",
+                "/sys/class/touch/switch/set_touchscreen", (profileId >= 4) ? "1" : "0",
+                "/sys/devices/virtual/touch/touch_dev/bump_sample_rate", (profileId >= 4) ? "1" : "0",
+                "/proc/sys/kernel/panic", "0",
+                "/proc/sys/kernel/panic_on_oops", "0",
+                "/sys/module/kernel/parameters/initcall_debug", "0"
+        );
         logs.add("Touch sampling and kernel panic suppression configured");
     }
 }

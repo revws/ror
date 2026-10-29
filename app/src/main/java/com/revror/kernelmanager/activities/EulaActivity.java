@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 REVROR contributors - Commercial License */
+/* Copyright (C) 2026 REVROR contributors - GPL-3.0-or-later */
 package com.revror.kernelmanager.activities;
 
 import android.animation.ObjectAnimator;

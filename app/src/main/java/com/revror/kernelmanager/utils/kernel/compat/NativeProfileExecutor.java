@@ -72,7 +72,7 @@ public final class NativeProfileExecutor {
             } else if (isGaming) {
                 backend.applyGamingOptimizations(false);
                 RootUtils.runCommand("cmd power set-fixed-performance-mode-enabled false 2>/dev/null");
-            } else if ((!isPhoenix && (profile == 2 || profile == 3)) || (isPhoenix && (profile == 0 || profile == 2))) {
+            } else if (profile == 2 || (!isPhoenix && profile == 3)) {
                 backend.applyBatteryOptimizations();
                 RootUtils.runCommand("cmd power set-fixed-performance-mode-enabled false 2>/dev/null");
             } else {
@@ -114,21 +114,26 @@ public final class NativeProfileExecutor {
         int engineProfile = isPhoenix ? toPhoenixProfile(profile) : toRegularProfile(profile);
         int spectrumProfile = (profile == 5 ? 1 : profile == 2 ? 2 : profile == 4 ? 3 : 0);
 
-        NativeKernelAccess.setSystemProperty("persist.revror.manual_cpu", "0");
-        NativeKernelAccess.setSystemProperty("persist.revror.manual_gpu", "0");
-        NativeKernelAccess.setSystemProperty("persist.revror.app.profile", String.valueOf(profile));
-        NativeKernelAccess.setSystemProperty("persist.revror.profile", String.valueOf(profile));
-        NativeKernelAccess.setSystemProperty("persist.revror.worker.profile", String.valueOf(engineProfile));
-        NativeKernelAccess.setSystemProperty(isPhoenix ? "persist.revror.phoenix.profile" : "persist.revror.revws.profile", String.valueOf(engineProfile));
-        NativeKernelAccess.setSystemProperty("persist.revror.mode", String.valueOf(engineProfile));
-        NativeKernelAccess.setSystemProperty("persist.revror.active_engine", isPhoenix ? "phoenix" : "regular");
-        NativeKernelAccess.setSystemProperty("persist.spectrum.profile", String.valueOf(spectrumProfile));
-        NativeKernelAccess.setSystemProperty("revror.phoenix.support", isPhoenix ? "1" : "0");
-        NativeKernelAccess.setSystemProperty("revror.revws.support", "1");
-        NativeKernelAccess.setSystemProperty("revror.support", "1");
-        NativeKernelAccess.setSystemProperty("persist.sys.NV_FPSLIMIT", "144");
-        NativeKernelAccess.setSystemProperty("persist.sys.NV_POWERMODE", "1");
-        NativeKernelAccess.setSystemProperty("debug.egl.buffcount", "4");
+        String cmd = "setprop persist.revror.manual_cpu 0; "
+                + "setprop persist.revror.manual_gpu 0; "
+                + "setprop persist.revror.app.profile " + profile + "; "
+                + "setprop persist.revror.profile " + profile + "; "
+                + "setprop persist.revror.worker.profile " + engineProfile + "; "
+                + "setprop " + (isPhoenix ? "persist.revror.phoenix.profile" : "persist.revror.revws.profile") + " " + engineProfile + "; "
+                + "setprop persist.revror.mode " + engineProfile + "; "
+                + "setprop persist.revror.active_engine " + (isPhoenix ? "phoenix" : "regular") + "; "
+                + "setprop persist.spectrum.profile " + spectrumProfile + "; "
+                + "setprop revror.phoenix.support " + (isPhoenix ? "1" : "0") + "; "
+                + "setprop revror.revws.support 1; "
+                + "setprop revror.support 1; "
+                + "setprop persist.sys.NV_FPSLIMIT 144; "
+                + "setprop persist.sys.NV_POWERMODE 1; "
+                + "setprop debug.egl.buffcount 4";
+        try {
+            RootUtils.runCommand(cmd);
+        } catch (Throwable t) {
+            Log.w(TAG, "Failed syncProfileProperties: " + t.getMessage());
+        }
     }
 
     private static boolean verifyAppliedProfile(int profile, boolean isPhoenix) {
